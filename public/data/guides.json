@@ -4,7 +4,7 @@
     "slug": "ahmed-ali",
     "card": {
       "name": "Ahmed Ali",
-      "avatar": "/images/guides/ahmed-ali.png",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
       "rating": 4.9,
       "reviewsCount": 54,
       "pricePerHour": 35,
@@ -41,9 +41,9 @@
         ]
       },
       "gallery": [
-        "/images/trips/ahmed/pyramids-tour-01.jpg",
-        "/images/trips/ahmed/museum-tour-02.jpg",
-        "/images/trips/ahmed/khan-el-khalili-03.jpg"
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -79,7 +79,7 @@
     "slug": "mona-samir",
     "card": {
       "name": "Mona Samir",
-      "avatar": "/images/guides/mona-samir.png",
+      "avatar": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 41,
       "pricePerHour": 30,
@@ -107,8 +107,8 @@
         "skills": ["Historical Tours", "Food Experience", "Sea Tour Planning"]
       },
       "gallery": [
-        "/images/trips/mona/citadel-01.jpg",
-        "/images/trips/mona/bibliotheca-02.jpg"
+        "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -126,7 +126,7 @@
     "slug": "omar-el-sayed",
     "card": {
       "name": "Omar El Sayed",
-      "avatar": "/images/guides/omar.webp",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
       "rating": 4.9,
       "reviewsCount": 120,
       "pricePerHour": 25,
@@ -151,8 +151,8 @@
         "skills": ["Scuba Diving", "Underwater Photography", "Snorkeling Tours"]
       },
       "gallery": [
-        "/images/trips/omar/bluehole-01.jpg",
-        "/images/trips/omar/snorkeling-02.jpg"
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -170,7 +170,7 @@
     "slug": "sara-khaled",
     "card": {
       "name": "Sara Khaled",
-      "avatar": "/images/guides/sara.webp",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 98,
       "pricePerHour": 30,
@@ -195,8 +195,8 @@
         "skills": ["Hiking Tours", "Desert Camping", "Blue Hole Snorkeling"]
       },
       "gallery": [
-        "/images/trips/sara/bluehole-01.jpg",
-        "/images/trips/sara/mountain-02.jpg"
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -214,7 +214,7 @@
     "slug": "john-adams",
     "card": {
       "name": "John Adams",
-      "avatar": "/images/guides/john.webp",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
       "rating": 4.7,
       "reviewsCount": 85,
       "pricePerHour": 27,
@@ -239,8 +239,8 @@
         "skills": ["Underwater Photography", "Advanced Diving", "Safety & Training"]
       },
       "gallery": [
-        "/images/trips/john/bluehole-01.jpg",
-        "/images/trips/john/diving-02.jpg"
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -258,7 +258,7 @@
     "slug": "mariam-samir",
     "card": {
       "name": "Mariam Samir",
-      "avatar": "/images/guides/mariam.webp",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 72,
       "pricePerHour": 22,
@@ -283,8 +283,8 @@
         "skills": ["Camping", "Storytelling", "Snorkeling Guidance"]
       },
       "gallery": [
-        "/images/trips/mariam/desert-01.jpg",
-        "/images/trips/mariam/sunset-02.jpg"
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -302,7 +302,7 @@
     "slug": "ahmed-salah",
     "card": {
       "name": "Ahmed Salah",
-      "avatar": "/images/guides/ahmed.webp",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
       "rating": 4.6,
       "reviewsCount": 56,
       "pricePerHour": 20,
@@ -327,7 +327,7 @@
         "skills": ["Boat Trip Planning", "Snorkeling", "Guest Safety"]
       },
       "gallery": [
-        "/images/trips/ahmed/boat-01.jpg"
+        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop"
       ],
       "reviews": []
     }
@@ -339,7 +339,7 @@
     "slug": "nour-hassan",
     "card": {
       "name": "Nour Hassan",
-      "avatar": "/images/guides/nour.webp",
+      "avatar": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop&crop=face",
       "rating": 5.0,
       "reviewsCount": 164,
       "pricePerHour": 35,
@@ -364,8 +364,8 @@
         "skills": ["Egyptology", "Temple Tours", "Storytelling"]
       },
       "gallery": [
-        "/images/trips/nour/luxor-01.jpg",
-        "/images/trips/nour/karnak-02.jpg"
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -383,7 +383,7 @@
     "slug": "hassan-mahmoud",
     "card": {
       "name": "Hassan Mahmoud",
-      "avatar": "/images/guides/hassan.webp",
+      "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face",
       "rating": 4.9,
       "reviewsCount": 110,
       "pricePerHour": 32,
@@ -408,7 +408,7 @@
         "skills": ["History Storytelling", "Temple Guidance", "Group Management"]
       },
       "gallery": [
-        "/images/trips/hassan/luxor-01.jpg"
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
       ],
       "reviews": []
     }
@@ -419,7 +419,7 @@
     "slug": "clara-williams",
     "card": {
       "name": "Clara Williams",
-      "avatar": "/images/guides/clara.webp",
+      "avatar": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face",
       "rating": 4.7,
       "reviewsCount": 77,
       "pricePerHour": 28,
@@ -444,7 +444,7 @@
         "skills": ["Nile Cruises", "Photography Tours", "Luxury Planning"]
       },
       "gallery": [
-        "/images/trips/clara/nile-01.jpg"
+        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop"
       ],
       "reviews": []
     }
@@ -455,7 +455,7 @@
     "slug": "youssef-adel",
     "card": {
       "name": "Youssef Adel",
-      "avatar": "/images/guides/youssef.webp",
+      "avatar": "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 89,
       "pricePerHour": 30,
@@ -480,7 +480,7 @@
         "skills": ["Comfort Tours", "Temple Guide", "German Interpretation"]
       },
       "gallery": [
-        "/images/trips/youssef/temple-01.jpg"
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
       ],
       "reviews": []
     }
@@ -491,7 +491,7 @@
     "slug": "fatma-reda",
     "card": {
       "name": "Fatma Reda",
-      "avatar": "/images/guides/fatma.webp",
+      "avatar": "https://images.unsplash.com/photo-1485893226355-9a1c32a0c81e?w=400&h=400&fit=crop&crop=face",
       "rating": 4.6,
       "reviewsCount": 70,
       "pricePerHour": 24,
@@ -526,7 +526,7 @@
     "slug": "mohamed-nabil",
     "card": {
       "name": "Mohamed Nabil",
-      "avatar": "/images/guides/mnabil.webp",
+      "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face",
       "rating": 4.9,
       "reviewsCount": 143,
       "pricePerHour": 33,
@@ -550,7 +550,9 @@
         "mainCity": "Alexandria",
         "skills": ["Historical Research", "Architecture Tours", "Citadel History"]
       },
-      "gallery": ["/images/trips/mnabil/library-01.jpg"],
+      "gallery": [
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
+      ],
       "reviews": []
     }
   },
@@ -560,7 +562,7 @@
     "slug": "emily-carter",
     "card": {
       "name": "Emily Carter",
-      "avatar": "/images/guides/emily.webp",
+      "avatar": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=face",
       "rating": 4.6,
       "reviewsCount": 65,
       "pricePerHour": 26,
@@ -594,7 +596,7 @@
     "slug": "salma-farouk",
     "card": {
       "name": "Salma Farouk",
-      "avatar": "/images/guides/salma.webp",
+      "avatar": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 92,
       "pricePerHour": 32,
@@ -628,7 +630,7 @@
     "slug": "yehia-mansour",
     "card": {
       "name": "Yehia Mansour",
-      "avatar": "/images/guides/yehia.webp",
+      "avatar": "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=400&h=400&fit=crop&crop=face",
       "rating": 4.7,
       "reviewsCount": 80,
       "pricePerHour": 29,
@@ -662,7 +664,7 @@
     "slug": "karim-fouad",
     "card": {
       "name": "Karim Fouad",
-      "avatar": "/images/guides/karim.webp",
+      "avatar": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=face",
       "rating": 4.6,
       "reviewsCount": 60,
       "pricePerHour": 23,
@@ -697,7 +699,7 @@
     "slug": "youssef-hamdy",
     "card": {
       "name": "Youssef Hamdy",
-      "avatar": "/images/guides/youssef-hamdy.png",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop&crop=face",
       "rating": 4.9,
       "reviewsCount": 63,
       "pricePerHour": 55,
@@ -725,8 +727,8 @@
         "skills": ["Photography Spots Expert", "Camel Tour Coordination", "Private VIP Tours"]
       },
       "gallery": [
-        "/images/trips/youssef-hamdy/giza-01.jpg",
-        "/images/trips/youssef-hamdy/giza-02.jpg"
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -749,7 +751,7 @@
     "slug": "salma-fouad",
     "card": {
       "name": "Salma Fouad",
-      "avatar": "/images/guides/salma-fouad.png",
+      "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 47,
       "pricePerHour": 40,
@@ -774,8 +776,8 @@
         "skills": ["Food Tours", "Storytelling", "Market Negotiation"]
       },
       "gallery": [
-        "/images/trips/salma-fouad/pyramids-01.jpg",
-        "/images/trips/salma-fouad/khan-02.jpg"
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -792,7 +794,7 @@
     "slug": "khaled-mostafa",
     "card": {
       "name": "Khaled Mostafa",
-      "avatar": "/images/guides/khaled-mostafa.png",
+      "avatar": "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop&crop=face",
       "rating": 4.7,
       "reviewsCount": 38,
       "pricePerHour": 28,
@@ -817,8 +819,8 @@
         "skills": ["Camel Tours", "Drone Photography Assistance"]
       },
       "gallery": [
-        "/images/trips/khaled-mostafa/camel-01.jpg",
-        "/images/trips/khaled-mostafa/pyramids-02.jpg"
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -835,7 +837,7 @@
     "slug": "mariam-saad",
     "card": {
       "name": "Mariam Saad",
-      "avatar": "/images/guides/mariam-saad.png",
+      "avatar": "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?w=400&h=400&fit=crop&crop=face",
       "rating": 4.6,
       "reviewsCount": 52,
       "pricePerHour": 22,
@@ -860,7 +862,7 @@
         "skills": ["Budget Planning", "Local Food Insights"]
       },
       "gallery": [
-        "/images/trips/mariam-saad/giza-01.jpg"
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -877,7 +879,7 @@
     "slug": "hassan-omar",
     "card": {
       "name": "Hassan Omar",
-      "avatar": "/images/guides/hassan-omar.png",
+      "avatar": "https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=400&fit=crop&crop=face",
       "rating": 4.9,
       "reviewsCount": 71,
       "pricePerHour": 70,
@@ -905,8 +907,8 @@
         "skills": ["VIP Tours", "Luxury Itinerary Planning"]
       },
       "gallery": [
-        "/images/trips/hassan-omar/vip-01.jpg",
-        "/images/trips/hassan-omar/inside-pyramid-02.jpg"
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -924,7 +926,7 @@
   "slug": "ali-hassan",
   "card": {
     "name": "Ali Hassan",
-    "avatar": "/images/guides/ali-hassan.png",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
     "rating": 4.9,
     "reviewsCount": 58,
     "pricePerHour": 60,
@@ -952,8 +954,8 @@
       "skills": ["Luxury Trip Planning", "Cruise Scheduling", "Cultural Storytelling"]
     },
     "gallery": [
-      "/images/trips/ali-hassan/cruise-01.jpg",
-      "/images/trips/ali-hassan/philae-02.jpg"
+      "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
     ],
     "reviews": [
       {
@@ -970,7 +972,7 @@
   "slug": "noor-adel",
   "card": {
     "name": "Noor Adel",
-    "avatar": "/images/guides/noor-adel.png",
+    "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
     "rating": 4.7,
     "reviewsCount": 42,
     "pricePerHour": 35,
@@ -1012,7 +1014,7 @@
   "slug": "mohamed-selim",
   "card": {
     "name": "Mohamed Selim",
-    "avatar": "/images/guides/mohamed-selim.png",
+    "avatar": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=400&h=400&fit=crop&crop=face",
     "rating": 4.6,
     "reviewsCount": 34,
     "pricePerHour": 20,
@@ -1054,7 +1056,7 @@
   "slug": "nadia-ismail",
   "card": {
     "name": "Nadia Ismail",
-    "avatar": "/images/guides/nadia-ismail.png",
+    "avatar": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=400&fit=crop&crop=face",
     "rating": 4.8,
     "reviewsCount": 46,
     "pricePerHour": 45,
@@ -1096,7 +1098,7 @@
   "slug": "omer-rashed",
   "card": {
     "name": "Omer Rashed",
-    "avatar": "/images/guides/omer-rashed.png",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
     "rating": 4.9,
     "reviewsCount": 79,
     "pricePerHour": 70,

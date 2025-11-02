@@ -1,0 +1,108 @@
+.pageWrapper {
+  min-height: 100vh;
+}
+
+/* LEFT CARD */
+.profileCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+}
+
+.avatar {
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.specialization {
+  font-size: .95rem;
+  color: #777;
+}
+
+.verified {
+  display: inline-block;
+  background: #daf1d8;
+  color: green;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 8px;
+  font-size: .85rem;
+}
+
+.infoBlock {
+  text-align: left;
+  font-size: .9rem;
+}
+
+.backLink {
+  display: block;
+  margin-top: 20px;
+  color: #555;
+  font-size: .9rem;
+}
+
+/* RIGHT SECTIONS */
+.section {
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  margin-bottom: 22px;
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.sectionText {
+  font-size: .95rem;
+  color: #555;
+}
+
+/* REVIEWS */
+.reviewCard {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.reviewText {
+  font-size: .9rem;
+  color: #444;
+  margin-top: 5px;
+}
+
+/* GALLERY */
+.galleryImage {
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* TAG BADGES */
+.badgeSection {
+  margin-top: 15px;
+}
+
+.badge {
+  background: #f0f0f0;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border-radius: 20px;
+  font-size: .85rem;
+}

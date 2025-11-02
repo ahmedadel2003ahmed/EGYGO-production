@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import styles from "./Governorate.module.css";
 
 export default function GovernorateClient({ initialGuides = [] }) {
   // 🏙️ Extract unique cities
   const cities = useMemo(() => {
     const set = new Set();
+
+    
     initialGuides.forEach((g) => {
       (g.filters?.serviceLocations || []).forEach((c) => set.add(c));
     });
@@ -111,7 +114,9 @@ export default function GovernorateClient({ initialGuides = [] }) {
                     <div className={styles.price}>
                       ${g.card?.pricePerHour} <small>/ hour</small>
                     </div>
-                    <button className={styles.viewBtn}>View Profile</button>
+                    <Link href={`/guides/${g.slug}`} className={styles.viewBtn}>
+                      View Profile
+                    </Link>
                   </div>
                 </article>
               </div>

@@ -218,11 +218,11 @@
 .price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #00bfa6;
+  color: #ff543d;
 }
 
 .viewBtn {
-  background: #00bfa6;
+  background: #ff543d;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -231,11 +231,15 @@
   font-weight: 500;
   transition: all 0.2s ease;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .viewBtn:hover {
-  background: #009c8a;
+  background: #ff5926;
   transform: translateY(-1px);
+  color: white;
+  text-decoration: none;
 }
 
 /* ===== EMPTY STATE ===== */

@@ -1,0 +1,133 @@
+.pageWrapper {
+  padding: 40px 0;
+}
+
+/* SIDEBAR */
+.sidebarCard {
+  background: #fff;
+  border-radius: 18px;
+  padding: 25px 15px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.avatar {
+  border-radius: 50%;
+  border: 4px solid #f5f5f5;
+}
+
+.name {
+  font-size: 20px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.verified {
+  color: #27ae60;
+  font-size: 14px;
+  margin: 4px 0;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  align-items: center;
+}
+
+.university {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.languages {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.langBadge {
+  background: #f2f2f2;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.btnOutline {
+  background: #fff;
+  border: 1.8px solid #0d9488;
+  color: #0d9488;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.btnOutline:hover {
+  background: #0d9488;
+  color: white;
+}
+
+.btnPrimary {
+  background: #0d9488;
+  color: white;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.btnPrimary:hover {
+  opacity: 0.95;
+}
+
+/* SECTIONS */
+.sectionCard {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 25px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.aboutText {
+  color: #444;
+  line-height: 1.7;
+}
+
+/* REVIEWS */
+.reviewItem {
+  border-bottom: 1px solid #ececec;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+}
+
+.reviewName {
+  font-weight: 600;
+}
+
+.stars {
+  color: #ffc107;
+  margin-bottom: 6px;
+  display: flex;
+}
+
+.reviewText {
+  color: #555;
+  font-size: 14px;
+}
+
+/* GALLERY */
+.galleryImg {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
