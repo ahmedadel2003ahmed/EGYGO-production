@@ -43,7 +43,10 @@
       "gallery": [
         "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
         "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -108,7 +111,11 @@
       },
       "gallery": [
         "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1592753470502-6fdc4ea3a03f?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -116,6 +123,24 @@
           "rating": 5,
           "review": "Her storytelling and energy are unmatched. Loved every minute!",
           "date": "2024-03-18"
+        },
+        {
+          "name": "Marco T.",
+          "rating": 5,
+          "review": "Mona showed us hidden gems in Alexandria that we never would have found. Amazing local knowledge!",
+          "date": "2024-04-12"
+        },
+        {
+          "name": "Sofia R.",
+          "rating": 4,
+          "review": "Great food tour experience! She knows all the best local spots in Alexandria.",
+          "date": "2024-05-08"
+        },
+        {
+          "name": "James P.",
+          "rating": 5,
+          "review": "Perfect guide for Alexandria's historic sites. Very professional and knowledgeable.",
+          "date": "2024-06-15"
         }
       ]
     }
@@ -152,7 +177,11 @@
       },
       "gallery": [
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -196,7 +225,11 @@
       },
       "gallery": [
         "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -240,7 +273,11 @@
       },
       "gallery": [
         "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -284,7 +321,11 @@
       },
       "gallery": [
         "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1517824806704-9040b037703b?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -327,7 +368,12 @@
         "skills": ["Boat Trip Planning", "Snorkeling", "Guest Safety"]
       },
       "gallery": [
-        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"
       ],
       "reviews": []
     }
@@ -365,7 +411,11 @@
       },
       "gallery": [
         "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
       ],
       "reviews": [
         {
@@ -408,7 +458,12 @@
         "skills": ["History Storytelling", "Temple Guidance", "Group Management"]
       },
       "gallery": [
-        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
       ],
       "reviews": []
     }
@@ -515,8 +570,30 @@
         "mainCity": "Luxor",
         "skills": ["Photography Planning", "Temple Guiding", "Culture Sharing"]
       },
-      "gallery": [],
-      "reviews": []
+      "gallery": [
+        "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop"
+      ],
+      "reviews": [
+        {
+          "name": "Michael B.",
+          "rating": 5,
+          "review": "Fatma has an amazing eye for photography! She helped us get incredible shots at the temples.",
+          "date": "2024-04-15"
+        },
+        {
+          "name": "Sarah T.",
+          "rating": 4,
+          "review": "Great photography-focused tour. She knows all the best angles and lighting spots.",
+          "date": "2024-05-20"
+        },
+        {
+          "name": "Carlos M.",
+          "rating": 5,
+          "review": "Perfect guide for photography enthusiasts. Very knowledgeable about Luxor's culture too.",
+          "date": "2024-06-25"
+        }
+      ]
     }
   },
 
@@ -553,7 +630,26 @@
       "gallery": [
         "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "name": "Lisa M.",
+          "rating": 5,
+          "review": "Mohamed's deep knowledge of Alexandria's history is incredible. The library tour was fascinating!",
+          "date": "2024-03-25"
+        },
+        {
+          "name": "Ahmed S.",
+          "rating": 5,
+          "review": "Best architectural tour guide in Alexandria. He really knows his stuff about the citadel.",
+          "date": "2024-04-18"
+        },
+        {
+          "name": "Elena V.",
+          "rating": 4,
+          "review": "Very professional and informative. Great insights into Alexandria's cultural heritage.",
+          "date": "2024-05-22"
+        }
+      ]
     }
   },
 
@@ -586,8 +682,30 @@
         "mainCity": "Alexandria",
         "skills": ["Architecture", "Historical Walks", "Citadel Storytelling"]
       },
-      "gallery": [],
-      "reviews": []
+      "gallery": [
+        "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
+      ],
+      "reviews": [
+        {
+          "name": "Robert K.",
+          "rating": 5,
+          "review": "Emily's architectural expertise made the citadel tour absolutely fascinating. Highly recommend!",
+          "date": "2024-04-05"
+        },
+        {
+          "name": "Catherine L.",
+          "rating": 4,
+          "review": "Great English-speaking guide. Perfect for foreign visitors wanting to understand Alexandria's architecture.",
+          "date": "2024-05-12"
+        },
+        {
+          "name": "David W.",
+          "rating": 5,
+          "review": "Excellent knowledge of historical buildings. Made our Alexandria visit memorable.",
+          "date": "2024-06-08"
+        }
+      ]
     }
   },
 
@@ -620,8 +738,30 @@
         "mainCity": "Alexandria",
         "skills": ["Museum Narration", "Cultural Guidance", "French Interpretation"]
       },
-      "gallery": [],
-      "reviews": []
+      "gallery": [
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop"
+      ],
+      "reviews": [
+        {
+          "name": "Pierre M.",
+          "rating": 5,
+          "review": "Salma's French is perfect and her knowledge of the library's cultural collections is outstanding!",
+          "date": "2024-03-30"
+        },
+        {
+          "name": "Marie D.",
+          "rating": 5,
+          "review": "Wonderful cultural experience! She made the library museum come alive with stories.",
+          "date": "2024-04-25"
+        },
+        {
+          "name": "Thomas L.",
+          "rating": 4,
+          "review": "Great storytelling skills. Perfect for anyone interested in literature and art.",
+          "date": "2024-05-18"
+        }
+      ]
     }
   },
 
@@ -654,8 +794,30 @@
         "mainCity": "Alexandria",
         "skills": ["Russian Interpretation", "Sea Tours", "Citadel Walkthroughs"]
       },
-      "gallery": [],
-      "reviews": []
+      "gallery": [
+        "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop"
+      ],
+      "reviews": [
+        {
+          "name": "Dmitri V.",
+          "rating": 5,
+          "review": "Yehia speaks excellent Russian! Perfect guide for our group from Moscow. Great coastal tour.",
+          "date": "2024-04-02"
+        },
+        {
+          "name": "Natasha K.",
+          "rating": 5,
+          "review": "Wonderful sea coast tour. He knows all the best photo spots along Alexandria's coastline.",
+          "date": "2024-05-15"
+        },
+        {
+          "name": "Boris M.",
+          "rating": 4,
+          "review": "Very professional Russian-speaking guide. Great knowledge of citadel history.",
+          "date": "2024-06-10"
+        }
+      ]
     }
   },
 
@@ -688,8 +850,30 @@
         "mainCity": "Alexandria",
         "skills": ["Academic Tours", "Library Navigation", "Italian Interpretation"]
       },
-      "gallery": [],
-      "reviews": []
+      "gallery": [
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop"
+      ],
+      "reviews": [
+        {
+          "name": "Marco A.",
+          "rating": 5,
+          "review": "Perfect for our university group! Karim knows exactly how to make academic tours engaging.",
+          "date": "2024-04-20"
+        },
+        {
+          "name": "Giuseppe R.",
+          "rating": 4,
+          "review": "Great Italian-speaking guide. Very helpful for students visiting the library.",
+          "date": "2024-05-28"
+        },
+        {
+          "name": "Anna F.",
+          "rating": 5,
+          "review": "Excellent academic tour guide. Made our research visit to Alexandria Library very productive.",
+          "date": "2024-06-12"
+        }
+      ]
     }
   }
 

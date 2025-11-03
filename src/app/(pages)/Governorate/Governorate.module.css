@@ -1,8 +1,7 @@
 /* ===== PAGE CONTAINER ===== */
 .pageContainer {
   padding: 60px 0;
-  background-color: #f9fafb;
-  min-height: 100vh;
+   min-height: 100vh;
 }
 
 .inner {
