@@ -2,25 +2,100 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./guideProfile.module.css";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaCheckCircle, FaStar } from "react-icons/fa";
 
 export default function GuideProfileClient() {
   const { slug } = useParams();
+  const router = useRouter();
   const [guide, setGuide] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchGuideData() {
-      const res = await fetch("/data/guides.json");
-      const allGuides = await res.json();
-      const selected = allGuides.find((g) => g.slug === slug);
-      setGuide(selected);
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch("/data/guides.json");
+        
+        if (!res.ok) {
+          throw new Error("Failed to fetch guide data");
+        }
+        
+        const allGuides = await res.json();
+        const selected = allGuides.find((g) => g.slug === slug);
+        
+        if (!selected) {
+          throw new Error("Guide not found");
+        }
+        
+        setGuide(selected);
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching guide:", err);
+      } finally {
+        setLoading(false);
+      }
     }
-    fetchGuideData();
+    
+    if (slug) {
+      fetchGuideData();
+    }
   }, [slug]);
 
-  if (!guide) return <p className="text-center mt-5">Loading...</p>;
+  // Handle booking navigation
+  const handleBookNow = () => {
+    if (guide && guide.slug) {
+      router.push(`/booking/${guide.slug}`);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading guide details...</span>
+        </div>
+        <p className="mt-3">Loading guide details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center mt-5">
+        <div className="alert alert-danger" role="alert">
+          <h4>Error Loading Guide</h4>
+          <p>{error}</p>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!guide) {
+    return (
+      <div className="text-center mt-5">
+        <div className="alert alert-warning" role="alert">
+          <h4>Guide Not Found</h4>
+          <p>The guide you're looking for doesn't exist.</p>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => router.push('/guides')}
+          >
+            Browse All Guides
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const { card, profile } = guide;
 
@@ -65,7 +140,13 @@ export default function GuideProfileClient() {
                 <button className={styles.btnOutline}>Start Chat</button>
                 <button className={styles.btnOutline}>Voice Call</button>
                 <button className={styles.btnOutline}>Video Call</button>
-                <button className={styles.btnPrimary}>Book Now</button>
+                <button 
+                  className={styles.btnPrimary}
+                  onClick={handleBookNow}
+                  disabled={!guide}
+                >
+                  Book Now
+                </button>
               </div>
             </div>
           </div>

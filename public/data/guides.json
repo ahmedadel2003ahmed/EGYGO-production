@@ -77,74 +77,74 @@
     }
   },
 
-  {
-    "id": 2,
-    "slug": "mona-samir",
-    "card": {
-      "name": "Ahmde Samir",
-      "avatar": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400&h=400&fit=crop&crop=face",
-      "rating": 4.8,
-      "reviewsCount": 41,
-      "pricePerHour": 30,
-      "specialization": "Alexandria & Mediterranean Coast"
-    },
-    "filters": {
-      "serviceLocations": ["Alexandria"],
-      "landmarkSpecialties": [
-        "Alexandria Library & Citadel",
-        "Corniche Alexandria"
-      ],
-      "languages": ["Arabic", "English", "Italian"],
-      "maxPricePerHour": 30,
-      "minRating": 4.5
-    },
-    "profile": {
-      "aboutMe": "I was born and raised in Alexandria, the Mediterranean Pearl. I specialize in cultural walking tours, food experiences, and photographic journeys through Alexandria Library, Citadel of Qaitbay, and historic downtown architecture.",
-      "verified": true,
-      "certifications": ["Alexandria University — History & Tourism"],
-      "languages": ["Arabic", "English", "Italian"],
-      "hourlyRate": 30,
-      "flashInfo": {
-        "experienceYears": 7,
-        "mainCity": "Alexandria",
-        "skills": ["Historical Tours", "Food Experience", "Sea Tour Planning"]
+    {
+      "id": 2,
+      "slug": "mona-samir",
+      "card": {
+        "name": "Ahmde Samir",
+        "avatar": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400&h=400&fit=crop&crop=face",
+        "rating": 4.8,
+        "reviewsCount": 41,
+        "pricePerHour": 30,
+        "specialization": "Alexandria & Mediterranean Coast"
       },
-      "gallery": [
-        "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1592753470502-6fdc4ea3a03f?w=800&h=600&fit=crop"
-      ],
-      "reviews": [
-        {
-          "name": "Kevin L.",
-          "rating": 5,
-          "review": "Her storytelling and energy are unmatched. Loved every minute!",
-          "date": "2024-03-18"
+      "filters": {
+        "serviceLocations": ["Alexandria"],
+        "landmarkSpecialties": [
+          "Alexandria Library & Citadel",
+          "Corniche Alexandria"
+        ],
+        "languages": ["Arabic", "English", "Italian"],
+        "maxPricePerHour": 30,
+        "minRating": 4.5
+      },
+      "profile": {
+        "aboutMe": "I was born and raised in Alexandria, the Mediterranean Pearl. I specialize in cultural walking tours, food experiences, and photographic journeys through Alexandria Library, Citadel of Qaitbay, and historic downtown architecture.",
+        "verified": true,
+        "certifications": ["Alexandria University — History & Tourism"],
+        "languages": ["Arabic", "English", "Italian"],
+        "hourlyRate": 30,
+        "flashInfo": {
+          "experienceYears": 7,
+          "mainCity": "Alexandria",
+          "skills": ["Historical Tours", "Food Experience", "Sea Tour Planning"]
         },
-        {
-          "name": "Marco T.",
-          "rating": 5,
-          "review": "Mona showed us hidden gems in Alexandria that we never would have found. Amazing local knowledge!",
-          "date": "2024-04-12"
-        },
-        {
-          "name": "Sofia R.",
-          "rating": 4,
-          "review": "Great food tour experience! She knows all the best local spots in Alexandria.",
-          "date": "2024-05-08"
-        },
-        {
-          "name": "James P.",
-          "rating": 5,
-          "review": "Perfect guide for Alexandria's historic sites. Very professional and knowledgeable.",
-          "date": "2024-06-15"
-        }
-      ]
+        "gallery": [
+          "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1592753470502-6fdc4ea3a03f?w=800&h=600&fit=crop"
+        ],
+        "reviews": [
+          {
+            "name": "Kevin L.",
+            "rating": 5,
+            "review": "Her storytelling and energy are unmatched. Loved every minute!",
+            "date": "2024-03-18"
+          },
+          {
+            "name": "Marco T.",
+            "rating": 5,
+            "review": "Mona showed us hidden gems in Alexandria that we never would have found. Amazing local knowledge!",
+            "date": "2024-04-12"
+          },
+          {
+            "name": "Sofia R.",
+            "rating": 4,
+            "review": "Great food tour experience! She knows all the best local spots in Alexandria.",
+            "date": "2024-05-08"
+          },
+          {
+            "name": "James P.",
+            "rating": 5,
+            "review": "Perfect guide for Alexandria's historic sites. Very professional and knowledgeable.",
+            "date": "2024-06-15"
+          }
+        ]
+      }
     }
-  }
 ,
   {
     "id": 1,
