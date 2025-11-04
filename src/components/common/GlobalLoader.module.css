@@ -1,0 +1,396 @@
+/* GlobalLoader.module.css - Egyptian Heritage Luxury Loading Screen */
+
+/* Main Overlay */
+.loaderOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  
+  /* Egyptian Gradient: Golden Sandstone → Nile Blue */
+  background: linear-gradient(
+    135deg,
+    #D4AF37 0%,           /* Pyramid Gold */
+    #F4E4BC 25%,          /* Desert Sand */
+    #E6C770 50%,          /* Golden Sunset */
+    #4A7C7E 75%,          /* Nile Turquoise */
+    #2C5F41 100%          /* Deep Nile Blue */
+  );
+  
+  /* Animated Gradient Movement */
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease-in-out infinite;
+  
+  /* Smooth Fade In/Out */
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out forwards;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+/* Container for all loader elements */
+.loaderContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+}
+
+/* Spinning Ring Animation Around Logo */
+.spinnerRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top: 3px solid rgba(212, 175, 55, 0.8);    /* Gold */
+  border-right: 3px solid rgba(244, 228, 188, 0.6); /* Sand */
+  border-bottom: 3px solid rgba(74, 124, 126, 0.4); /* Nile Blue */
+  animation: spin 3s linear infinite;
+  
+  /* Glow Effect */
+  box-shadow: 
+    0 0 20px rgba(212, 175, 55, 0.3),
+    inset 0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+.spinnerInner {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-left: 2px solid rgba(244, 228, 188, 0.7);
+  border-bottom: 2px solid rgba(212, 175, 55, 0.5);
+  animation: spinReverse 2s linear infinite;
+}
+
+/* Logo Container */
+.logoContainer {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 40px;
+  
+  /* Subtle floating animation */
+  animation: float 3s ease-in-out infinite;
+}
+
+.logo {
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 50%;
+  
+  /* Elegant glow */
+  box-shadow: 
+    0 0 30px rgba(212, 175, 55, 0.4),
+    0 0 60px rgba(244, 228, 188, 0.2);
+  
+  /* Smooth scaling on hover-like effect */
+  transition: all 0.3s ease;
+  filter: brightness(1.1) contrast(1.05);
+}
+
+/* Text Container */
+.textContainer {
+  max-width: 500px;
+  padding: 0 20px;
+  z-index: 3;
+}
+
+.primaryText {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  
+  /* Text glow effect */
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(212, 175, 55, 0.3);
+  
+  /* Typing animation */
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+.secondaryText {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  letter-spacing: 0.3px;
+  
+  /* Subtle text shadow */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  
+  /* Delayed fade-in */
+  opacity: 0;
+  animation: delayedFadeIn 1s ease-in-out 0.5s forwards;
+}
+
+/* Decorative Floating Particles */
+.decorativeElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: floatParticles 6s ease-in-out infinite;
+}
+
+.particle:nth-child(1) {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  top: 70%;
+  right: 20%;
+  animation-delay: 1.5s;
+}
+
+.particle:nth-child(3) {
+  top: 30%;
+  right: 10%;
+  animation-delay: 3s;
+}
+
+.particle:nth-child(4) {
+  bottom: 25%;
+  left: 25%;
+  animation-delay: 4.5s;
+}
+
+.particle:nth-child(5) {
+  top: 60%;
+  left: 70%;
+  animation-delay: 2s;
+}
+
+/* Bottom Glow Effect */
+.bottomGlow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 100px;
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+  z-index: 1;
+}
+
+/* ============ ANIMATIONS ============ */
+
+/* Gradient Background Animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+}
+
+/* Spinner Animations */
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+/* Logo Float Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Text Pulse Animation */
+@keyframes textPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Delayed Fade In for Secondary Text */
+@keyframes delayedFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 0.85; transform: translateY(0); }
+}
+
+/* Floating Particles Animation */
+@keyframes floatParticles {
+  0%, 100% { 
+    transform: translateY(0px) scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translateY(-20px) scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+
+/* Mobile First Approach */
+@media (max-width: 576px) {
+  .spinnerRing {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .logo {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .primaryText {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .secondaryText {
+    font-size: 0.95rem;
+  }
+  
+  .textContainer {
+    padding: 0 15px;
+  }
+  
+  .particle {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 577px) and (max-width: 768px) {
+  .spinnerRing {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .logo {
+    width: 100px !important;
+    height: 100px !important;
+  }
+  
+  .primaryText {
+    font-size: 1.4rem;
+  }
+  
+  .secondaryText {
+    font-size: 1rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .primaryText {
+    font-size: 1.6rem;
+  }
+  
+  .secondaryText {
+    font-size: 1.15rem;
+  }
+  
+  .logoContainer {
+    margin-bottom: 50px;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1200px) {
+  .spinnerRing {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .logo {
+    width: 140px !important;
+    height: 140px !important;
+  }
+  
+  .primaryText {
+    font-size: 1.8rem;
+  }
+  
+  .secondaryText {
+    font-size: 1.2rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .loaderOverlay,
+  .spinnerRing,
+  .spinnerInner,
+  .logo,
+  .primaryText,
+  .secondaryText,
+  .particle {
+    animation: none !important;
+  }
+  
+  .loaderOverlay {
+    opacity: 1;
+  }
+  
+  .secondaryText {
+    opacity: 0.85;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .loaderOverlay {
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  }
+  
+  .primaryText,
+  .secondaryText {
+    color: #FFFFFF;
+    text-shadow: none;
+  }
+  
+  .spinnerRing {
+    border-top-color: #FFFFFF;
+    border-right-color: #CCCCCC;
+    border-bottom-color: #999999;
+  }
+}

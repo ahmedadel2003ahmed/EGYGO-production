@@ -9,6 +9,11 @@ export default function MapSection({ location, destinationName }) {
   // Convert Google Maps share URL to embeddable URL
   const getEmbeddableMapUrl = (url) => {
     try {
+      // If it's already an embed URL, return as is
+      if (url.includes('google.com/maps/embed')) {
+        return url;
+      }
+      
       // Extract coordinates or place ID from Google Maps URL
       if (url.includes('maps.app.goo.gl') || url.includes('goo.gl')) {
         // For shortened URLs, we'll use a search-based embed
@@ -34,6 +39,31 @@ export default function MapSection({ location, destinationName }) {
   };
 
   const embedUrl = getEmbeddableMapUrl(location.mapUrl);
+
+  // Create a proper Google Maps link for opening in new tab
+  const getGoogleMapsLink = (url) => {
+    // If it's already a regular maps URL, return as is
+    if (url.includes('maps.google.com') && !url.includes('/embed')) {
+      return url;
+    }
+    
+    // If it's an embed URL, convert to regular maps URL
+    if (url.includes('google.com/maps/embed')) {
+      // Try to extract search query from embed URL
+      const searchMatch = url.match(/pb=([^&]+)/);
+      if (searchMatch) {
+        // Create a search-based Google Maps URL
+        const searchQuery = encodeURIComponent(`${destinationName}, ${location.city}, ${location.country}`);
+        return `https://www.google.com/maps/search/${searchQuery}`;
+      }
+    }
+    
+    // Fallback to search URL
+    const searchQuery = encodeURIComponent(`${destinationName}, ${location.city}, ${location.country}`);
+    return `https://www.google.com/maps/search/${searchQuery}`;
+  };
+
+  const googleMapsLink = getGoogleMapsLink(location.mapUrl);
 
   return (
     <section className={styles.section}>
@@ -63,16 +93,14 @@ export default function MapSection({ location, destinationName }) {
                 <p className={styles.mapLocation}>
                   📍 {location.city}, {location.country}
                 </p>
-                {location.mapUrl && (
-                  <a 
-                    href={location.mapUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn btn-outline-primary mt-2"
-                  >
-                    Open in Google Maps
-                  </a>
-                )}
+                <a 
+                  href={googleMapsLink} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-outline-primary mt-2"
+                >
+                  Open in Google Maps
+                </a>
               </div>
             </div>
           </div>

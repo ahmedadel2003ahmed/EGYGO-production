@@ -32,17 +32,20 @@
         "bestTimeToVisit": "October to April"
       },
       "images": {
-        "heroImage": "/images/destinations/pyramids/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/pyramids/01.jpg",
-          "/images/destinations/pyramids/02.jpg",
-          "/images/destinations/pyramids/03.jpg"
+          "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
         ]
-      },
+      }, 
       "location": {
         "country": "Egypt",
         "city": "Giza",
-        "mapUrl": "https://maps.app.goo.gl/xyz-example"
+        "mapUrl": "https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d13824.514897502351!2d31.149492896685025!3d29.97573039932849!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z2KfZh9ix2KfZhdin2Kog2KfZhNis2YrYstip!5e0!3m2!1sar!2seg!4v1762252278205!5m2!1sar!2seg"
       }
     }
   },
@@ -79,11 +82,14 @@
         "bestTimeToVisit": "Evening – when the bazaar is most lively"
       },
       "images": {
-        "heroImage": "/images/destinations/khan/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1583123079115-aa5c4cfdfb49?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/khan/01.jpg",
-          "/images/destinations/khan/02.jpg",
-          "/images/destinations/khan/03.jpg"
+          "https://images.unsplash.com/photo-1583123079115-aa5c4cfdfb49?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578471499651-d63b40cce92b?w=800&h=600&fit=crop"
         ]
       },
       "location": {
@@ -126,11 +132,14 @@
         "bestTimeToVisit": "March to May & September to November"
       },
       "images": {
-        "heroImage": "/images/destinations/alexandria-library/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/alexandria-library/01.jpg",
-          "/images/destinations/alexandria-library/02.jpg",
-          "/images/destinations/alexandria-library/03.jpg"
+          "https://images.unsplash.com/photo-1594736797933-d0402ba515df?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1592753470502-6fdc4ea3a03f?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop"
         ]
       },
       "location": {
@@ -173,11 +182,14 @@
         "bestTimeToVisit": "October to April"
       },
       "images": {
-        "heroImage": "/images/destinations/citadel/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/citadel/01.jpg",
-          "/images/destinations/citadel/02.jpg",
-          "/images/destinations/citadel/03.jpg"
+          "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1583123079115-aa5c4cfdfb49?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&h=600&fit=crop"
         ]
       },
       "location": {
@@ -220,11 +232,14 @@
         "bestTimeToVisit": "October to March"
       },
       "images": {
-        "heroImage": "/images/destinations/aswan-cruise/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/aswan-cruise/01.jpg",
-          "/images/destinations/aswan-cruise/02.jpg",
-          "/images/destinations/aswan-cruise/03.jpg"
+          "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1592753470502-6fdc4ea3a03f?w=800&h=600&fit=crop"
         ]
       },
       "location": {
@@ -267,11 +282,14 @@
         "bestTimeToVisit": "October to April (evening visits recommended)"
       },
       "images": {
-        "heroImage": "/images/destinations/luxor-temple/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/luxor-temple/01.jpg",
-          "/images/destinations/luxor-temple/02.jpg",
-          "/images/destinations/luxor-temple/03.jpg"
+          "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1539650116574-75c0c6d73ab2?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
         ]
       },
       "location": {
@@ -314,11 +332,14 @@
         "bestTimeToVisit": "March to May & September to November"
       },
       "images": {
-        "heroImage": "/images/destinations/dahab-blue-hole/hero.jpg",
+        "heroImage": "https://images.unsplash.com/photo-1582719503704-b82659c88b9d?w=1200&h=800&fit=crop",
         "gallery": [
-          "/images/destinations/dahab-blue-hole/01.jpg",
-          "/images/destinations/dahab-blue-hole/02.jpg",
-          "/images/destinations/dahab-blue-hole/03.jpg"
+          "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=800&h=600&fit=crop"
         ]
       },
       "location": {

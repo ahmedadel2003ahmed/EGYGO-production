@@ -162,7 +162,7 @@ export default function HomeClient() {
             </div>
 
             <div className="col-md-6 mb-3 mb-md-0">
-              <Image src="/images/footerLogo.jpg" alt="Logo" width={250} height={100} />
+              <Image src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=250&h=100&fit=crop" alt="EgyGo Logo" width={250} height={100} />
             </div>
           </div>
         </div>

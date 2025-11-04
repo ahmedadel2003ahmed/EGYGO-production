@@ -44,7 +44,6 @@
 .heroContent {
   position: relative;
   z-index: 3;
-  text-align: center;
   color: white;
   max-width: 800px;
   animation: fadeInUp 1s ease-out;

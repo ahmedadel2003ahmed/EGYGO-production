@@ -42,7 +42,7 @@
 }
 
 .logo:hover {
-  color: #3498db;
+  color: #D4AF37;
   text-decoration: none;
 }
 
@@ -64,13 +64,13 @@
 }
 
 .navLink:hover {
-  color: #3498db;
+  color: #E6D4A6;
   text-decoration: none;
 }
 
 /* Active link styling */
 .activeLink {
-  color: #3498db;
+    color: #E6D4A6;
 }
 
 .activeLink::after {
@@ -80,7 +80,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: #3498db;
+  background: #E6D4A6;
   border-radius: 1px;
 }
 
@@ -166,13 +166,13 @@
 }
 
 .mobileNavLink:hover {
-  color: #3498db;
+  color: #E6D4A6;
   text-decoration: none;
   padding-left: 1rem;
 }
 
 .activeMobileLink {
-  color: #3498db;
+  color: #E6D4A6;
   font-weight: 600;
 }
 
@@ -251,7 +251,7 @@
 
 /* Animation for hamburger menu */
 .menuToggle:hover .hamburgerLine {
-  background: #3498db;
+  background: #E6D4A6;
 }
 
 /* Focus styles for accessibility */
@@ -260,13 +260,9 @@
 .bookNowBtn:focus,
 .mobileBookNowBtn:focus,
 .logo:focus {
-  outline: 2px solid #3498db;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: none;
 }
 
 .menuToggle:focus {
-  outline: 2px solid #3498db;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: none;
 }

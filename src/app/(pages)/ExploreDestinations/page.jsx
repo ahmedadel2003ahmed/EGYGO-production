@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios'; // Using axios as requested
 import Link from 'next/link';
 import Image from 'next/image';
+import GlobalLoader from '@/components/common/GlobalLoader';
 import styles from './ExploreDestinations.module.css';
 
 // --- MOCK DATA ---
@@ -111,7 +112,7 @@ const makeSlug = (name = "") =>
 // helper to normalize image path
 //
 const normalizeImagePath = (img = "") => {
-  if (!img) return "/images/default-destination.jpg";
+  if (!img) return "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop";
   if (img.startsWith("/")) return img;
   return "/" + img.replace(/^\.\.\/+/, "").replace(/^\/+/, "");
 };
@@ -154,17 +155,6 @@ const fetchGovernorates = async () => {
 };
 
 // --- Helper Components ---
-
-/**
- * A simple loading placeholder.
- */
-const LoadingSpinner = () => (
-  <div className="d-flex justify-content-center my-5">
-    <div className="spinner-border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </div>
-  </div>
-);
 
 /**
  * A simple error message.
@@ -256,12 +246,15 @@ export default function ExploreDestinations() {
 
   return (
     <>
+      {/* Professional Global Loader */}
+      <GlobalLoader isLoading={isLoading} />
+      
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className="container">
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
-              Explore Egypt's Top Destinations
+              Explore Egypt&apos;s Top Destinations
             </h1>
             <p className={styles.heroSubtitle}>
               Discover the timeless wonders and hidden gems of Egypt, from ancient monuments to pristine beaches
@@ -276,9 +269,7 @@ export default function ExploreDestinations() {
           <h2 className={styles.sectionTitle}>
             Popular Destinations
           </h2>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
+          {!isLoading && (
             <div className="row g-4">
               {destinations.map((dest) => (
                 <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
@@ -294,9 +285,7 @@ export default function ExploreDestinations() {
           <h2 className={styles.sectionTitle}>
             Explore Egyptian Governorates
           </h2>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
+          {!isLoading && (
             <div className="row g-4">
               {governorates.map((gov) => (
                 <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>

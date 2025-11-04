@@ -1,14 +1,45 @@
 // /app/guides/[slug]/page.jsx
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./guideProfile.module.css";
-import guides from "@/data/guides.json"; // ✅ adjust path if different
 import Link from "next/link";
 
 export default function GuideProfilePage({ params }) {
   const { slug } = params;
-  const guide = guides.find((g) => g.slug === slug);
+  const [guide, setGuide] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGuide = async () => {
+      try {
+        const response = await fetch('/data/guides.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch guides');
+        }
+        const guides = await response.json();
+        const foundGuide = guides.find((g) => g.slug === slug);
+        setGuide(foundGuide);
+      } catch (error) {
+        console.error('Error fetching guide:', error);
+        setGuide(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGuide();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="container py-5 text-center">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   if (!guide) {
     return (

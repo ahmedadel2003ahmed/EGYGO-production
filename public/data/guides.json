@@ -81,7 +81,7 @@
     "id": 2,
     "slug": "mona-samir",
     "card": {
-      "name": "Mona Samir",
+      "name": "Ahmde Samir",
       "avatar": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400&h=400&fit=crop&crop=face",
       "rating": 4.8,
       "reviewsCount": 41,
@@ -1181,7 +1181,7 @@
       "skills": ["Photography Assistance", "Event Hosting"]
     },
     "gallery": [
-      "/images/trips/noor-adel/nile-night-01.jpg"
+      "https://images.unsplash.com/photo-1564659248364-22fcf21b5db2?w=800&h=600&fit=crop"
     ],
     "reviews": [
       {
@@ -1223,7 +1223,7 @@
       "skills": ["Budget Planning", "Temple Narration"]
     },
     "gallery": [
-      "/images/trips/mohamed-selim/cruise-01.jpg"
+      "https://images.unsplash.com/photo-1574267432048-5d164ca306dc?w=800&h=600&fit=crop"
     ],
     "reviews": [
       {
@@ -1265,7 +1265,7 @@
       "skills": ["Deep History Explanation", "Temple Navigation"]
     },
     "gallery": [
-      "/images/trips/nadia-ismail/philae-01.jpg"
+      "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&h=600&fit=crop"
     ],
     "reviews": [
       {
@@ -1310,8 +1310,8 @@
       "skills": ["Full Trip Planning", "VIP Packages", "Private Rooms Negotiations"]
     },
     "gallery": [
-      "/images/trips/omer-rashed/cruise-vip-01.jpg",
-      "/images/trips/omer-rashed/cruise-vip-02.jpg"
+      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1587222979596-c06e7a49ad67?w=800&h=600&fit=crop"
     ],
     "reviews": [
       {

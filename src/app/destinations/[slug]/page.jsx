@@ -17,6 +17,11 @@ const makeSlug = (name = "") =>
 const normalizeImagePath = (imagePath) => {
   if (!imagePath) return null;
   
+  // If it's an Unsplash URL or any external URL, return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
   // If it's already a proper path starting with /, return as is
   if (imagePath.startsWith('/')) {
     return imagePath;
@@ -101,7 +106,7 @@ export async function generateStaticParams() {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/data/Destinations.json`);
@@ -128,10 +133,11 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: destination.name,
         description: destination.card.shortDescription,
-        images: [destination.details.images.heroImage],
+        images: [getHeroImage(destination)],
       },  
     };
   } catch (error) {
+    console.error('Error generating metadata:', error);
     return {
       title: 'Destination Details - EGYGO Travel',
       description: 'Explore amazing destinations in Egypt',
@@ -141,7 +147,7 @@ export async function generateMetadata({ params }) {
 
 // Main page component
 export default async function DestinationDetailsPage({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   
   let destination;
   
@@ -170,6 +176,16 @@ export default async function DestinationDetailsPage({ params }) {
   // Get the best available hero image
   const heroImage = getHeroImage(destination);
   
+  // Process gallery images safely
+  const galleryImages = details.images?.gallery 
+    ? details.images.gallery.map(normalizeImagePath).filter(Boolean)
+    : [];
+  
+  // Debug logging for development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Gallery images processed:', galleryImages);
+  }
+  
   return (
     <div className="destination-details">
       {/* Hero Section */}
@@ -195,7 +211,7 @@ export default async function DestinationDetailsPage({ params }) {
       
       {/* Gallery Section */}
       <GallerySection 
-        gallery={details.images?.gallery?.map(normalizeImagePath) || []}
+        gallery={galleryImages}
         destinationName={destination.name}
       />
       
