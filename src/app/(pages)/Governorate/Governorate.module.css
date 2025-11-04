@@ -1,7 +1,18 @@
+/* ===== ANCIENT EGYPTIAN COLOR PALETTE ===== */
+/* Primary Colors: */
+/* --pyramid-gold: #D4AF37 (Ancient gold) */
+/* --desert-sand: #F4E4BC (Warm sand) */
+/* --papyrus-cream: #FAF7F0 (Papyrus background) */
+/* --nile-blue: #2C5F41 (Deep river blue) */
+/* --pharaoh-blue: #1E3A8A (Royal blue) */
+/* --hieroglyph-dark: #2D1B1B (Dark brown) */
+/* --accent-amber: #F59E0B (Amber accent) */
+
 /* ===== PAGE CONTAINER ===== */
 .pageContainer {
   padding: 60px 0;
-   min-height: 100vh;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
 }
 
 .inner {
@@ -14,7 +25,7 @@
 }
 
 .subtitle {
-  color: #6b7280;
+  color: #8B7355;
   font-size: 1rem;
   margin-top: 8px;
   max-width: 600px;
@@ -30,20 +41,24 @@
 
 /* ===== LEFT COLUMN (Cities) ===== */
 .leftCol {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
+  background: linear-gradient(145deg, #FFFFFF, #FAF7F0);
+  border-radius: 16px;
+  padding: 28px;
+  border: 2px solid #E6D4A6;
   height: fit-content;
   position: sticky;
   top: 20px;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.12);
 }
 
 .columnTitle {
   font-weight: 600;
-  margin-bottom: 20px;
-  color: #1f2937;
+  margin-bottom:20px;
+  color: #2D1B1B;
   font-size: 1.2rem;
+  border-bottom: 3px solid #D4AF37;
+  padding-bottom: 8px;
+  text-transform: uppercase;
 }
 
 .citiesWrap {
@@ -53,76 +68,121 @@
 }
 
 .cityItem {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #FFFFFF, #FAF7F0);
+  border: 2px solid #E6D4A6;
+  border-radius: 12px;
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-align: left;
   width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.cityItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  transition: left 0.5s;
 }
 
 .cityItem:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #F4E4BC, #E6D4A6);
+  border-color: #D4AF37;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(212, 175, 55, 0.25);
+}
+
+.cityItem:hover::before {
+  left: 100%;
 }
 
 .activeCity {
-  border-color: #00bfa6;
-  background: #ecfdf5;
-  box-shadow: 0 2px 4px rgba(0, 191, 166, 0.1);
+  border-color: #D4AF37;
+  background: linear-gradient(135deg, #F4E4BC, #E6D4A6);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+  transform: translateY(-1px);
+}
+
+.activeCity strong {
+  color: #2C5F41;
 }
 
 .cityDesc {
-  color: #6b7280;
+  color: #8B7355;
   font-size: 0.85rem;
-  margin-top: 2px;
+  margin-top: 3px;
+  font-style: italic;
 }
 
 .bell {
   font-size: 1.1rem;
-  opacity: 0.7;
+  opacity: 0.8;
+  filter: sepia(1) saturate(2) hue-rotate(25deg);
 }
 
 /* ===== RIGHT COLUMN (Guides) ===== */
 .rightCol {
-  background: #fff;
-  border-radius: 12px;
+  background: linear-gradient(145deg, #FFFFFF, #FAF7F0);
+  border-radius: 16px;
   padding: 24px;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #E6D4A6;
   min-height: 500px;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.12);
 }
 
 .rightHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
-  gap: 16px;
+  margin-bottom: 28px;
+  gap: 20px;
 }
 
 .searchWrapper {
   flex-shrink: 0;
+  position: relative;
+}
+
+.searchWrapper::before {
+  content: '🔍';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  font-size: 1rem;
 }
 
 .search {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  width: 280px;
-  transition: all 0.2s ease;
+  padding: 12px 16px 12px 40px;
+  border-radius: 12px;
+  border: 2px solid #E6D4A6;
+  width: 300px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.95rem;
+  background: linear-gradient(135deg, #FFFFFF, #FAF7F0);
+  color: #2D1B1B;
 }
 
 .search:focus {
   outline: none;
-  border-color: #00bfa6;
-  box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.1);
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+  background: #FFFFFF;
+}
+
+.search::placeholder {
+  color: #8B7355;
+  font-style: italic;
 }
 
 /* ===== GUIDE CARDS ===== */
@@ -131,37 +191,65 @@
 }
 
 .card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: linear-gradient(145deg, #FFFFFF, #FAF7F0);
+  border: 2px solid #E6D4A6;
+  border-radius: 16px;
   padding: 20px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #D4AF37, #F59E0B, #D4AF37);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+  transform-origin: left;
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  border-color: #d1d5db;
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.25);
+  border-color: #D4AF37;
+  background: linear-gradient(145deg, #FAF7F0, #F4E4BC);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
 }
 
 .cardTop {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .avatar {
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #00bfa6;
+  border: 3px solid #D4AF37;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.card:hover .avatar {
+  border-color: #F59E0B;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  transform: scale(1.05);
 }
 
 .cardTitleWrap {
@@ -170,39 +258,44 @@
 }
 
 .cardName {
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #1f2937;
+  font-weight:600;
+  margin-bottom: 6px;
+  color: #2D1B1B;
   font-size: 1rem;
   line-height: 1.3;
+  text-transform: capitalize;
 }
 
 .ratingWrap {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-bottom: 4px;
+  font-size: 0.9rem;
+  color: #8B7355;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .stars {
-  color: #fbbf24;
+  color: #F59E0B;
+  font-size: 1rem;
 }
 
 .rating {
   font-weight: 600;
-  color: #374151;
+  color: #2C5F41;
 }
 
 .reviews {
-  color: #9ca3af;
+  color: #8B7355;
+  font-style: italic;
 }
 
 .spec {
-  color: #4b5563;
+  color: #2C5F41;
   font-size: 0.9rem;
+  font-weight: 500;
   font-style: italic;
+  line-height: 1.4;
 }
 
 .cardBottom {
@@ -210,43 +303,82 @@
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid #f3f4f6;
+  padding-top: 16px;
+  border-top: 2px solid #E6D4A6;
 }
 
 .price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ff543d;
+  color: #2C5F41;
+  text-shadow: 1px 1px 2px rgba(44, 95, 65, 0.1);
+}
+
+.price small {
+  color: #8B7355;
+  font-weight: 500;
 }
 
 .viewBtn {
-  background: #ff543d;
-  color: white;
+  background: linear-gradient(135deg, #D4AF37, #F59E0B);
+  color: #FFFFFF;
   border: none;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.viewBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .viewBtn:hover {
-  background: #ff5926;
-  transform: translateY(-1px);
-  color: white;
+  background: linear-gradient(135deg, #F59E0B, #D4AF37);
+  transform: translateY(-2px);
+  color: #FFFFFF;
   text-decoration: none;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+}
+
+.viewBtn:hover::before {
+  left: 100%;
 }
 
 /* ===== EMPTY STATE ===== */
 .empty {
-  padding: 60px 20px;
+  padding: 80px 20px;
   text-align: center;
-  color: #6b7280;
-  font-size: 1.1rem;
+  color: #8B7355;
+  font-size: 1.2rem;
+  font-style: italic;
+  background: linear-gradient(135deg, #FAF7F0, #F4E4BC);
+  border-radius: 12px;
+  border: 2px dashed #E6D4A6;
+  position: relative;
+}
+
+.empty::before {
+  content: '🏺';
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.6;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -254,13 +386,14 @@
   .leftCol {
     position: relative;
     top: auto;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    padding: 24px;
   }
   
   .rightHeader {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 16px;
   }
   
   .searchWrapper {
@@ -272,25 +405,28 @@
   }
   
   .columnTitle {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    font-size: 1.2rem;
   }
 }
 
 @media (max-width: 767.98px) {
   .pageContainer {
     padding: 40px 0;
+    background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 50%, #E6D4A6 100%);
   }
   
   .leftCol,
   .rightCol {
     padding: 20px;
+    border-radius: 12px;
   }
   
   .cardTop {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 8px;
+    gap: 12px;
   }
   
   .cardTitleWrap {
@@ -299,14 +435,23 @@
   
   .cardBottom {
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     text-align: center;
   }
   
   .citiesWrap {
     max-height: 300px;
     overflow-y: auto;
-    gap: 6px;
+    gap: 8px;
+  }
+  
+  .cityItem {
+    padding: 14px 18px;
+  }
+  
+  .avatar {
+    width: 64px;
+    height: 64px;
   }
 }
 
@@ -317,7 +462,7 @@
   
   .leftCol,
   .rightCol {
-    padding: 16px;
+    padding: 18px;
     margin: 0 -15px;
     border-radius: 0;
     border-left: none;
@@ -326,5 +471,21 @@
   
   .search {
     font-size: 16px; /* Prevent zoom on iOS */
+    padding: 14px 18px 14px 42px;
+  }
+  
+  .columnTitle {
+    font-size: 1.1rem;
+  }
+  
+  .cardName {
+    font-size: 1rem;
+  }
+  
+  .viewBtn {
+    padding: 14px 28px;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: center;
   }
 }
