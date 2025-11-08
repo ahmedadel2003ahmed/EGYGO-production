@@ -1,5 +1,7 @@
 .pageWrapper {
   min-height: 100vh;
+    background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
+
 }
 
 /* LEFT CARD */

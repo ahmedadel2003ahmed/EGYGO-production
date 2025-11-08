@@ -89,10 +89,15 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Book Now Button */}
-        <Link href="/auth/login" className={styles.bookNowBtn} aria-label="Book your trip now">
-          Book Now
-        </Link>
+        {/* Auth Buttons */}
+        <div className={styles.authButtons}>
+          <Link href="/login" className={styles.loginBtn} aria-label="Login to your account">
+            Login
+          </Link>
+          <Link href="/register" className={styles.registerBtn} aria-label="Create new account">
+            Register
+          </Link>
+        </div>
 
         {/* Mobile Menu Toggle */}
         <button
@@ -128,14 +133,24 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/auth/login"
-            className={styles.mobileBookNowBtn}
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Book your trip now"
-          >
-            Book Now
-          </Link>
+          <div className={styles.mobileAuthButtons}>
+            <Link
+              href="/login"
+              className={styles.mobileLoginBtn}
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Login to your account"
+            >
+              Login
+            </Link>
+            <Link
+              href="/register"
+              className={styles.mobileRegisterBtn}
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Create new account"
+            >
+              Register
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styles from "./guideProfile.module.css";
+import styles from "./GuideProfile.module.css";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaCheckCircle, FaStar } from "react-icons/fa";

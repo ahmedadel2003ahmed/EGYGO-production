@@ -84,25 +84,105 @@
   border-radius: 1px;
 }
 
-/* Book Now Button */
-.bookNowBtn {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
+/* Auth Buttons Container */
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Login Button - Outline Style */
+.loginBtn {
+  color: #D4AF37;
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
+  padding: 0.6rem 1.25rem;
+  border: 2px solid #D4AF37;
+  border-radius: 25px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+  background: transparent;
 }
 
-.bookNowBtn:hover {
-  background: linear-gradient(135deg, #2980b9, #1f618d);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-  color: white;
+.loginBtn:hover {
+  background: #D4AF37;
+  color: #2C5F41;
   text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Register Button - Filled Style */
+.registerBtn {
+  background: linear-gradient(135deg, #D4AF37, #F4E4BC);
+  color: #2C5F41;
+  padding: 0.6rem 1.25rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.registerBtn:hover {
+  background: linear-gradient(135deg, #F4E4BC, #D4AF37);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  color: #2C5F41;
+  text-decoration: none;
+}
+
+/* Mobile Auth Buttons Container */
+.mobileAuthButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mobileLoginBtn {
+  color: #D4AF37;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #D4AF37;
+  border-radius: 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.mobileLoginBtn:hover {
+  background: #D4AF37;
+  color: #2C5F41;
+  text-decoration: none;
+}
+
+.mobileRegisterBtn {
+  background: linear-gradient(135deg, #D4AF37, #F4E4BC);
+  color: #2C5F41;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.mobileRegisterBtn:hover {
+  background: linear-gradient(135deg, #F4E4BC, #D4AF37);
+  color: #2C5F41;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
 /* Mobile Menu Toggle */
@@ -176,40 +256,18 @@
   font-weight: 600;
 }
 
-.mobileBookNowBtn {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 25px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
-  text-align: center;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-}
-
-.mobileBookNowBtn:hover {
-  background: linear-gradient(135deg, #2980b9, #1f618d);
-  color: white;
-  text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-}
-
 /* Responsive Design */
 @media (max-width: 968px) {
   .navLinks {
     display: none;
   }
 
-  .menuToggle {
-    display: flex;
+  .authButtons {
+    display: none;
   }
 
-  .bookNowBtn {
-    display: none;
+  .menuToggle {
+    display: flex;
   }
 }
 
@@ -257,8 +315,10 @@
 /* Focus styles for accessibility */
 .navLink:focus,
 .mobileNavLink:focus,
-.bookNowBtn:focus,
-.mobileBookNowBtn:focus,
+.loginBtn:focus,
+.registerBtn:focus,
+.mobileLoginBtn:focus,
+.mobileRegisterBtn:focus,
 .logo:focus {
   outline: none;
 }
