@@ -85,7 +85,7 @@ export default function GuideProfileClient() {
       <div className="text-center mt-5">
         <div className="alert alert-warning" role="alert">
           <h4>Guide Not Found</h4>
-          <p>The guide you're looking for doesn't exist.</p>
+          <p>The guide you&apos;re looking for doesn&apos;t exist.</p>
           <button 
             className="btn btn-primary" 
             onClick={() => router.push('/guides')}
