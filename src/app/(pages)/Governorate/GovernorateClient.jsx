@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./Governorate.module.css";
 
 export default function GovernorateClient({ initialGuides = [] }) {
@@ -87,11 +88,12 @@ export default function GovernorateClient({ initialGuides = [] }) {
               <div className="col-xl-4 col-lg-6 col-md-12" key={`${g.id}-${g.slug || g.card?.name}`}>
                 <article className={styles.card}>
                   <div className={styles.cardTop}>
-                    <img
+                    <Image
                       src={g.card?.avatar || "/images/guides/default.png"}
-                      alt={g.card?.name}
+                      alt={g.card?.name || "Guide avatar"}
                       className={styles.avatar}
-                      loading="lazy"
+                      width={80}
+                      height={80}
                     />
                     <div className={styles.cardTitleWrap}>
                       <h4 className={styles.cardName}>{g.card?.name}</h4>

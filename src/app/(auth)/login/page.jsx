@@ -143,7 +143,7 @@ export default function LoginPage() {
           <div className={styles.leftCard}>
             <div className={styles.imageText}>
               <h1>
-                <img src="/images/logo.png" alt="Logo" width="24" height="24" />
+                <Image src="/images/logo.png" alt="Logo" width={24} height={24} />
               </h1>
               <h2>مرحبا بكم في لقطها</h2>
               <p>اطلب مني اللي تريده وخليني ألقطها عشانك</p>

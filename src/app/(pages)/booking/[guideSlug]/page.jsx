@@ -73,7 +73,7 @@ export default function BookingPage() {
         <div className="text-center">
           <div className="alert alert-warning" role="alert">
             <h4>Guide Not Found</h4>
-            <p>The guide you're trying to book doesn't exist.</p>
+            <p>The guide you&apos;re trying to book doesn&apos;t exist.</p>
             <button 
               className="btn btn-primary"
               onClick={() => router.push('/guides')}

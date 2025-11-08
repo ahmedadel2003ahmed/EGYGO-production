@@ -161,11 +161,11 @@ export default function Otp() {
                 </h2>
 
                 <div className={styles.successIcon}>
-                  <img
+                  <Image
                     src="/images/success-check.svg"
                     alt="Success"
-                    width="300"
-                    height="300"
+                    width={300}
+                    height={300}
                   />
                 </div>
 

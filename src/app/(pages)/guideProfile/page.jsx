@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import styles from "./guideProfile.module.css";
 import Link from "next/link";
 
@@ -60,7 +61,13 @@ export default function GuideProfilePage({ params }) {
         {/* LEFT CARD (PROFILE SIDEBAR) */}
         <div className="col-md-4 col-lg-3">
           <div className={styles.profileCard}>
-            <img src={card.avatar} alt={card.name} className={styles.avatar} />
+            <Image 
+              src={card.avatar} 
+              alt={card.name || "Guide avatar"} 
+              className={styles.avatar}
+              width={150}
+              height={150}
+            />
 
             <h3 className={styles.name}>{card.name}</h3>
             <p className={styles.specialization}>{card.specialization}</p>
@@ -118,7 +125,13 @@ export default function GuideProfilePage({ params }) {
               <div className="row g-3">
                 {profile.gallery.map((img, i) => (
                   <div key={i} className="col-6 col-md-4 col-lg-3">
-                    <img src={img} alt="trip" className={styles.galleryImage} />
+                    <Image 
+                      src={img} 
+                      alt={`Trip ${i + 1}`} 
+                      className={styles.galleryImage}
+                      width={200}
+                      height={150}
+                    />
                   </div>
                 ))}
               </div>
