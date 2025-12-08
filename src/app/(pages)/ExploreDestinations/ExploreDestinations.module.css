@@ -68,21 +68,140 @@
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 700;
   color: #0A2342;
-  text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 0;
   position: relative;
 }
 
-.sectionTitle::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(90deg, #00797C, #F2C94C);
-  border-radius: 2px;
+/* --- Governorate Header with Search --- */
+.governorateHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* --- Compact Search Bar --- */
+.searchBarContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 30px;
+  padding: 4px 16px;
+  box-shadow: 0 4px 15px rgba(0, 121, 124, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  max-width: 350px;
+  min-width: 280px;
+}
+
+.searchBarContainer:focus-within {
+  box-shadow: 0 6px 20px rgba(0, 121, 124, 0.15);
+  border-color: #00797C;
+}
+
+.searchIcon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  color: #00797C;
+  transition: transform 0.3s ease;
+}
+
+.searchBarContainer:focus-within .searchIcon {
+  transform: scale(1.05);
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  padding: 8px 4px;
+  color: #0A2342;
+  background: transparent;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.clearButton {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
+.clearButton:hover {
+  background: #e5e7eb;
+  color: #374151;
+  transform: rotate(90deg);
+}
+
+.searchResults {
+  text-align: left;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* --- No Results State --- */
+.noResults {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
+}
+
+.noResultsIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.noResultsTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0A2342;
+  margin-bottom: 0.5rem;
+}
+
+.noResultsText {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.clearSearchLink {
+  background: none;
+  border: none;
+  color: #00797C;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.clearSearchLink:hover {
+  color: #0A2342;
 }
 
 /* --- CTA Link --- */
@@ -349,6 +468,18 @@
     margin-bottom: 2rem;
   }
   
+  .governorateHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  
+  .searchBarContainer {
+    width: 100%;
+    max-width: 100%;
+    min-width: auto;
+  }
+  
   .cardBody {
     padding: 1.5rem;
   }
@@ -367,6 +498,54 @@
 }
 
 @media (max-width: 576px) {
+  .sectionTitle {
+    font-size: 1.75rem;
+  }
+  
+  .governorateHeader {
+    gap: 1rem;
+  }
+  
+  .searchBarContainer {
+    padding: 4px 14px;
+  }
+  
+  .searchIcon {
+    font-size: 1.1rem;
+    margin-right: 6px;
+  }
+  
+  .searchInput {
+    font-size: 0.9rem;
+    padding: 8px 4px;
+  }
+  
+  .searchInput::placeholder {
+    font-size: 0.85rem;
+  }
+  
+  .clearButton {
+    width: 22px;
+    height: 22px;
+    font-size: 0.9rem;
+  }
+  
+  .searchResults {
+    font-size: 0.85rem;
+  }
+  
+  .noResultsIcon {
+    font-size: 3rem;
+  }
+  
+  .noResultsTitle {
+    font-size: 1.5rem;
+  }
+  
+  .noResultsText {
+    font-size: 1rem;
+  }
+  
   .cardImage {
     height: 200px;
   }

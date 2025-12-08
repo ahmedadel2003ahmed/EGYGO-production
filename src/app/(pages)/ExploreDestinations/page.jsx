@@ -262,6 +262,7 @@ const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug }) => {
  */
 export default function ExploreDestinations() {
   const [showAllGovernorates, setShowAllGovernorates] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const {
     data: destinationsData,
@@ -286,13 +287,24 @@ export default function ExploreDestinations() {
   const destinations = destinationsData || MOCK_DESTINATIONS;
   const allGovernorates = governoratesData || MOCK_GOVERNORATES;
   
-  // Show only 6 governorates initially
+  // Filter governorates based on search query
+  const filteredGovernorates = React.useMemo(() => {
+    if (!searchQuery.trim()) return allGovernorates;
+    
+    const query = searchQuery.toLowerCase().trim();
+    return allGovernorates.filter(gov => 
+      gov.name.toLowerCase().includes(query) ||
+      gov.shortDesc.toLowerCase().includes(query)
+    );
+  }, [allGovernorates, searchQuery]);
+  
+  // Show only 6 governorates initially (from filtered results)
   const governorates = showAllGovernorates 
-    ? allGovernorates 
-    : allGovernorates.slice(0, 6);
+    ? filteredGovernorates 
+    : filteredGovernorates.slice(0, 6);
 
   const isLoading = isLoadingDestinations || isLoadingGovernorates;
-  const hasMoreGovernorates = allGovernorates.length > 6;
+  const hasMoreGovernorates = filteredGovernorates.length > 6;
 
   return (
     <>
@@ -332,28 +344,73 @@ export default function ExploreDestinations() {
 
         {/* Section 2: Explore Governorates */}
         <section className={`mt-4 pt-md-3 ${styles.section}`}>
-          <h2 className={styles.sectionTitle}>
-            Explore Egyptian Governorates
-          </h2>
+          <div className={styles.governorateHeader}>
+            <h2 className={styles.sectionTitle}>
+              Explore Egyptian Governorates
+            </h2>
+            
+            {/* Compact Search Bar */}
+            <div className={styles.searchBarContainer}>
+              <span className={styles.searchIcon}>🔍</span>
+              <input
+                type="text"
+                placeholder="Search governorates..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowAllGovernorates(false);
+                }}
+                className={styles.searchInput}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className={styles.clearButton}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {searchQuery && (
+            <p className={styles.searchResults}>
+              Found {filteredGovernorates.length} {filteredGovernorates.length === 1 ? 'result' : 'results'}
+            </p>
+          )}
+
           {!isLoading && (
             <>
-              <div className="row g-4">
-                {governorates.map((gov) => (
-                  <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
-                    <GovernorateTile {...gov} />
+              {governorates.length > 0 ? (
+                <>
+                  <div className="row g-4">
+                    {governorates.map((gov) => (
+                      <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
+                        <GovernorateTile {...gov} />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              
-              {/* Show More Button */}
-              {hasMoreGovernorates && (
-                <div className="text-center mt-4">
-                  <button
-                    onClick={() => setShowAllGovernorates(!showAllGovernorates)}
-                    className={`btn btn-lg ${styles.seeMoreBtn}`}
-                  >
-                    {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
-                  </button>
+                  
+                  {/* Show More Button */}
+                  {hasMoreGovernorates && (
+                    <div className="text-center mt-4">
+                      <button
+                        onClick={() => setShowAllGovernorates(!showAllGovernorates)}
+                        className={`btn btn-lg ${styles.seeMoreBtn}`}
+                      >
+                        {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className={styles.noResults}>
+                  <div className={styles.noResultsIcon}>🔍</div>
+                  <h3 className={styles.noResultsTitle}>No governorates found</h3>
+                  <p className={styles.noResultsText}>
+                    Try adjusting your search terms or <button onClick={() => setSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
+                  </p>
                 </div>
               )}
             </>
