@@ -11,7 +11,7 @@
   background: linear-gradient(135deg, #0A2342, #00797C);
   background-size: cover;
   background-position: center;
-  padding: 100px 0 80px;
+  padding: 120px 0 100px;
   margin-bottom: 4rem;
   overflow: hidden;
 }
@@ -23,7 +23,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(10, 35, 66, 0.85), rgba(0, 121, 124, 0.7));
+  background: linear-gradient(135deg, rgba(10, 35, 66, 0.88), rgba(0, 121, 124, 0.75));
   z-index: 1;
 }
 
@@ -60,8 +60,41 @@
   font-weight: 300;
   opacity: 0.95;
   max-width: 700px;
-  margin: 0 auto;
+  margin: 0 auto 2rem;
   line-height: 1.6;
+}
+
+/* Province Stats */
+.provinceStats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statIcon {
+  font-size: 2rem;
+}
+
+.statValue {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* --- Categories Section --- */
@@ -160,6 +193,228 @@
   transform: translateX(10px);
 }
 
+/* Category Count Badge */
+.categoryCount {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--category-color, #00797C);
+  margin-top: 0.5rem;
+}
+
+.categoryCardDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Items Section (When category is selected) --- */
+.itemsSection {
+  padding: 3rem 0 5rem;
+  background: #f8f9fa;
+  min-height: 60vh;
+}
+
+.categoryHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.backToCategoriesBtn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: transparent;
+  border: 2px solid #0A2342;
+  color: #0A2342;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backToCategoriesBtn:hover {
+  background: #0A2342;
+  color: white;
+  transform: translateX(-5px);
+}
+
+.categoryHeaderTitle {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #0A2342;
+  margin-bottom: 0.5rem;
+}
+
+.categoryHeaderSubtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+/* --- Place Cards --- */
+.placeCard {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 121, 124, 0.15);
+}
+
+.placeImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+}
+
+.placeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.placeCard:hover .placeImage {
+  transform: scale(1.1);
+}
+
+.placeRating {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.placeContent {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeName {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0A2342;
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
+}
+
+.placeDescription {
+  font-size: 0.95rem;
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.placeDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.placeDetail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.detailIcon {
+  font-size: 1.2rem;
+}
+
+.detailText {
+  line-height: 1.4;
+}
+
+.placeTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.placeTag {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #0A2342;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.placeActions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: auto;
+}
+
+.mapButton,
+.detailsButton {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+}
+
+.mapButton {
+  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+  color: white;
+}
+
+.mapButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(78, 205, 196, 0.4);
+  color: white;
+}
+
+.detailsButton {
+  background: linear-gradient(135deg, #0A2342, #00797C);
+  color: white;
+}
+
+.detailsButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 121, 124, 0.4);
+}
+
+/* --- Error Container --- */
+.errorContainer {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
 /* --- Back Button --- */
 .backButton {
   display: inline-block;
@@ -204,6 +459,18 @@
     font-size: 2.5rem;
   }
 
+  .provinceStats {
+    gap: 1.5rem;
+  }
+
+  .stat {
+    min-width: 100px;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
   .categoriesSection {
     padding: 2rem 0 3rem;
   }
@@ -219,9 +486,47 @@
   .categoryTitle {
     font-size: 1.3rem;
   }
+
+  .itemsSection {
+    padding: 2rem 0 3rem;
+  }
+
+  .categoryHeader {
+    margin-bottom: 2rem;
+  }
+
+  .backToCategoriesBtn {
+    position: static;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .placeImageWrapper {
+    height: 220px;
+  }
+
+  .placeActions {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 576px) {
+  .provinceStats {
+    gap: 1rem;
+  }
+
+  .statIcon {
+    font-size: 1.5rem;
+  }
+
+  .statValue {
+    font-size: 1.3rem;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+  }
+
   .categoryIcon {
     font-size: 2.5rem;
   }
@@ -231,6 +536,18 @@
   }
 
   .categoryDescription {
+    font-size: 0.9rem;
+  }
+
+  .placeImageWrapper {
+    height: 200px;
+  }
+
+  .placeName {
+    font-size: 1.2rem;
+  }
+
+  .placeDescription {
     font-size: 0.9rem;
   }
 }
