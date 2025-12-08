@@ -17,52 +17,68 @@ export default function RegisterPage() {
 
   const formik = useFormik({
     initialValues: {
-      Name: "",
+      name: "",
       email: "",
       password: "",
+      phone: "",
+      role: "tourist",
     },
 
     validationSchema: Yup.object({
-      Name: Yup.string().required("مطلوب"),
+      name: Yup.string().required("مطلوب"),
       email: Yup.string().email("بريد إلكتروني غير صالح").required("مطلوب"),
       password: Yup.string().min(6, "على الأقل 6 أحرف").required("مطلوب"),
+      phone: Yup.string()
+        .matches(/^\+\d{7,15}$/, "يجب أن يكون رقم هاتف صالح (مثال: +201234567890)")
+        .required("مطلوب"),
+      role: Yup.string().oneOf(["tourist", "guide"], "يجب اختيار نوع الحساب").required("مطلوب"),
     }),
 
-  onSubmit: async (values) => {
-  console.log("📨 FORM SUBMITTED", values); // ✅ أضف هذا
+    onSubmit: async (values) => {
+      console.log("📨 FORM SUBMITTED", values);
 
-  setSubmitting(true);
-  setServerError(null);
+      setSubmitting(true);
+      setServerError(null);
 
-  try {
-    const registerRes = await axios.post("http://localhost:4000/api/auth/register", {
-      name: `${values.Name} ${values.lastName}`,
-      email: values.email,
-      password: values.password,
-    });
+      try {
+        const registerRes = await axios.post("http://localhost:5000/api/auth/register", {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          phone: values.phone,
+          role: values.role,
+        });
 
-    console.log("REGISTER RESPONSE:", registerRes.data); // ✅ تأكيد نجاح الطلب
+        console.log("REGISTER RESPONSE:", registerRes.data);
 
         // لو التسجيل نجح
-if (registerRes.data?.success) {
-  const userId = registerRes.data?.user?._id;
+        if (registerRes.data?.success) {
+          const userId = registerRes.data?.userId || registerRes.data?.user?._id;
 
-  if (!userId) {
-    console.warn("⚠️ لم يتم إرجاع userId من السيرفر، سيتم تجاوز خطوة OTP مؤقتًا.");
-  } else {
-    // 2️⃣ إرسال OTP للمستخدم
-    await axios.post("http://localhost:4000/api/auth/send-verify-otp", { userId });
+          if (!userId) {
+            console.warn("⚠️ لم يتم إرجاع userId من السيرفر، سيتم تجاوز خطوة OTP مؤقتًا.");
+            alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
+            router.replace("/login");
+          } else {
+            // 2️⃣ إرسال OTP للمستخدم
+            try {
+              await axios.post("http://localhost:5000/api/auth/send-verify-otp", { userId });
+              console.log("✅ OTP sent successfully");
+            } catch (otpError) {
+              console.warn("⚠️ Failed to send OTP, but continuing to OTP page:", otpError);
+            }
 
-    // 3️⃣ حفظ الـ userId محليًا لصفحة التحقق
-    localStorage.setItem("pendingUserId", userId);
-  }
+            // 3️⃣ حفظ الـ userId والـ email محليًا لصفحة التحقق
+            localStorage.setItem("pendingUserId", userId);
+            localStorage.setItem("registerEmail", values.email);
 
-  alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
-  router.replace("/login");
-} else {
-  throw new Error(registerRes.data?.message || "فشل في إنشاء الحساب");
-}
-
+            // 4️⃣ إعادة توجيه المستخدم إلى صفحة OTP
+            console.log("🔄 Redirecting to /otp");
+            router.replace("/otp");
+          }
+        } else {
+          throw new Error(registerRes.data?.message || "فشل في إنشاء الحساب");
+        }
       } catch (err) {
         console.error("REGISTER ERROR:", err);
         setServerError(
@@ -110,17 +126,18 @@ if (registerRes.data?.success) {
               <div className="row">
                 <div className="col-12 mb-3">
                   <input
-                    name="Name"
-                    placeholder="الاسم الأول"
-                    value={formik.values.firstName}
+                    id="name"
+                    name="name"
+                    placeholder="الاسم الكامل"
+                    value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className={`${styles.input} ${
-                      formik.touched.firstName && formik.errors.firstName ? styles.invalid : ""
+                      formik.touched.name && formik.errors.name ? styles.invalid : ""
                     }`}
                   />
-                  {formik.touched.firstName && formik.errors.firstName && (
-                    <div className={styles.err}>{formik.errors.firstName}</div>
+                  {formik.touched.name && formik.errors.name && (
+                    <div className={styles.err}>{formik.errors.name}</div>
                   )}
                 </div>
 
@@ -129,6 +146,7 @@ if (registerRes.data?.success) {
 
               <div className="mb-3">
                 <input
+                  id="email"
                   name="email"
                   type="email"
                   placeholder="البريد الإلكتروني"
@@ -146,6 +164,7 @@ if (registerRes.data?.success) {
 
               <div className="mb-3">
                 <input
+                  id="password"
                   name="password"
                   type="password"
                   placeholder="كلمة المرور"
@@ -161,7 +180,42 @@ if (registerRes.data?.success) {
                 )}
               </div>
 
-           
+              <div className="mb-3">
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="رقم الهاتف (مثال: +201234567890)"
+                  value={formik.values.phone}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`${styles.input} ${
+                    formik.touched.phone && formik.errors.phone ? styles.invalid : ""
+                  }`}
+                />
+                {formik.touched.phone && formik.errors.phone && (
+                  <div className={styles.err}>{formik.errors.phone}</div>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <select
+                  id="role"
+                  name="role"
+                  value={formik.values.role}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`${styles.input} ${
+                    formik.touched.role && formik.errors.role ? styles.invalid : ""
+                  }`}
+                >
+                  <option value="tourist">tourist</option>
+                  <option value="guide">guide</option>
+                </select>
+                {formik.touched.role && formik.errors.role && (
+                  <div className={styles.err}>{formik.errors.role}</div>
+                )}
+              </div>
 
               {/* رسالة الخطأ العامة من السيرفر */}
               {serverError && (

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 import styles from "./login.module.css";
 import { useAuth } from "@/app/context/AuthContext";
 import Image from "next/image";
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -24,29 +26,38 @@ export default function LoginPage() {
     }),
     onSubmit: async (values) => {
       setSubmitting(true);
+      setServerError(null);
+
       try {
-        // mock delay
-        await new Promise((r) => setTimeout(r, 700));
-
-        // mock token/user
-        const token = "mocktoken-" + Math.random().toString(36).slice(2);
-        const user = {
-          name: values.email.split("@")[0] || "User",
+        const response = await axios.post("http://localhost:5000/api/auth/login", {
           email: values.email,
-          profileComplete: true, // ✅ login → المستخدم جاهز يروح على الشات
-        };
+          password: values.password,
+        });
 
-        if (auth?.setAuth) {
-          auth.setAuth({ token, user });
+        console.log("LOGIN RESPONSE:", response.data);
+
+        if (response.data?.success) {
+          const token = response.data?.token;
+          const user = response.data?.user;
+
+          if (auth?.setAuth) {
+            auth.setAuth({ token, user });
+          } else {
+            localStorage.setItem("laqtaha_token", token);
+            localStorage.setItem("laqtaha_user", JSON.stringify(user));
+          }
+
+          router.replace("/");
         } else {
-          localStorage.setItem("laqtaha_token", token);
-          localStorage.setItem("laqtaha_user", JSON.stringify(user));
+          throw new Error(response.data?.message || "فشل تسجيل الدخول");
         }
-
-        router.replace("/chat");
       } catch (err) {
         console.error("login error", err);
-        alert("حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.");
+        setServerError(
+          err.response?.data?.message ||
+            err.message ||
+            "حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى."
+        );
       } finally {
         setSubmitting(false);
       }
@@ -103,6 +114,10 @@ export default function LoginPage() {
                   <div className={styles.err}>{formik.errors.password}</div>
                 )}
               </div>
+
+              {serverError && (
+                <div className={`${styles.err} text-center mb-3`}>{serverError}</div>
+              )}
 
               <button type="submit" className={styles.primaryBtn} disabled={submitting}>
                 {submitting ? "جاري الدخول..." : "دخول"}

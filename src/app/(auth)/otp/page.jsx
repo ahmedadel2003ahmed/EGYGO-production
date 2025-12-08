@@ -43,13 +43,8 @@ export default function Otp() {
 
     setLoading(true);
     setError("");
-
-    /* ================================
-       🚧 تم تعليق منطق الاتصال مؤقتًا
-       سيُعاد تفعيله لاحقًا بعد اكتمال تصميم الـ UI
-    =================================
     try {
-      const res = await fetch("http://localhost:5002/api/auth/verify-account", {
+      const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -73,13 +68,13 @@ export default function Otp() {
       setVerified(true);
       setError("");
       localStorage.removeItem("registerEmail");
+      localStorage.removeItem("pendingUserId");
     } catch (err) {
       console.error("Verification error:", err);
       setError("حدث خطأ أثناء الاتصال بالخادم، حاول مجددًا.");
     } finally {
       setLoading(false);
     }
-    ================================= */
 
     // ✅ منطق مؤقت لعرض شاشة النجاح مباشرة (بدون تحقق)
     setTimeout(() => {
@@ -90,7 +85,12 @@ export default function Otp() {
 
   // ✅ منطق الانتقال بعد التحقق بنجاح
   const handleNext = () => {
-    router.replace("/onboarding");
+    // تنظيف البيانات المؤقتة
+    localStorage.removeItem("pendingUserId");
+    localStorage.removeItem("registerEmail");
+    
+    // الانتقال إلى الصفحة الرئيسية
+    router.replace("/home");
   };
 
   return (
