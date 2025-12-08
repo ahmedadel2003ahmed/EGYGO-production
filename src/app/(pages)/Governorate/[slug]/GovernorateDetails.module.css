@@ -1,0 +1,236 @@
+/* === GOVERNORATE DETAILS PAGE === */
+
+.pageWrapper {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+}
+
+/* --- Hero Section --- */
+.heroSection {
+  position: relative;
+  background: linear-gradient(135deg, #0A2342, #00797C);
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0 80px;
+  margin-bottom: 4rem;
+  overflow: hidden;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(10, 35, 66, 0.85), rgba(0, 121, 124, 0.7));
+  z-index: 1;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+  background-size: 100px 100px;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
+}
+
+.heroSubtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 300;
+  opacity: 0.95;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* --- Categories Section --- */
+.categoriesSection {
+  padding: 3rem 0 5rem;
+}
+
+.sectionTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  text-align: center;
+  color: #0A2342;
+  margin-bottom: 1rem;
+}
+
+.sectionSubtitle {
+  font-size: 1.2rem;
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+/* --- Category Cards --- */
+.categoryCard {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid transparent;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.categoryCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--category-color, #00797C);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.categoryCard:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 121, 124, 0.15);
+  border-color: var(--category-color, #00797C);
+}
+
+.categoryCard:hover::before {
+  transform: scaleX(1);
+}
+
+.categoryIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.categoryCard:hover .categoryIcon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.categoryTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0A2342;
+  margin-bottom: 0.8rem;
+}
+
+.categoryDescription {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.categoryArrow {
+  font-size: 2rem;
+  color: var(--category-color, #00797C);
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.categoryCard:hover .categoryArrow {
+  transform: translateX(10px);
+}
+
+/* --- Back Button --- */
+.backButton {
+  display: inline-block;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #0A2342, #00797C);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 121, 124, 0.3);
+}
+
+.backButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 121, 124, 0.4);
+  color: white;
+  background: linear-gradient(135deg, #00797C, #0A2342);
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 80px 0 60px;
+    margin-bottom: 3rem;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .categoriesSection {
+    padding: 2rem 0 3rem;
+  }
+
+  .categoryCard {
+    padding: 2rem 1.5rem;
+  }
+
+  .categoryIcon {
+    font-size: 3rem;
+  }
+
+  .categoryTitle {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .categoryIcon {
+    font-size: 2.5rem;
+  }
+
+  .categoryTitle {
+    font-size: 1.2rem;
+  }
+
+  .categoryDescription {
+    font-size: 0.9rem;
+  }
+}

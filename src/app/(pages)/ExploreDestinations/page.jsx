@@ -238,17 +238,19 @@ const DestinationCard = ({ title, subtitle, imageUrl, slug }) => (
 /**
  * Renders a single governorate tile.
  */
-const GovernorateTile = ({ name, shortDesc, icon, colorClass }) => {
+const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug }) => {
   const tileColorClass = styles[colorClass] || styles.tileDefault;
 
   return (
-    <div className={`text-center p-3 rounded-3 h-100 ${styles.governorateTile} ${tileColorClass}`}>
-      <div className={styles.tileIcon} aria-hidden="true">
-        {icon}
+    <Link href={`/Governorate/${slug}`} className="text-decoration-none">
+      <div className={`text-center p-3 rounded-3 h-100 ${styles.governorateTile} ${tileColorClass}`}>
+        <div className={styles.tileIcon} aria-hidden="true">
+          {icon}
+        </div>
+        <h5 className={`fw-bold ${styles.tileTitle}`}>{name}</h5>
+        <p className={styles.tileDesc}>{shortDesc}</p>
       </div>
-      <h5 className={`fw-bold ${styles.tileTitle}`}>{name}</h5>
-      <p className={styles.tileDesc}>{shortDesc}</p>
-    </div>
+    </Link>
   );
 };
 
