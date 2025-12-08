@@ -122,22 +122,72 @@ const normalizeImagePath = (img = "") => {
 //
 const fetchDestinations = async () => {
   try {
-    const res = await axios.get("/data/Destinations.json");
-    const data = Array.isArray(res.data) ? res.data : [];
-
-    const formatted = data.map((dest) => ({
-      destinationId: dest.destinationId,
-      slug: makeSlug(dest.name),
-      title: dest.name,
-      subtitle: dest.card?.shortDescription || "",
-      imageUrl: normalizeImagePath(dest.card?.image),
-    }));
-
-    return formatted.length ? formatted : MOCK_DESTINATIONS;
+    const response = await axios.get('http://localhost:5000/api/places');
+    
+    if (response.data?.success && Array.isArray(response.data?.data?.places)) {
+      // Transform the API data to match the component's expected format
+      const formatted = response.data.data.places.map((place) => ({
+        destinationId: place._id,
+        slug: place.slug,
+        title: place.name,
+        subtitle: place.shortDescription || "",
+        imageUrl: place.images?.[0] || getPlaceholderImage(place.name),
+      }));
+      
+      return formatted.length > 0 ? formatted : MOCK_DESTINATIONS;
+    }
+    
+    return MOCK_DESTINATIONS;
   } catch (err) {
-    console.warn("Could not load /data/destinations.json — using fallback MOCK.", err.message || err);
+    console.warn("Could not load places from API — using fallback MOCK.", err.message || err);
     return MOCK_DESTINATIONS;
   }
+};
+
+// Helper function to get placeholder images based on place name/type
+const getPlaceholderImage = (name = '') => {
+  const nameLower = name.toLowerCase();
+  
+  // Match specific types of places with relevant Unsplash images
+  if (nameLower.includes('pyramid') || nameLower.includes('giza')) {
+    return 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=1200&h=800&fit=crop'; // Pyramids
+  }
+  if (nameLower.includes('temple') || nameLower.includes('luxor') || nameLower.includes('karnak')) {
+    return 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=1200&h=800&fit=crop'; // Ancient temple
+  }
+  if (nameLower.includes('sphinx')) {
+    return 'https://images.unsplash.com/photo-1539768942893-daf53e448371?w=1200&h=800&fit=crop'; // Sphinx
+  }
+  if (nameLower.includes('museum')) {
+    return 'https://images.unsplash.com/photo-1566127444979-b3d2b3dba5d3?w=1200&h=800&fit=crop'; // Museum
+  }
+  if (nameLower.includes('nile') || nameLower.includes('cruise') || nameLower.includes('river')) {
+    return 'https://images.unsplash.com/photo-1572252821143-035a024857ac?w=1200&h=800&fit=crop'; // Nile
+  }
+  if (nameLower.includes('beach') || nameLower.includes('red sea') || nameLower.includes('dahab') || nameLower.includes('sharm')) {
+    return 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&h=800&fit=crop'; // Red Sea beach
+  }
+  if (nameLower.includes('market') || nameLower.includes('bazaar') || nameLower.includes('khan')) {
+    return 'https://images.unsplash.com/photo-1578408967898-bfb1f6f41e73?w=1200&h=800&fit=crop'; // Market
+  }
+  if (nameLower.includes('alexandria') || nameLower.includes('library')) {
+    return 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200&h=800&fit=crop'; // Library/Alexandria
+  }
+  if (nameLower.includes('desert') || nameLower.includes('safari')) {
+    return 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1200&h=800&fit=crop'; // Desert
+  }
+  if (nameLower.includes('hotel') || nameLower.includes('resort')) {
+    return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop'; // Hotel
+  }
+  if (nameLower.includes('mosque') || nameLower.includes('masjid')) {
+    return 'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=1200&h=800&fit=crop'; // Mosque
+  }
+  if (nameLower.includes('park') || nameLower.includes('garden')) {
+    return 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200&h=800&fit=crop'; // Park
+  }
+  
+  // Default Egypt tourism image
+  return 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop';
 };
 
 const fetchGovernorates = async () => {
@@ -262,7 +312,9 @@ const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug }) => {
  */
 export default function ExploreDestinations() {
   const [showAllGovernorates, setShowAllGovernorates] = React.useState(false);
+  const [showAllDestinations, setShowAllDestinations] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [destinationSearchQuery, setDestinationSearchQuery] = React.useState('');
 
   const {
     data: destinationsData,
@@ -284,8 +336,24 @@ export default function ExploreDestinations() {
 
   // Since fetch functions now handle fallbacks internally,
   // we can directly use the returned data
-  const destinations = destinationsData || MOCK_DESTINATIONS;
+  const allDestinations = destinationsData || MOCK_DESTINATIONS;
   const allGovernorates = governoratesData || MOCK_GOVERNORATES;
+  
+  // Filter destinations based on search query
+  const filteredDestinations = React.useMemo(() => {
+    if (!destinationSearchQuery.trim()) return allDestinations;
+    
+    const query = destinationSearchQuery.toLowerCase().trim();
+    return allDestinations.filter(dest => 
+      dest.title.toLowerCase().includes(query) ||
+      dest.subtitle.toLowerCase().includes(query)
+    );
+  }, [allDestinations, destinationSearchQuery]);
+  
+  // Show only 6 destinations initially (from filtered results)
+  const destinations = showAllDestinations 
+    ? filteredDestinations 
+    : filteredDestinations.slice(0, 6);
   
   // Filter governorates based on search query
   const filteredGovernorates = React.useMemo(() => {
@@ -305,6 +373,7 @@ export default function ExploreDestinations() {
 
   const isLoading = isLoadingDestinations || isLoadingGovernorates;
   const hasMoreGovernorates = filteredGovernorates.length > 6;
+  const hasMoreDestinations = filteredDestinations.length > 6;
 
   return (
     <>
@@ -312,7 +381,15 @@ export default function ExploreDestinations() {
       <GlobalLoader isLoading={isLoading} />
       
       {/* Hero Section */}
-      <section className={styles.heroSection}>
+      <section 
+        className={styles.heroSection}
+        style={{
+          backgroundImage: 'url(/images/Govern_Panner.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         <div className="container">
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
@@ -328,17 +405,73 @@ export default function ExploreDestinations() {
       <div className="container my-4 my-md-5">
         {/* Section 1: Popular Destinations */}
         <section className={`mb-5 ${styles.section}`}>
-          <h2 className={styles.sectionTitle}>
-            Popular Destinations
-          </h2>
-          {!isLoading && (
-            <div className="row g-4">
-              {destinations.map((dest) => (
-                <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
-                  <DestinationCard {...dest} />
-                </div>
-              ))}
+          <div className={styles.governorateHeader}>
+            <h2 className={styles.sectionTitle}>
+              Popular Destinations
+            </h2>
+            
+            {/* Compact Search Bar for Destinations */}
+            <div className={styles.searchBarContainer}>
+              <span className={styles.searchIcon}>🔍</span>
+              <input
+                type="text"
+                placeholder="Search destinations..."
+                value={destinationSearchQuery}
+                onChange={(e) => setDestinationSearchQuery(e.target.value)}
+                className={styles.searchInput}
+              />
+              {destinationSearchQuery && (
+                <button
+                  onClick={() => setDestinationSearchQuery('')}
+                  className={styles.clearButton}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
             </div>
+          </div>
+
+          {destinationSearchQuery && (
+            <p className={styles.searchResults}>
+              Found {filteredDestinations.length} {filteredDestinations.length === 1 ? 'result' : 'results'}
+            </p>
+          )}
+
+          {!isLoading && (
+            <>
+              {filteredDestinations.length > 0 ? (
+                <>
+                  <div className="row g-4">
+                    {destinations.map((dest) => (
+                      <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
+                        <DestinationCard {...dest} />
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Show More Button for Destinations */}
+                  {hasMoreDestinations && (
+                    <div className="text-center mt-4">
+                      <button
+                        onClick={() => setShowAllDestinations(!showAllDestinations)}
+                        className={`btn btn-lg ${styles.seeMoreBtn}`}
+                      >
+                        {showAllDestinations ? 'Show Less' : 'See More Destinations'}
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className={styles.noResults}>
+                  <div className={styles.noResultsIcon}>🔍</div>
+                  <h3 className={styles.noResultsTitle}>No destinations found</h3>
+                  <p className={styles.noResultsText}>
+                    Try adjusting your search terms or <button onClick={() => setDestinationSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </section>
 
