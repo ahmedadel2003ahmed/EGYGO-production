@@ -141,17 +141,57 @@ const fetchDestinations = async () => {
 };
 
 const fetchGovernorates = async () => {
-  // TODO: Replace with your actual backend endpoint
-  const endpoint = '/api/governorates';
+  const endpoint = 'http://localhost:5000/api/provinces';
   try {
-    const { data } = await axios.get(endpoint);
-    return data && data.length > 0 ? data : MOCK_GOVERNORATES;
+    const response = await axios.get(endpoint);
+    
+    if (response.data?.success && Array.isArray(response.data?.data)) {
+      // Transform the API data to match the component's expected format
+      const formatted = response.data.data.map((province) => ({
+        name: province.name,
+        shortDesc: province.description || '',
+        icon: getProvinceIcon(province.name), // Helper function to assign icons
+        colorClass: getProvinceColorClass(province.name), // Helper function for colors
+        slug: province.slug,
+        coverImage: province.coverImage,
+      }));
+      
+      return formatted.length > 0 ? formatted : MOCK_GOVERNORATES;
+    }
+    
+    return MOCK_GOVERNORATES;
   } catch (error) {
-    // For development: if API endpoint doesn't exist (404) or any other error,
-    // return mock data instead of throwing to provide a smooth development experience
     console.warn("API endpoint not available, using mock data:", error.message);
     return MOCK_GOVERNORATES;
   }
+};
+
+// Helper function to assign icons based on province name
+const getProvinceIcon = (name) => {
+  const iconMap = {
+    'Giza': '⛰️',
+    'Cairo': '🕌',
+    'Alexandria': '⚓',
+    'Luxor': '☀️',
+    'Aswan': '📍',
+    'Sharm El Sheikh': '🌴',
+    'Asyut': '🏛️',
+    'Beheira': '🌾',
+  };
+  return iconMap[name] || '📍';
+};
+
+// Helper function to assign color classes based on province name
+const getProvinceColorClass = (name) => {
+  const colorMap = {
+    'Giza': 'tileGiza',
+    'Cairo': 'tileCairo',
+    'Alexandria': 'tileAlexandria',
+    'Luxor': 'tileLuxor',
+    'Aswan': 'tileAswan',
+    'Sharm El Sheikh': 'tileSharm',
+  };
+  return colorMap[name] || 'tileDefault';
 };
 
 // --- Helper Components ---
@@ -219,6 +259,8 @@ const GovernorateTile = ({ name, shortDesc, icon, colorClass }) => {
  * in a <QueryClientProvider> in a parent component.
  */
 export default function ExploreDestinations() {
+  const [showAllGovernorates, setShowAllGovernorates] = React.useState(false);
+
   const {
     data: destinationsData,
     isLoading: isLoadingDestinations,
@@ -240,9 +282,15 @@ export default function ExploreDestinations() {
   // Since fetch functions now handle fallbacks internally,
   // we can directly use the returned data
   const destinations = destinationsData || MOCK_DESTINATIONS;
-  const governorates = governoratesData || MOCK_GOVERNORATES;
+  const allGovernorates = governoratesData || MOCK_GOVERNORATES;
+  
+  // Show only 6 governorates initially
+  const governorates = showAllGovernorates 
+    ? allGovernorates 
+    : allGovernorates.slice(0, 6);
 
   const isLoading = isLoadingDestinations || isLoadingGovernorates;
+  const hasMoreGovernorates = allGovernorates.length > 6;
 
   return (
     <>
@@ -286,13 +334,27 @@ export default function ExploreDestinations() {
             Explore Egyptian Governorates
           </h2>
           {!isLoading && (
-            <div className="row g-4">
-              {governorates.map((gov) => (
-                <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
-                  <GovernorateTile {...gov} />
+            <>
+              <div className="row g-4">
+                {governorates.map((gov) => (
+                  <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
+                    <GovernorateTile {...gov} />
+                  </div>
+                ))}
+              </div>
+              
+              {/* Show More Button */}
+              {hasMoreGovernorates && (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => setShowAllGovernorates(!showAllGovernorates)}
+                    className={`btn btn-lg ${styles.seeMoreBtn}`}
+                  >
+                    {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </section>
       </div>
