@@ -37,8 +37,13 @@ export default function LoginPage() {
         console.log("LOGIN RESPONSE:", response.data);
 
         if (response.data?.success) {
-          const token = response.data?.token;
-          const user = response.data?.user;
+          // Backend returns accessToken and refreshToken
+          const token = response.data?.data?.accessToken || response.data?.accessToken || response.data?.token;
+          const user = response.data?.data?.user || response.data?.user;
+
+          if (!token) {
+            throw new Error("No token received from server");
+          }
 
           if (auth?.setAuth) {
             auth.setAuth({ token, user });
@@ -47,6 +52,7 @@ export default function LoginPage() {
             localStorage.setItem("laqtaha_user", JSON.stringify(user));
           }
 
+          console.log("Token stored:", token);
           router.replace("/");
         } else {
           throw new Error(response.data?.message || "فشل تسجيل الدخول");

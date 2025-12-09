@@ -1,0 +1,289 @@
+.pickerWrapper {
+  width: 100%;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  padding: 10px 20px;
+  background: white;
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4a5568;
+}
+
+.actionBtn:hover {
+  border-color: #667eea;
+  background: #f7fafc;
+  color: #667eea;
+}
+
+.selectedLocation {
+  background: #f0fff4;
+  border: 2px solid #9ae6b4;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.selectedHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.selectedIcon {
+  font-size: 1.5rem;
+}
+
+.selectedInfo {
+  flex: 1;
+}
+
+.selectedTitle {
+  font-weight: 600;
+  color: #22543d;
+  margin-bottom: 4px;
+}
+
+.selectedCoords {
+  font-size: 0.875rem;
+  color: #2f855a;
+  font-family: monospace;
+}
+
+.clearBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #fc8181;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+
+.clearBtn:hover {
+  background: #f56565;
+  transform: rotate(90deg);
+}
+
+.mapPreview {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #c6f6d5;
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2f855a;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.mapLink:hover {
+  color: #22543d;
+  text-decoration: underline;
+}
+
+.mapModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.mapModal::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modalHeader h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2d3748;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #edf2f7;
+  color: #4a5568;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+
+.closeBtn:hover {
+  background: #e2e8f0;
+  transform: rotate(90deg);
+}
+
+.modalContent {
+  padding: 20px;
+}
+
+.quickSelect {
+  margin-bottom: 24px;
+}
+
+.sectionLabel {
+  display: block;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.locationChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.locationChip {
+  padding: 8px 16px;
+  background: #edf2f7;
+  border: 1px solid #cbd5e0;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4a5568;
+}
+
+.locationChip:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.manualEntry {
+  margin-bottom: 20px;
+}
+
+.coordInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.coordField {
+  display: flex;
+  flex-direction: column;
+}
+
+.coordField label {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.coordInput {
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.coordInput:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitBtn:hover {
+  background: #5a67d8;
+  transform: translateY(-1px);
+}
+
+.infoBox {
+  background: #ebf8ff;
+  border-left: 4px solid #4299e1;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #2c5282;
+}
+
+.infoBox strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionBtn {
+    width: 100%;
+  }
+
+  .mapModal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .coordInputs {
+    grid-template-columns: 1fr;
+  }
+}

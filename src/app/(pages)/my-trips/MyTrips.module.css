@@ -1,0 +1,414 @@
+.pageWrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-bottom: 60px;
+}
+
+.headerSection {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 50px 0 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pageSubtitle {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  margin: 0;
+}
+
+.createBtn {
+  padding: 14px 28px;
+  background: white;
+  color: #667eea;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.tabsSection {
+  background: white;
+  border-bottom: 2px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 16px 0;
+}
+
+.tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab:hover {
+  color: #4a5568;
+  background: #f7fafc;
+}
+
+.tabActive {
+  color: #667eea;
+  border-bottom-color: #667eea;
+}
+
+.tabCount {
+  background: #edf2f7;
+  color: #4a5568;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.tabActive .tabCount {
+  background: #667eea;
+  color: white;
+}
+
+.contentSection {
+  padding: 40px 0;
+}
+
+.loadingState,
+.errorState,
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingState p,
+.errorState p {
+  color: #718096;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.errorIcon,
+.emptyIcon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin: 0 0 12px 0;
+}
+
+.emptyState p {
+  color: #718096;
+  font-size: 1.05rem;
+  margin: 0 0 24px 0;
+}
+
+.emptyActionBtn {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emptyActionBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.tripsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.tripCard {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.tripCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.tripCardHeader {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.statusBadge {
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusorange {
+  background: #fed7aa;
+  color: #c05621;
+}
+
+.statusblue {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.statuspurple {
+  background: #e9d8fd;
+  color: #553c9a;
+}
+
+.statusgreen {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.statusteal {
+  background: #b2f5ea;
+  color: #234e52;
+}
+
+.statusgray {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.statusred {
+  background: #fed7d7;
+  color: #9b2c2c;
+}
+
+.tripDate {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #718096;
+}
+
+.tripCardBody {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tripMainInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tripInfoRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.infoIcon {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.infoText {
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.guidePreview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.guideAvatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.guideInfo {
+  flex: 1;
+}
+
+.guideName {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.guideRating {
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.itineraryPreview {
+  padding: 10px 12px;
+  background: #ebf8ff;
+  border-left: 3px solid #4299e1;
+  border-radius: 4px;
+}
+
+.itineraryLabel {
+  color: #2c5282;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.tripCardFooter {
+  padding: 16px 20px;
+  background: #f7fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.viewDetailsBtn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.viewDetailsBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .headerSection {
+    padding: 40px 0 30px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .pageSubtitle {
+    font-size: 1rem;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .createBtn {
+    width: 100%;
+  }
+
+  .tripsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    justify-content: space-between;
+  }
+
+  .tab {
+    flex: 1;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+}

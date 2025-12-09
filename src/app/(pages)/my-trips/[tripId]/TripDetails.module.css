@@ -1,0 +1,445 @@
+.pageWrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-bottom: 60px;
+}
+
+.loadingWrapper,
+.errorWrapper {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorIcon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.errorWrapper h2 {
+  color: #2d3748;
+  margin-bottom: 12px;
+}
+
+.errorWrapper p {
+  color: #718096;
+  margin-bottom: 24px;
+}
+
+.backBtn {
+  padding: 12px 24px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  background: #5a67d8;
+}
+
+.headerSection {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.backBtnHeader {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.backBtnHeader:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statusBadge {
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusorange {
+  background: #fed7aa;
+  color: #c05621;
+}
+
+.statusblue {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.statuspurple {
+  background: #e9d8fd;
+  color: #553c9a;
+}
+
+.statusgreen {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.statusteal {
+  background: #b2f5ea;
+  color: #234e52;
+}
+
+.statusgray {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.statusred {
+  background: #fed7d7;
+  color: #9b2c2c;
+}
+
+.contentSection {
+  margin-top: -30px;
+  position: relative;
+  z-index: 10;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 24px;
+}
+
+.mainCard,
+.sidebarCard {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.cardTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.infoGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #718096;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.infoValue {
+  font-size: 1.05rem;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #667eea;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 6px;
+  transition: all 0.2s;
+}
+
+.mapLink:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+.itinerarySection {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 16px 0;
+}
+
+.itineraryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itineraryItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.itineraryNumber {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #667eea;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.itineraryContent {
+  flex: 1;
+}
+
+.itineraryName {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 6px;
+}
+
+.itineraryMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sidebarCard {
+  padding: 24px;
+}
+
+.sidebarCard .cardTitle {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.guideInfo {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.guideAvatar {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.guideDetails {
+  flex: 1;
+}
+
+.guideName {
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.guideRating {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.viewProfileBtn,
+.actionBtn,
+.cancelBtn,
+.reviewBtn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.viewProfileBtn {
+  background: #edf2f7;
+  color: #4a5568;
+}
+
+.viewProfileBtn:hover {
+  background: #e2e8f0;
+}
+
+.actionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actionBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.actionBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.cancelBtn {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background: #fc8181;
+}
+
+.reviewBtn {
+  background: #48bb78;
+  color: white;
+}
+
+.reviewBtn:hover:not(:disabled) {
+  background: #38a169;
+}
+
+.cancelBtn:disabled,
+.reviewBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reviewCard {
+  background: #f7fafc;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.reviewRating {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.reviewComment {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerSection {
+    padding: 30px 0;
+  }
+
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+
+  .mainCard,
+  .sidebarCard {
+    padding: 20px;
+  }
+
+  .itineraryItem {
+    padding: 12px;
+  }
+}

@@ -4,6 +4,7 @@
 /* --- Hero Section --- */
 .heroSection {
   position: relative;
+  min-height: 500px;
   background: linear-gradient(135deg, #0A2342, #00797C);
   background-size: cover;
   background-position: center;

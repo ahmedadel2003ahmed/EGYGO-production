@@ -54,6 +54,8 @@ const Navbar = () => {
     { href: '/', label: 'Home' },
     { href: '/ExploreDestinations', label: 'Explore Destinations' },
     { href: '/Governorate', label: 'Governorate' },
+    { href: '/create-trip', label: 'Create Trip' },
+    { href: '/my-trips', label: 'My Trips' },
     { href: '/AboutUs', label: 'About Us' },
   ];
 

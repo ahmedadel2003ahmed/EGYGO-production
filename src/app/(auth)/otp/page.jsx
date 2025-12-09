@@ -67,6 +67,14 @@ export default function Otp() {
       // ✅ نجاح التحقق
       setVerified(true);
       setError("");
+      
+      // 🔐 Check if backend returned token (auto-login after verification)
+      if (data.data?.accessToken && data.data?.user) {
+        localStorage.setItem("laqtaha_token", data.data.accessToken);
+        localStorage.setItem("laqtaha_user", JSON.stringify(data.data.user));
+        console.log("✅ Auto-logged in after OTP verification");
+      }
+      
       localStorage.removeItem("registerEmail");
       localStorage.removeItem("pendingUserId");
     } catch (err) {
@@ -89,8 +97,17 @@ export default function Otp() {
     localStorage.removeItem("pendingUserId");
     localStorage.removeItem("registerEmail");
     
-    // الانتقال إلى الصفحة الرئيسية
-    router.replace("/home");
+    // Check if user is logged in (has token)
+    const token = localStorage.getItem("laqtaha_token");
+    
+    if (token) {
+      // User is logged in, go to home
+      router.replace("/home");
+    } else {
+      // No token, redirect to login
+      console.log("⚠️ No token found, redirecting to login");
+      router.replace("/login");
+    }
   };
 
   return (
