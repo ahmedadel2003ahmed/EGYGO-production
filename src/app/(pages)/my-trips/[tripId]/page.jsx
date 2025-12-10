@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
@@ -11,11 +11,23 @@ export default function TripDetailsPage() {
   const params = useParams();
   const tripId = params.tripId;
   const queryClient = useQueryClient();
+  const [guideFilters, setGuideFilters] = useState({
+    language: '',
+    maxDistanceKm: '',
+  });
+
+  // Debug logging
+  useEffect(() => {
+    console.log('TripDetailsPage mounted');
+    console.log('Trip ID from params:', tripId);
+    console.log('Full params:', params);
+  }, [tripId, params]);
 
   // Check authentication
   useEffect(() => {
     const token = localStorage.getItem('laqtaha_token');
     if (!token) {
+      console.log('No token found, redirecting to login');
       router.push('/login');
     }
   }, [router]);
@@ -36,9 +48,35 @@ export default function TripDetailsPage() {
           },
         }
       );
+      console.log('Trip details API response:', response.data);
+      console.log('Extracted trip data:', response.data?.data);
       return response.data?.data;
     },
     enabled: !!tripId,
+  });
+
+  // Fetch compatible guides (only if trip status is selecting_guide)
+  const {
+    data: guidesData = [],
+    isLoading: guidesLoading,
+  } = useQuery({
+    queryKey: ['trip-guides', tripId, guideFilters],
+    queryFn: async () => {
+      const response = await axios.get(
+        `http://localhost:5000/api/tourist/trips/${tripId}/guides`,
+        {
+          params: {
+            language: guideFilters.language || undefined,
+            maxDistanceKm: guideFilters.maxDistanceKm || undefined,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+          },
+        }
+      );
+      return response.data?.data || [];
+    },
+    enabled: !!tripId && tripData?.status === 'selecting_guide',
   });
 
   // Cancel trip mutation
@@ -81,6 +119,33 @@ export default function TripDetailsPage() {
     },
   });
 
+  // Select guide mutation
+  const selectGuideMutation = useMutation({
+    mutationFn: async (guideId) => {
+      const response = await axios.post(
+        `http://localhost:5000/api/tourist/trips/${tripId}/select-guide`,
+        { guideId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+          },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['trip', tripId]);
+      queryClient.invalidateQueries(['trip-guides', tripId]);
+      alert('Guide selected successfully!');
+    },
+  });
+
+  const handleSelectGuide = (guideId) => {
+    if (window.confirm('Select this guide for your trip?')) {
+      selectGuideMutation.mutate(guideId);
+    }
+  };
+
   const handleCancelTrip = () => {
     if (
       window.confirm(
@@ -107,7 +172,12 @@ export default function TripDetailsPage() {
     });
   };
 
-  const trip = tripData?.trip;
+  const trip = tripData?.trip || tripData;
+
+  console.log('Trip data received:', tripData);
+  console.log('Extracted trip:', trip);
+  console.log('Is loading:', isLoading);
+  console.log('Error:', error);
 
   if (isLoading) {
     return (
@@ -119,11 +189,13 @@ export default function TripDetailsPage() {
   }
 
   if (error || !trip) {
+    console.log('Showing error state');
+    console.log('Error object:', error);
     return (
       <div className={styles.errorWrapper}>
         <div className={styles.errorIcon}>⚠️</div>
         <h2>Trip Not Found</h2>
-        <p>{error?.response?.data?.message || 'Unable to load trip details'}</p>
+        <p>{error?.response?.data?.message || error?.message || 'Unable to load trip details'}</p>
         <button onClick={() => router.push('/my-trips')} className={styles.backBtn}>
           Go to My Trips
         </button>
@@ -239,6 +311,127 @@ export default function TripDetailsPage() {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Guide Selection Section */}
+              {trip.status === 'selecting_guide' && (
+                <div className={styles.guideSelectionSection}>
+                  <h3 className={styles.sectionTitle}>Select a Guide</h3>
+                  
+                  {/* Filters */}
+                  <div className={styles.guideFilters}>
+                    <div className={styles.filterGroup}>
+                      <label>Language (Optional)</label>
+                      <select
+                        value={guideFilters.language}
+                        onChange={(e) =>
+                          setGuideFilters({ ...guideFilters, language: e.target.value })
+                        }
+                        className={styles.filterSelect}
+                      >
+                        <option value="">All Languages</option>
+                        <option value="English">English</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="French">French</option>
+                      </select>
+                    </div>
+                    <div className={styles.filterGroup}>
+                      <label>Max Distance (km) (Optional)</label>
+                      <select
+                        value={guideFilters.maxDistanceKm}
+                        onChange={(e) =>
+                          setGuideFilters({ ...guideFilters, maxDistanceKm: e.target.value })
+                        }
+                        className={styles.filterSelect}
+                      >
+                        <option value="">Any Distance</option>
+                        <option value="5">Within 5 km</option>
+                        <option value="10">Within 10 km</option>
+                        <option value="20">Within 20 km</option>
+                        <option value="50">Within 50 km</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Loading State */}
+                  {guidesLoading && (
+                    <div className={styles.loadingGuides}>
+                      <div className={styles.smallSpinner}></div>
+                      <p>Finding available guides...</p>
+                    </div>
+                  )}
+
+                  {/* Empty State */}
+                  {!guidesLoading && guidesData.length === 0 && (
+                    <div className={styles.emptyGuidesState}>
+                      <div className={styles.emptyIcon}>🔍</div>
+                      <p>No compatible guides available. Try adjusting filters.</p>
+                    </div>
+                  )}
+
+                  {/* Guides List */}
+                  {!guidesLoading && guidesData.length > 0 && (
+                    <div className={styles.guidesList}>
+                      {guidesData.map((guide) => (
+                        <div key={guide._id} className={styles.guideCard}>
+                          <div className={styles.guideCardHeader}>
+                            <div className={styles.guideAvatar}>
+                              {guide.profilePicture ? (
+                                <img
+                                  src={guide.profilePicture}
+                                  alt={guide.name}
+                                  className={styles.avatarImg}
+                                />
+                              ) : (
+                                <div className={styles.avatarPlaceholder}>
+                                  {guide.name?.charAt(0) || '?'}
+                                </div>
+                              )}
+                            </div>
+                            <div className={styles.guideHeaderInfo}>
+                              <div className={styles.guideName}>{guide.name}</div>
+                              <div className={styles.guideRating}>
+                                ⭐ {guide.rating?.toFixed(1) || 'N/A'} ({guide.reviewCount || 0} reviews)
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className={styles.guideDetails}>
+                            {guide.languages && (
+                              <div className={styles.detailItem}>
+                                <span>🗣️ {guide.languages.join(', ')}</span>
+                              </div>
+                            )}
+                            {guide.pricePerHour && (
+                              <div className={styles.detailItem}>
+                                <span>💰 EGP {guide.pricePerHour}/hour</span>
+                              </div>
+                            )}
+                            {guide.experienceYears && (
+                              <div className={styles.detailItem}>
+                                <span>🎓 {guide.experienceYears} years experience</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {guide.bio && (
+                            <p className={styles.guideBio}>{guide.bio}</p>
+                          )}
+
+                          <button
+                            onClick={() => handleSelectGuide(guide._id)}
+                            disabled={selectGuideMutation.isPending}
+                            className={styles.selectGuideBtn}
+                          >
+                            {selectGuideMutation.isPending
+                              ? 'Selecting...'
+                              : 'Select Guide'}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

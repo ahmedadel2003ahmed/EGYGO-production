@@ -22,12 +22,13 @@ export async function generateStaticParams() {
 
 // Generate metadata for each guide
 export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
   try {
     const filePath = path.join(process.cwd(), "public", "data", "guides.json");
     const raw = await fs.readFile(filePath, "utf-8");
     const guides = JSON.parse(raw);
     
-    const guide = guides.find((g) => g.slug === params.slug);
+    const guide = guides.find((g) => g.slug === resolvedParams.slug);
     
     if (!guide) {
       return {
@@ -58,12 +59,13 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function GuidePage({ params }) {
+  const resolvedParams = await params;
   try {
     const filePath = path.join(process.cwd(), "public", "data", "guides.json");
     const raw = await fs.readFile(filePath, "utf-8");
     const guides = JSON.parse(raw);
     
-    const guide = guides.find((g) => g.slug === params.slug);
+    const guide = guides.find((g) => g.slug === resolvedParams.slug);
     
     if (!guide) {
       notFound();
