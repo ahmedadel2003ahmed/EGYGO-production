@@ -9,13 +9,24 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const pathname = usePathname();
+
+  // Check authentication status
+  useEffect(() => {
+    const token = localStorage.getItem('laqtaha_token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   // Scroll behavior logic
   useEffect(() => {
     const controlNavbar = () => {
       if (typeof window !== 'undefined') {
         const currentScrollY = window.scrollY;
+        
+        // Add background after scrolling
+        setIsScrolled(currentScrollY > 20);
         
         // Show navbar when at top or scrolling up
         if (currentScrollY < lastScrollY || currentScrollY < 10) {
@@ -51,12 +62,11 @@ const Navbar = () => {
 
   // Navigation links configuration
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/ExploreDestinations', label: 'Explore Destinations' },
-    { href: '/Governorate', label: 'Governorate' },
-    { href: '/create-trip', label: 'Create Trip' },
-    { href: '/my-trips', label: 'My Trips' },
-    { href: '/AboutUs', label: 'About Us' },
+    { href: '/', label: 'Home', icon: '🏠' },
+    { href: '/ExploreDestinations', label: 'Destinations', icon: '🗺️' },
+    { href: '/Governorate', label: 'Governorates', icon: '🏛️' },
+    { href: '/my-trips', label: 'My Trips', icon: '✈️' },
+    { href: '/AboutUs', label: 'About', icon: 'ℹ️' },
   ];
 
   const toggleMenu = () => {
@@ -65,14 +75,15 @@ const Navbar = () => {
 
   return (
     <nav 
-      className={`${styles.navbar} ${!isVisible ? styles.navbarHidden : ''}`} 
+      className={`${styles.navbar} ${!isVisible ? styles.navbarHidden : ''} ${isScrolled ? styles.navbarScrolled : ''}`} 
       role="navigation" 
       aria-label="Main navigation"
     >
       <div className={styles.navContainer}>
         {/* Logo */}
-        <Link href="/" className={styles.logo} aria-label="HIGH PEAKS - Go to homepage">
-          HIGH PEAKS
+        <Link href="/" className={styles.logo} aria-label="EgyGo - Go to homepage">
+          <span className={styles.logoIcon}>🇪🇬</span>
+          <span className={styles.logoText}>EgyGo</span>
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -86,19 +97,31 @@ const Navbar = () => {
               }`}
               aria-current={isActiveLink(link.href) ? 'page' : undefined}
             >
-              {link.label}
+              <span className={styles.navIcon}>{link.icon}</span>
+              <span className={styles.navLabel}>{link.label}</span>
             </Link>
           ))}
         </div>
 
         {/* Auth Buttons */}
         <div className={styles.authButtons}>
-          <Link href="/login" className={styles.loginBtn} aria-label="Login to your account">
-            Login
-          </Link>
-          <Link href="/register" className={styles.registerBtn} aria-label="Create new account">
-            Register
-          </Link>
+          {!isAuthenticated ? (
+            <>
+              <Link href="/login" className={styles.loginBtn} aria-label="Login to your account">
+                <span className={styles.btnIcon}>👤</span>
+                <span>Login</span>
+              </Link>
+              <Link href="/register" className={styles.registerBtn} aria-label="Create new account">
+                <span className={styles.btnIcon}>✨</span>
+                <span>Get Started</span>
+              </Link>
+            </>
+          ) : (
+            <button className={styles.profileBtn} aria-label="User profile">
+              <span className={styles.profileIcon}>👤</span>
+              <span className={styles.profileText}>Profile</span>
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -132,7 +155,8 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
               aria-current={isActiveLink(link.href) ? 'page' : undefined}
             >
-              {link.label}
+              <span className={styles.mobileNavIcon}>{link.icon}</span>
+              <span>{link.label}</span>
             </Link>
           ))}
           <div className={styles.mobileAuthButtons}>

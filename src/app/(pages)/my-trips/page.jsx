@@ -2,13 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './MyTrips.module.css';
+import TripModal from '@/components/trip/TripModal';
 
 export default function MyTripsPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Check authentication
   useEffect(() => {
@@ -58,6 +61,11 @@ export default function MyTripsPage() {
 
   const filteredTrips = filterTrips(activeTab);
 
+  const handleTripCreated = () => {
+    // Refetch trips after creating a new one
+    queryClient.invalidateQueries(['my-trips']);
+  };
+
   const getStatusBadge = (status) => {
     const statusConfig = {
       pending: { label: 'Pending', color: 'orange', icon: '⏳' },
@@ -78,24 +86,31 @@ export default function MyTripsPage() {
   };
 
   return (
-    <div className={styles.pageWrapper}>
-      {/* Header */}
-      <section className={styles.headerSection}>
-        <div className="container">
-          <div className={styles.headerContent}>
-            <div>
-              <h1 className={styles.pageTitle}>My Trips</h1>
-              <p className={styles.pageSubtitle}>Manage and track your travel experiences</p>
+    <>
+      <TripModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleTripCreated}
+      />
+      
+      <div className={styles.pageWrapper}>
+        {/* Header */}
+        <section className={styles.headerSection}>
+          <div className="container">
+            <div className={styles.headerContent}>
+              <div>
+                <h1 className={styles.pageTitle}>My Trips</h1>
+                <p className={styles.pageSubtitle}>Manage and track your travel experiences</p>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className={styles.createBtn}
+              >
+                + Create New Trip
+              </button>
             </div>
-            <button
-              onClick={() => router.push('/create-trip')}
-              className={styles.createBtn}
-            >
-              + Create New Trip
-            </button>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Tabs */}
       <section className={styles.tabsSection}>
@@ -158,7 +173,7 @@ export default function MyTripsPage() {
               </p>
               {activeTab === 'all' && (
                 <button
-                  onClick={() => router.push('/create-trip')}
+                  onClick={() => setIsModalOpen(true)}
                   className={styles.emptyActionBtn}
                 >
                   Create Your First Trip
@@ -261,6 +276,7 @@ export default function MyTripsPage() {
           )}
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
