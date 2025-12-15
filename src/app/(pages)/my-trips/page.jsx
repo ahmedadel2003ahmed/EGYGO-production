@@ -248,6 +248,17 @@ export default function MyTripsPage() {
                               ⭐ {trip.guide.rating.toFixed(1)}
                             </div>
                           )}
+                          {trip.guide._id && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/guides/${trip.guide._id}`);
+                              }}
+                              className={styles.viewProfileBtn}
+                            >
+                              👤 View Profile
+                            </button>
+                          )}
                         </div>
                       </div>
                     )}

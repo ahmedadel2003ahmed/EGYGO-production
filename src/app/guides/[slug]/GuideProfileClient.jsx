@@ -18,20 +18,29 @@ export default function GuideProfileClient() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch("/data/guides.json");
+        
+        const token = localStorage.getItem('access_token');
+        const headers = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+        
+        const res = await fetch(`http://localhost:5000/api/tourist/guides/${slug}`, {
+          headers
+        });
         
         if (!res.ok) {
           throw new Error("Failed to fetch guide data");
         }
         
-        const allGuides = await res.json();
-        const selected = allGuides.find((g) => g.slug === slug);
+        const response = await res.json();
+        console.log('Guide API Response:', response);
         
-        if (!selected) {
+        if (!response.success || !response.data) {
           throw new Error("Guide not found");
         }
         
-        setGuide(selected);
+        setGuide(response.data);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching guide:", err);
@@ -97,8 +106,6 @@ export default function GuideProfileClient() {
     );
   }
 
-  const { card, profile } = guide;
-
   return (
     <div className={`${styles.pageWrapper} container`}>
       <div className="row">
@@ -107,33 +114,66 @@ export default function GuideProfileClient() {
           <div className={styles.sidebarCard}>
             <div className="text-center">
               <Image
-                src={card.avatar}
-                alt={card.name}
+                src={guide.photo?.url || '/images/default-avatar.png'}
+                alt={guide.name}
                 width={130}
                 height={130}
                 className={styles.avatar}
               />
-              <h4 className={styles.name}>{card.name}</h4>
+              <h4 className={styles.name}>{guide.name}</h4>
 
-              {profile.verified && (
+              {guide.isVerified && (
                 <p className={styles.verified}>
-                  <FaCheckCircle /> Verified
+                  <FaCheckCircle /> Verified Guide
                 </p>
               )}
 
-              <p className={styles.university}>{card.specialization}</p>
+              {guide.isLicensed && (
+                <p className={styles.verified}>
+                  <FaCheckCircle style={{ color: '#10b981' }} /> Licensed
+                </p>
+              )}
+
+              {guide.canEnterArchaeologicalSites && (
+                <p className={styles.university}>🏛️ Can Enter Archaeological Sites</p>
+              )}
 
               {/* LANGUAGES */}
               <div className={styles.languages}>
-                {profile.languages.map((lang) => (
+                {guide.languages?.map((lang) => (
                   <span key={lang} className={styles.langBadge}>
                     {lang}
                   </span>
                 ))}
               </div>
 
+              {/* RATING */}
+              {guide.rating > 0 && (
+                <div className={styles.ratingSection}>
+                  <div className={styles.stars}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <FaStar 
+                        key={i} 
+                        color={i < Math.round(guide.rating) ? '#ffc107' : '#e0e0e0'}
+                      />
+                    ))}
+                  </div>
+                  <p className={styles.ratingText}>
+                    {guide.rating.toFixed(1)} ({guide.ratingCount} reviews)
+                  </p>
+                </div>
+              )}
+
               {/* PRICE */}
-              <p className={styles.price}>${card.pricePerHour} / hour</p>
+              <p className={styles.price}>${guide.pricePerHour} / hour</p>
+
+              {/* STATS */}
+              <div className={styles.statsBox}>
+                <div className={styles.statItem}>
+                  <span className={styles.statValue}>{guide.totalTrips || 0}</span>
+                  <span className={styles.statLabel}>Total Trips</span>
+                </div>
+              </div>
 
               {/* BUTTONS */}
               <div className="d-grid gap-2 mt-3">
@@ -157,44 +197,73 @@ export default function GuideProfileClient() {
           {/* ABOUT ME */}
           <div className={styles.sectionCard}>
             <h5 className={styles.sectionTitle}>About Me</h5>
-            <p className={styles.aboutText}>{profile.aboutMe}</p>
-          </div>
-
-          {/* REVIEWS */}
-          <div className={styles.sectionCard}>
-            <h5 className={styles.sectionTitle}>
-              Reviews ({profile.reviews.length})
-            </h5>
-
-            {profile.reviews.map((review, index) => (
-              <div key={index} className={styles.reviewItem}>
-                <p className={styles.reviewName}>{review.name}</p>
-                <div className={styles.stars}>
-                  {Array.from({ length: review.rating }).map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
-                </div>
-                <p className={styles.reviewText}>{review.review}</p>
+            <p className={styles.aboutText}>{guide.bio || 'No bio available'}</p>
+            
+            {guide.user?.email && (
+              <div className={styles.contactInfo}>
+                <p><strong>📧 Email:</strong> {guide.user.email}</p>
+                {guide.user.phone && (
+                  <p><strong>📱 Phone:</strong> {guide.user.phone}</p>
+                )}
               </div>
-            ))}
+            )}
           </div>
+
+          {/* LOCATION */}
+          {guide.location && (
+            <div className={styles.sectionCard}>
+              <h5 className={styles.sectionTitle}>Location</h5>
+              <p className={styles.aboutText}>
+                📍 Coordinates: {guide.location.coordinates[1]}, {guide.location.coordinates[0]}
+              </p>
+              <a
+                href={`https://www.google.com/maps?q=${guide.location.coordinates[1]},${guide.location.coordinates[0]}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.btnOutline}
+                style={{ display: 'inline-block', marginTop: '10px' }}
+              >
+                🗺️ View on Map
+              </a>
+            </div>
+          )}
 
           {/* GALLERY */}
-          <div className={styles.sectionCard}>
-            <h5 className={styles.sectionTitle}>Latest Trips Gallery</h5>
+          {guide.gallery && guide.gallery.length > 0 && (
+            <div className={styles.sectionCard}>
+              <h5 className={styles.sectionTitle}>Gallery ({guide.gallery.length})</h5>
 
-            <div className="row">
-              {profile.gallery.map((img, i) => (
-                <div className="col-lg-4 col-md-4 col-6 mb-3" key={i}>
-                  <Image
-                    src={img}
-                    width={400}
-                    height={300}
-                    alt="Gallery image"
-                    className={styles.galleryImg}
-                  />
-                </div>
-              ))}
+              <div className="row">
+                {guide.gallery.map((item, i) => (
+                  <div className="col-lg-4 col-md-4 col-6 mb-3" key={item._id || i}>
+                    <Image
+                      src={item.url}
+                      width={400}
+                      height={300}
+                      alt={`Gallery image ${i + 1}`}
+                      className={styles.galleryImg}
+                    />
+                    <p className={styles.galleryDate}>
+                      {new Date(item.uploadedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ACTIVITY STATUS */}
+          <div className={styles.sectionCard}>
+            <h5 className={styles.sectionTitle}>Status</h5>
+            <div className={styles.statusBadges}>
+              <span className={guide.isActive ? styles.badgeActive : styles.badgeInactive}>
+                {guide.isActive ? '✅ Active' : '❌ Inactive'}
+              </span>
+              {guide.user?.isActive && (
+                <span className={styles.badgeActive}>
+                  ✅ Account Active
+                </span>
+              )}
             </div>
           </div>
         </div>
