@@ -70,7 +70,7 @@ export default function Otp() {
       
       // 🔐 Check if backend returned token (auto-login after verification)
       if (data.data?.accessToken && data.data?.user) {
-        localStorage.setItem("laqtaha_token", data.data.accessToken);
+        localStorage.setItem("access_token", data.data.accessToken);
         localStorage.setItem("laqtaha_user", JSON.stringify(data.data.user));
         console.log("✅ Auto-logged in after OTP verification");
       }
@@ -98,7 +98,7 @@ export default function Otp() {
     localStorage.removeItem("registerEmail");
     
     // Check if user is logged in (has token)
-    const token = localStorage.getItem("laqtaha_token");
+    const token = localStorage.getItem("access_token");
     
     if (token) {
       // User is logged in, go to home

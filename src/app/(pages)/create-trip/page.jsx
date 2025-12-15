@@ -20,7 +20,7 @@ export default function CreateTripPage() {
 
   // Check authentication
   useEffect(() => {
-    const token = localStorage.getItem('laqtaha_token');
+    const token = localStorage.getItem('access_token');
     if (!token) {
       router.push('/login');
     }
@@ -55,7 +55,7 @@ export default function CreateTripPage() {
 
       try {
         // Check authentication
-        const token = localStorage.getItem('laqtaha_token');
+        const token = localStorage.getItem('access_token');
         if (!token) {
           router.push('/login');
           return;
@@ -97,7 +97,18 @@ export default function CreateTripPage() {
         console.log('Trip creation response:', response.data);
 
         if (response.data?.success) {
-          const tripId = response.data?.data?.trip?._id || response.data?.data?._id;
+          const tripId = response.data?.data?.trip?._id || 
+                        response.data?.data?._id || 
+                        response.data?.trip?._id ||
+                        response.data?._id;
+          
+          console.log('Extracted tripId:', tripId);
+          console.log('Response data structure:', response.data?.data);
+          
+          if (!tripId) {
+            throw new Error('Trip created but no ID returned');
+          }
+          
           // Redirect to guide selection page
           router.push(`/create-trip/${tripId}/select-guide`);
         } else {

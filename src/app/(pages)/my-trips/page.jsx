@@ -15,7 +15,7 @@ export default function MyTripsPage() {
 
   // Check authentication
   useEffect(() => {
-    const token = localStorage.getItem('laqtaha_token');
+    const token = localStorage.getItem('access_token');
     if (!token) {
       router.push('/login');
     }
@@ -34,7 +34,7 @@ export default function MyTripsPage() {
           'http://localhost:5000/api/tourist/trips',
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
           }
         );

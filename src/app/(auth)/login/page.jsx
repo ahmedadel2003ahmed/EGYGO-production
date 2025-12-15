@@ -48,7 +48,7 @@ export default function LoginPage() {
           if (auth?.setAuth) {
             auth.setAuth({ token, user });
           } else {
-            localStorage.setItem("laqtaha_token", token);
+            localStorage.setItem("access_token", token);
             localStorage.setItem("laqtaha_user", JSON.stringify(user));
           }
 

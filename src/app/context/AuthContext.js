@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     try {
-      const t = localStorage.getItem("laqtaha_token");
+      const t = localStorage.getItem("access_token");
       const u = localStorage.getItem("laqtaha_user");
       if (t) setToken(t);
       if (u) setUser(JSON.parse(u));
@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
       : newUser;
 
     setUser(preparedUser);
-    localStorage.setItem("laqtaha_token", newToken);
+    localStorage.setItem("access_token", newToken);
     localStorage.setItem("laqtaha_user", JSON.stringify(preparedUser));
   }
 
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   function logout() {
     setToken(null);
     setUser(null);
-    localStorage.removeItem("laqtaha_token");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("laqtaha_user");
   }
 

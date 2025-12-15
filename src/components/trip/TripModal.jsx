@@ -46,7 +46,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
       setError(null);
 
       try {
-        const token = localStorage.getItem('laqtaha_token');
+        const token = localStorage.getItem('access_token');
         if (!token) {
           router.push('/login');
           return;
@@ -84,7 +84,17 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
         );
 
         if (response.data?.success) {
-          const tripId = response.data?.data?.trip?._id || response.data?.data?._id;
+          const tripId = response.data?.data?.trip?._id || 
+                        response.data?.data?._id || 
+                        response.data?.trip?._id ||
+                        response.data?._id;
+          
+          console.log('Extracted tripId:', tripId);
+          console.log('Response data structure:', response.data?.data);
+          
+          if (!tripId) {
+            throw new Error('Trip created but no ID returned');
+          }
           
           // Reset form
           formik.resetForm();

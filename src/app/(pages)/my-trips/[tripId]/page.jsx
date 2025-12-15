@@ -44,7 +44,7 @@ export default function TripDetailsPage() {
         `http://localhost:5000/api/tourist/trips/${tripId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
@@ -70,7 +70,7 @@ export default function TripDetailsPage() {
             maxDistanceKm: guideFilters.maxDistanceKm || undefined,
           },
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
@@ -87,7 +87,7 @@ export default function TripDetailsPage() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
@@ -107,7 +107,7 @@ export default function TripDetailsPage() {
         { rating, comment },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
@@ -127,7 +127,7 @@ export default function TripDetailsPage() {
         { guideId },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );

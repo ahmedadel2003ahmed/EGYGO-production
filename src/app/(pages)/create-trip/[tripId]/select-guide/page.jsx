@@ -11,13 +11,23 @@ export default function SelectGuidePage() {
   const params = useParams();
   const tripId = params.tripId;
 
-  // Check authentication
+  console.log('SelectGuidePage - params:', params);
+  console.log('SelectGuidePage - tripId:', tripId);
+
+  // Check authentication and tripId
   useEffect(() => {
-    const token = localStorage.getItem('laqtaha_token');
+    const token = localStorage.getItem('access_token');
     if (!token) {
       router.push('/login');
+      return;
     }
-  }, [router]);
+    
+    if (!tripId || tripId === 'undefined') {
+      console.error('Invalid tripId:', tripId);
+      router.push('/my-trips');
+      return;
+    }
+  }, [router, tripId]);
 
   const [filters, setFilters] = useState({
     language: '',
@@ -44,7 +54,7 @@ export default function SelectGuidePage() {
             sortBy: filters.sortBy,
           },
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
@@ -61,7 +71,7 @@ export default function SelectGuidePage() {
         { guideId },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('laqtaha_token')}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
@@ -77,6 +87,26 @@ export default function SelectGuidePage() {
       selectGuideMutation.mutate(guideId);
     }
   };
+
+  // Show error if tripId is invalid
+  if (!tripId || tripId === 'undefined') {
+    return (
+      <div className={styles.pageWrapper}>
+        <section className={styles.headerSection}>
+          <div className="container">
+            <div className={styles.errorState}>
+              <div className={styles.errorIcon}>⚠️</div>
+              <h2>Invalid Trip</h2>
+              <p>Trip ID is missing or invalid. Please create a trip first.</p>
+              <button onClick={() => router.push('/my-trips')} className={styles.backBtn}>
+                Go to My Trips
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   const guides = guidesData?.guides || [];
   const trip = guidesData?.trip;

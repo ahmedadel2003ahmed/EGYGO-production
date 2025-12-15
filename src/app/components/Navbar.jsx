@@ -15,7 +15,7 @@ const Navbar = () => {
 
   // Check authentication status
   useEffect(() => {
-    const token = localStorage.getItem('laqtaha_token');
+    const token = localStorage.getItem('access_token');
     setIsAuthenticated(!!token);
   }, []);
 
@@ -117,10 +117,10 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <button className={styles.profileBtn} aria-label="User profile">
+            <Link href="/profile" className={styles.profileBtn} aria-label="User profile">
               <span className={styles.profileIcon}>👤</span>
               <span className={styles.profileText}>Profile</span>
-            </button>
+            </Link>
           )}
         </div>
 
