@@ -1,0 +1,383 @@
+{
+    "success": true,
+    "data": [
+        {
+            "_id": "6935efa247a0b161dbdeee4e",
+            "slug": "alexandria",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765634339/alex_kn9lb7.jpg",
+            "description": "Egypt's second-largest city and major Mediterranean port, founded by Alexander the Great.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    29.9187,
+                    31.2001
+                ]
+            },
+            "name": "Alexandria"
+        },
+        {
+            "_id": "6935efa347a0b161dbdeee50",
+            "slug": "aswan",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765636997/aswan_bwo3tg.jpg",
+            "description": "Southern frontier city known for the High Dam, Nubian culture, and beautiful Nile scenery.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    32.8998,
+                    24.0889
+                ]
+            },
+            "name": "Aswan"
+        },
+        {
+            "_id": "6935efa947a0b161dbdeee5f",
+            "slug": "asyut",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639547/asyut_qksnfw.jpg",
+            "description": "Upper Egypt governorate known for its university, Coptic heritage, and agricultural production.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.1837,
+                    27.1783
+                ]
+            },
+            "name": "Asyut"
+        },
+        {
+            "_id": "6935efa747a0b161dbdeee59",
+            "slug": "beheira",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765638416/behera_brwpeu.jpg",
+            "description": "Northwestern Delta governorate with rich agricultural lands and coastal access.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    30.4686,
+                    31.0361
+                ]
+            },
+            "name": "Beheira"
+        },
+        {
+            "_id": "6935efaa47a0b161dbdeee62",
+            "slug": "beni-suef",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639965/benisuif_rh3jbq.jpg",
+            "description": "Upper Egypt governorate bridging Cairo and Middle Egypt, known for agricultural production.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.0948,
+                    29.0661
+                ]
+            },
+            "name": "Beni Suef"
+        },
+        {
+            "_id": "6935efa247a0b161dbdeee4c",
+            "slug": "cairo",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765634183/cairo_i33h3i.jpg",
+            "description": "Egypt's capital and largest city, home to ancient pyramids, the Egyptian Museum, and vibrant Islamic Cairo.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.2357,
+                    30.0444
+                ]
+            },
+            "name": "Cairo"
+        },
+        {
+            "_id": "6935efa547a0b161dbdeee53",
+            "slug": "dakahlia",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765637483/dakhlia_buom6b.jpg",
+            "description": "Nile Delta governorate known for agriculture, historic Mansoura, and traditional Egyptian culture.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.3807,
+                    31.0409
+                ]
+            },
+            "name": "Dakahlia"
+        },
+        {
+            "_id": "6935efa847a0b161dbdeee5d",
+            "slug": "damietta",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639004/damietta_agmbx6.jpg",
+            "description": "Northeastern coastal governorate famous for furniture manufacturing and Mediterranean beaches.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.8133,
+                    31.4175
+                ]
+            },
+            "name": "Damietta"
+        },
+        {
+            "_id": "6935efaa47a0b161dbdeee63",
+            "slug": "fayoum",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765640148/fayoum_yrsqbx.jpg",
+            "description": "Oasis governorate with unique lakes, waterwheels, and ancient archaeological sites.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    30.8428,
+                    29.3084
+                ]
+            },
+            "name": "Fayoum"
+        },
+        {
+            "_id": "6935efa847a0b161dbdeee5b",
+            "slug": "gharbia",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765638820/tanta_lt0zbc.jpg",
+            "description": "Central Delta governorate with a rich textile industry and agricultural heritage.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.0004,
+                    30.7865
+                ]
+            },
+            "name": "Gharbia"
+        },
+        {
+            "_id": "6935efa247a0b161dbdeee4d",
+            "slug": "giza",
+            "coverImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/1280px-All_Gizah_Pyramids.jpg",
+            "description": "Home to the iconic Giza Pyramids and Great Sphinx",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.2118,
+                    30.0131
+                ]
+            },
+            "name": "Giza"
+        },
+        {
+            "_id": "6935efa747a0b161dbdeee58",
+            "slug": "ismailia",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765644040/ismailia_yzzbhn.jpg",
+            "description": "Beautiful canal city known for its gardens, colonial architecture, and strategic location.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    32.2654,
+                    30.5965
+                ]
+            },
+            "name": "Ismailia"
+        },
+        {
+            "_id": "6935efa847a0b161dbdeee5a",
+            "slug": "kafr-el-sheikh",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765638582/kafr-el-sheikh_plb5px.jpg",
+            "description": "Northern Delta governorate known for agriculture and Mediterranean coastline.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    30.939,
+                    31.1107
+                ]
+            },
+            "name": "Kafr El Sheikh"
+        },
+        {
+            "_id": "6935efa347a0b161dbdeee4f",
+            "slug": "luxor",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765635138/luxor_rwcvj3.jpg",
+            "description": "Ancient Thebes, the world's greatest open-air museum with temples, tombs, and pharaonic treasures.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    32.6396,
+                    25.6872
+                ]
+            },
+            "name": "Luxor"
+        },
+        {
+            "_id": "6935efaa47a0b161dbdeee64",
+            "slug": "matrouh",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765640269/matrouh_lnzbmj.jpg",
+            "description": "Northwestern coastal governorate with pristine Mediterranean beaches and WWII historical sites.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    27.2373,
+                    31.3543
+                ]
+            },
+            "name": "Matrouh"
+        },
+        {
+            "_id": "6935efa947a0b161dbdeee5e",
+            "slug": "minya",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639183/minya_tysp9o.jpg",
+            "description": "Middle Egypt governorate with significant Christian heritage and ancient archaeological sites.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    30.7503,
+                    28.0871
+                ]
+            },
+            "name": "Minya"
+        },
+        {
+            "_id": "6935efa847a0b161dbdeee5c",
+            "slug": "monufia",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765638911/monufia_hbriyn.jpg",
+            "description": "Delta governorate known for agriculture and as the birthplace of presidents Sadat and Mubarak.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    30.9976,
+                    30.5972
+                ]
+            },
+            "name": "Monufia"
+        },
+        {
+            "_id": "6935efab47a0b161dbdeee66",
+            "slug": "new-valley",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765643888/new-valley_pfa9dg.jpg",
+            "description": "Western desert governorate encompassing the Kharga, Dakhla, and Farafra oases.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    30.5428,
+                    25.4518
+                ]
+            },
+            "name": "New Valley"
+        },
+        {
+            "_id": "6935efaa47a0b161dbdeee65",
+            "slug": "north-sinai",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765643779/north-sinai_xgunuv.jpg",
+            "description": "Strategic northeastern governorate with Mediterranean coastline and historical significance.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    33.7991,
+                    31.1319
+                ]
+            },
+            "name": "North Sinai"
+        },
+        {
+            "_id": "6935efa647a0b161dbdeee56",
+            "slug": "port-said",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765638122/portsaid_vbepv9.jpg",
+            "description": "Strategic port city at the northern entrance of the Suez Canal.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    32.3019,
+                    31.2653
+                ]
+            },
+            "name": "Port Said"
+        },
+        {
+            "_id": "6935efa647a0b161dbdeee55",
+            "slug": "qalyubia",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765637844/qalyubia_lpvwix.jpg",
+            "description": "Northern governorate home to industrial cities and agricultural lands near Cairo.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.184,
+                    30.3262
+                ]
+            },
+            "name": "Qalyubia"
+        },
+        {
+            "_id": "6935efa947a0b161dbdeee61",
+            "slug": "qena",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639779/qena_le6hye.jpg",
+            "description": "Upper Egypt governorate with magnificent temples at Dendera and proximity to Luxor.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    32.7298,
+                    26.1551
+                ]
+            },
+            "name": "Qena"
+        },
+        {
+            "_id": "6935efa447a0b161dbdeee51",
+            "slug": "red-sea",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765637136/redsea_putjgw.jpg",
+            "description": "Premier diving and resort destination with pristine coral reefs and year-round sunshine.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    33.8116,
+                    27.2579
+                ]
+            },
+            "name": "Red Sea"
+        },
+        {
+            "_id": "6935efa547a0b161dbdeee54",
+            "slug": "sharqia",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765637721/sharkia_ukqlfs.jpg",
+            "description": "Eastern Delta governorate rich in history, from ancient Tanis to modern agricultural centers.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.5021,
+                    30.5852
+                ]
+            },
+            "name": "Sharqia"
+        },
+        {
+            "_id": "6935efa947a0b161dbdeee60",
+            "slug": "sohag",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639682/suhag_qx1ffu.jpg",
+            "description": "Upper Egypt governorate rich in Coptic monasteries and pharaonic temples.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    31.6948,
+                    26.5569
+                ]
+            },
+            "name": "Sohag"
+        },
+        {
+            "_id": "6935efa547a0b161dbdeee52",
+            "slug": "south-sinai",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765637185/Whisk_bf8fb964cd0968ca5304b6909031da00dr_ddaus0.jpg",
+            "description": "Home to Mount Sinai, St. Catherine's Monastery, and world-class Red Sea resorts like Sharm El Sheikh.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    34.2547,
+                    28.9684
+                ]
+            },
+            "name": "South Sinai"
+        },
+        {
+            "_id": "6935efa747a0b161dbdeee57",
+            "slug": "suez",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765638214/suez_w7zbjj.jpg",
+            "description": "Historic port city at the southern entrance of the Suez Canal.",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    32.5498,
+                    29.9668
+                ]
+            },
+            "name": "Suez"
+        }
+    ]
+}

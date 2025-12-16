@@ -225,7 +225,16 @@ export default function MyTripsPage() {
                     </div>
 
                     {trip.guide && (
-                      <div className={styles.guidePreview}>
+                      <div 
+                        className={styles.guidePreview}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (trip.guide._id) {
+                            router.push(`/guides/${trip.guide._id}`);
+                          }
+                        }}
+                        style={{ cursor: trip.guide._id ? 'pointer' : 'default' }}
+                      >
                         <div className={styles.guideAvatar}>
                           {trip.guide.profilePicture ? (
                             <img
@@ -247,17 +256,6 @@ export default function MyTripsPage() {
                             <div className={styles.guideRating}>
                               ⭐ {trip.guide.rating.toFixed(1)}
                             </div>
-                          )}
-                          {trip.guide._id && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                router.push(`/guides/${trip.guide._id}`);
-                              }}
-                              className={styles.viewProfileBtn}
-                            >
-                              👤 View Profile
-                            </button>
                           )}
                         </div>
                       </div>

@@ -296,6 +296,13 @@
   padding: 12px;
   background: #f7fafc;
   border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.guidePreview:hover {
+  background: linear-gradient(135deg, #667eea15, #764ba215);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
 .guideAvatar {

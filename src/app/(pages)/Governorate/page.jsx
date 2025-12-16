@@ -2,8 +2,6 @@
 // File: app/governorate/page.jsx
 // =====================
 
-import fs from "fs/promises";
-import path from "path";
 import GovernorateClient from "./GovernorateClient";
 import styles from "./Governorate.module.css";
 
@@ -12,15 +10,22 @@ export const metadata = {
 };
 
 export default async function Governorate() {
-  // ✅ SSR: Read local JSON mock data
-  const filePath = path.join(process.cwd(), "public", "data", "guides.json");
+  // ✅ SSR: Fetch guides from API
   let guides = [];
 
   try {
-    const raw = await fs.readFile(filePath, "utf-8");
-    guides = JSON.parse(raw);
+    const response = await fetch('http://localhost:5000/api/tourist/guides', {
+      cache: 'no-store', // Always fetch fresh data
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      guides = data.data || [];
+    } else {
+      console.error("❌ Failed to fetch guides from API", response.status);
+    }
   } catch (err) {
-    console.error("❌ Failed to read guides.json", err);
+    console.error("❌ Error fetching guides:", err);
     guides = [];
   }
 

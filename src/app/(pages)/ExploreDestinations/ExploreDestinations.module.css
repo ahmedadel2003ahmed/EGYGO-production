@@ -319,73 +319,81 @@
   margin-bottom: 1.5rem;
 }
 
-/* --- Governorate Tiles --- */
+/* --- Governorate Tiles with Cover Image --- */
 .governorateTile {
   border-radius: 16px;
-  padding: 2rem 1.5rem;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border: 2px solid transparent;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  min-height: 280px;
 }
 
-.governorateTile::before {
-  content: '';
+.governorateTile:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 121, 124, 0.2);
+}
+
+.tileImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tileOverlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 121, 124, 0.05));
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  background: linear-gradient(135deg, rgba(10, 35, 66, 0.85) 0%, rgba(0, 121, 124, 0.75) 100%);
+  transition: all 0.3s ease;
+  z-index: 1;
 }
 
-.governorateTile:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(0, 121, 124, 0.12);
-  border-color: rgba(0, 121, 124, 0.2);
+.governorateTile:hover .tileOverlay {
+  background: linear-gradient(135deg, rgba(10, 35, 66, 0.75) 0%, rgba(0, 121, 124, 0.65) 100%);
 }
 
-.governorateTile:hover::before {
-  opacity: 1;
+.tileContent {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 1.5rem;
+  color: white;
 }
 
 .tileIcon {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 1rem;
   line-height: 1;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
   transition: transform 0.3s ease;
-  position: relative;
-  z-index: 2;
 }
 
 .governorateTile:hover .tileIcon {
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(5deg);
 }
 
 .tileTitle {
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #0A2342;
-  position: relative;
-  z-index: 2;
+  margin-bottom: 0.75rem;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
 }
 
 .tileDesc {
   font-size: 0.95rem;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.5;
   text-align: center;
-  position: relative;
-  z-index: 2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Enhanced Governorate Tile Colors */
@@ -490,6 +498,14 @@
   }
   
   .governorateTile {
+    min-height: 240px;
+  }
+  
+  .tileImageWrapper {
+    min-height: 240px;
+  }
+  
+  .tileContent {
     padding: 1.5rem 1rem;
   }
   
@@ -551,11 +567,27 @@
     height: 200px;
   }
   
+  .governorateTile {
+    min-height: 220px;
+  }
+  
+  .tileImageWrapper {
+    min-height: 220px;
+  }
+  
+  .tileContent {
+    padding: 1.25rem 1rem;
+  }
+  
   .tileIcon {
     font-size: 2rem;
   }
   
   .tileTitle {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
+  }
+  
+  .tileDesc {
+    font-size: 0.85rem;
   }
 }

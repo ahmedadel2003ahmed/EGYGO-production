@@ -194,6 +194,36 @@ export default function GuideProfileClient() {
 
         {/* RIGHT SECTION */}
         <div className="col-lg-9">
+          {/* STATUS - Moved to top */}
+          <div className={styles.sectionCard}>
+            <h5 className={styles.sectionTitle}>Guide Status</h5>
+            <div className={styles.statusBadges}>
+              <span className={guide.isActive ? styles.badgeActive : styles.badgeInactive}>
+                {guide.isActive ? '✅ Active & Available' : '❌ Currently Unavailable'}
+              </span>
+              {guide.user?.isActive && (
+                <span className={styles.badgeActive}>
+                  ✅ Account Verified
+                </span>
+              )}
+              {guide.isVerified && (
+                <span className={styles.badgeActive}>
+                  ✅ Identity Verified
+                </span>
+              )}
+              {guide.isLicensed && (
+                <span className={styles.badgeActive}>
+                  ✅ Licensed Guide
+                </span>
+              )}
+              {guide.canEnterArchaeologicalSites && (
+                <span className={styles.badgeActive}>
+                  ✅ Archaeological Sites Access
+                </span>
+              )}
+            </div>
+          </div>
+
           {/* ABOUT ME */}
           <div className={styles.sectionCard}>
             <h5 className={styles.sectionTitle}>About Me</h5>
@@ -251,21 +281,6 @@ export default function GuideProfileClient() {
               </div>
             </div>
           )}
-
-          {/* ACTIVITY STATUS */}
-          <div className={styles.sectionCard}>
-            <h5 className={styles.sectionTitle}>Status</h5>
-            <div className={styles.statusBadges}>
-              <span className={guide.isActive ? styles.badgeActive : styles.badgeInactive}>
-                {guide.isActive ? '✅ Active' : '❌ Inactive'}
-              </span>
-              {guide.user?.isActive && (
-                <span className={styles.badgeActive}>
-                  ✅ Account Active
-                </span>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>

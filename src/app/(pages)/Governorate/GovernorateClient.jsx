@@ -6,54 +6,108 @@ import Image from "next/image";
 import styles from "./Governorate.module.css";
 
 export default function GovernorateClient({ initialGuides = [] }) {
-  // 🏙️ Extract unique cities
-  const cities = useMemo(() => {
-    const set = new Set();
+  // 🏙️ Extract unique governorates from all guides
+  const governorates = useMemo(() => {
+    const governorateMap = new Map();
 
-    
-    initialGuides.forEach((g) => {
-      (g.filters?.serviceLocations || []).forEach((c) => set.add(c));
+    initialGuides.forEach((guide) => {
+      // Handle guides with provinces array
+      if (guide.provinces && Array.isArray(guide.provinces) && guide.provinces.length > 0) {
+        guide.provinces.forEach((province) => {
+          if (province?.name && province?._id) {
+            governorateMap.set(province.name, {
+              id: province._id,
+              name: province.name,
+              slug: province.slug || province.name.toLowerCase(),
+            });
+          }
+        });
+      }
+      
+      // Handle guides with single province object
+      if (guide.province?.name && guide.province?._id) {
+        governorateMap.set(guide.province.name, {
+          id: guide.province._id,
+          name: guide.province.name,
+          slug: guide.province.slug || guide.province.name.toLowerCase(),
+        });
+      }
     });
-    return Array.from(set).sort();
+
+    // Convert map to sorted array
+    return Array.from(governorateMap.values()).sort((a, b) => 
+      a.name.localeCompare(b.name)
+    );
   }, [initialGuides]);
 
-  const [selectedCity, setSelectedCity] = useState(cities[0] || null);
+  const [selectedGovernorate, setSelectedGovernorate] = useState(governorates[0]?.name || null);
   const [query, setQuery] = useState("");
+
+  // Get guide count per governorate
+  const getGuideCount = (governorateName) => {
+    return initialGuides.filter((g) => {
+      const provinces = g.provinces || [];
+      const province = g.province;
+      
+      const hasProvince = provinces.some(p => p?.name === governorateName);
+      const hasMainProvince = province?.name === governorateName;
+      
+      return hasProvince || hasMainProvince;
+    }).length;
+  };
 
   // 🔍 Filter guides
   const filteredGuides = useMemo(() => {
-    if (!selectedCity) return initialGuides;
-    return initialGuides
-      .filter((g) =>
-        (g.filters?.serviceLocations || []).includes(selectedCity)
-      )
-      .filter((g) => {
-        if (!query.trim()) return true;
-        const q = query.toLowerCase();
+    let filtered = initialGuides;
+
+    // Filter by selected governorate
+    if (selectedGovernorate) {
+      filtered = filtered.filter((g) => {
+        const provinces = g.provinces || [];
+        const province = g.province;
+        
+        // Check if guide works in selected governorate
+        const hasProvince = provinces.some(p => p?.name === selectedGovernorate);
+        const hasMainProvince = province?.name === selectedGovernorate;
+        
+        return hasProvince || hasMainProvince;
+      });
+    }
+
+    // Filter by search query
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      filtered = filtered.filter((g) => {
         return (
-          g.card?.name?.toLowerCase().includes(q) ||
-          g.card?.specialization?.toLowerCase().includes(q)
+          g.name?.toLowerCase().includes(q) ||
+          g.bio?.toLowerCase().includes(q) ||
+          g.languages?.some(lang => lang.toLowerCase().includes(q))
         );
       });
-  }, [initialGuides, selectedCity, query]);
+    }
+
+    return filtered;
+  }, [initialGuides, selectedGovernorate, query]);
 
   return (
     <div className={`row ${styles.grid}`}>
-      {/* Left Column: Cities */}
+      {/* Left Column: Governorates */}
       <aside className={`col-lg-3 col-md-4 ${styles.leftCol}`}>
         <h3 className={styles.columnTitle}>Choose a Governorate</h3>
         <div className={styles.citiesWrap}>
-          {cities.map((city) => (
+          {governorates.map((gov) => (
             <button
-              key={city}
+              key={gov.id}
               className={`${styles.cityItem} ${
-                selectedCity === city ? styles.activeCity : ""
+                selectedGovernorate === gov.name ? styles.activeCity : ""
               }`}
-              onClick={() => setSelectedCity(city)}
+              onClick={() => setSelectedGovernorate(gov.name)}
             >
               <div>
-                <strong>{city}</strong>
-                <div className={styles.cityDesc}>Explore guides in {city}.</div>
+                <strong>{gov.name}</strong>
+                <div className={styles.cityDesc}>
+                  {getGuideCount(gov.name)} {getGuideCount(gov.name) === 1 ? 'guide' : 'guides'} available
+                </div>
               </div>
               <span className={styles.bell}>🔔</span>
             </button>
@@ -65,7 +119,7 @@ export default function GovernorateClient({ initialGuides = [] }) {
       <section className={`col-lg-9 col-md-8 ${styles.rightCol}`}>
         <div className={styles.rightHeader}>
           <h3 className={styles.columnTitle}>
-            Local Guides {selectedCity ? `in ${selectedCity}` : ""}
+            Local Guides {selectedGovernorate ? `in ${selectedGovernorate}` : ""}
           </h3>
           <div className={styles.searchWrapper}>
             <input
@@ -85,38 +139,43 @@ export default function GovernorateClient({ initialGuides = [] }) {
         ) : (
           <div className={`row g-3 ${styles.cardsGrid}`}>
             {filteredGuides.map((g) => (
-              <div className="col-xl-4 col-lg-6 col-md-12" key={`${g.id}-${g.slug || g.card?.name}`}>
+              <div className="col-xl-4 col-lg-6 col-md-12" key={g._id}>
                 <article className={styles.card}>
                   <div className={styles.cardTop}>
                     <Image
-                      src={g.card?.avatar || "/images/guides/default.png"}
-                      alt={g.card?.name || "Guide avatar"}
+                      src={g.photo?.url || "/images/guides/default.png"}
+                      alt={g.name || "Guide avatar"}
                       className={styles.avatar}
                       width={80}
                       height={80}
                     />
                     <div className={styles.cardTitleWrap}>
-                      <h4 className={styles.cardName}>{g.card?.name}</h4>
+                      <h4 className={styles.cardName}>{g.name}</h4>
                       <div className={styles.ratingWrap}>
                         <span className={styles.stars}>⭐</span>
                         <span className={styles.rating}>
-                          {g.card?.rating?.toFixed(1)}
+                          {g.rating > 0 ? g.rating.toFixed(1) : '0.0'}
                         </span>
                         <span className={styles.reviews}>
-                          ({g.card?.reviewsCount} reviews)
+                          ({g.ratingCount || 0} reviews)
                         </span>
                       </div>
                       <div className={styles.spec}>
-                        {g.card?.specialization}
+                        {g.languages?.join(', ') || 'No languages specified'}
                       </div>
+                      {g.isVerified && (
+                        <div className={styles.verifiedBadge}>
+                          ✓ Verified
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   <div className={styles.cardBottom}>
                     <div className={styles.price}>
-                      ${g.card?.pricePerHour} <small>/ hour</small>
+                      ${g.pricePerHour} <small>/ hour</small>
                     </div>
-                    <Link href={`/guides/${g.slug}`} className={styles.viewBtn}>
+                    <Link href={`/guides/${g._id}`} className={styles.viewBtn}>
                       View Profile
                     </Link>
                   </div>

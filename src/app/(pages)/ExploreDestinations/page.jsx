@@ -200,10 +200,10 @@ const fetchGovernorates = async () => {
       const formatted = response.data.data.map((province) => ({
         name: province.name,
         shortDesc: province.description || '',
-        icon: getProvinceIcon(province.name), // Helper function to assign icons
-        colorClass: getProvinceColorClass(province.name), // Helper function for colors
+        icon: getProvinceIcon(province.name),
+        colorClass: getProvinceColorClass(province.name),
         slug: province.slug,
-        coverImage: province.coverImage,
+        coverImage: province.coverImage || 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop',
       }));
       
       return formatted.length > 0 ? formatted : MOCK_GOVERNORATES;
@@ -286,19 +286,35 @@ const DestinationCard = ({ title, subtitle, imageUrl, slug }) => (
 );
 
 /**
- * Renders a single governorate tile.
+ * Renders a single governorate tile with cover image.
  */
-const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug }) => {
+const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug, coverImage }) => {
   const tileColorClass = styles[colorClass] || styles.tileDefault;
 
   return (
     <Link href={`/Governorate/${slug}`} className="text-decoration-none">
-      <div className={`text-center p-3 rounded-3 h-100 ${styles.governorateTile} ${tileColorClass}`}>
-        <div className={styles.tileIcon} aria-hidden="true">
-          {icon}
+      <div className={`rounded-3 overflow-hidden h-100 ${styles.governorateTile}`}>
+        {/* Background Image */}
+        <div 
+          className={styles.tileImageWrapper}
+          style={{
+            backgroundImage: `url(${coverImage || 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop'})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Overlay Gradient */}
+          <div className={styles.tileOverlay}></div>
+          
+          {/* Content */}
+          <div className={`${styles.tileContent} text-center`}>
+            <div className={styles.tileIcon} aria-hidden="true">
+              {icon}
+            </div>
+            <h5 className={`fw-bold ${styles.tileTitle}`}>{name}</h5>
+            <p className={styles.tileDesc}>{shortDesc}</p>
+          </div>
         </div>
-        <h5 className={`fw-bold ${styles.tileTitle}`}>{name}</h5>
-        <p className={styles.tileDesc}>{shortDesc}</p>
       </div>
     </Link>
   );
