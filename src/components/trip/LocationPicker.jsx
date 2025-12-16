@@ -1,26 +1,101 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './LocationPicker.module.css';
 
 export default function LocationPicker({ onLocationSelect, selectedLocation }) {
   const [showMap, setShowMap] = useState(false);
-  const [manualCoords, setManualCoords] = useState({
-    lat: selectedLocation?.lat || '',
-    lng: selectedLocation?.lng || '',
-  });
+  const [tempLocation, setTempLocation] = useState(selectedLocation);
+  const mapRef = useRef(null);
+  const leafletMapRef = useRef(null);
+  const markerRef = useRef(null);
 
-  const handleManualSubmit = () => {
-    const lat = parseFloat(manualCoords.lat);
-    const lng = parseFloat(manualCoords.lng);
+  // Initialize Leaflet Map
+  useEffect(() => {
+    if (showMap && mapRef.current && !leafletMapRef.current) {
+      // Load Leaflet CSS and JS
+      const loadLeaflet = async () => {
+        // Add Leaflet CSS
+        if (!document.getElementById('leaflet-css')) {
+          const link = document.createElement('link');
+          link.id = 'leaflet-css';
+          link.rel = 'stylesheet';
+          link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+          document.head.appendChild(link);
+        }
 
-    if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-      onLocationSelect({ lat, lng });
-      setShowMap(false);
-    } else {
-      alert('Please enter valid coordinates.\nLatitude: -90 to 90\nLongitude: -180 to 180');
+        // Load Leaflet JS
+        if (!window.L) {
+          await new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+            script.onload = resolve;
+            document.head.appendChild(script);
+          });
+        }
+
+        // Initialize map
+        const L = window.L;
+        const initialCenter = selectedLocation || { lat: 30.0444, lng: 31.2357 }; // Cairo
+
+        leafletMapRef.current = L.map(mapRef.current).setView(
+          [initialCenter.lat, initialCenter.lng],
+          13
+        );
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19,
+        }).addTo(leafletMapRef.current);
+
+        // Add marker if location exists
+        if (selectedLocation) {
+          markerRef.current = L.marker([selectedLocation.lat, selectedLocation.lng], {
+            draggable: true,
+          }).addTo(leafletMapRef.current);
+
+          // Update location when marker is dragged
+          markerRef.current.on('dragend', (e) => {
+            const pos = e.target.getLatLng();
+            setTempLocation({ lat: pos.lat, lng: pos.lng });
+          });
+        }
+
+        // Add click listener to map
+        leafletMapRef.current.on('click', (e) => {
+          const { lat, lng } = e.latlng;
+          setTempLocation({ lat, lng });
+
+          // Remove old marker
+          if (markerRef.current) {
+            leafletMapRef.current.removeLayer(markerRef.current);
+          }
+
+          // Add new marker
+          markerRef.current = L.marker([lat, lng], {
+            draggable: true,
+          }).addTo(leafletMapRef.current);
+
+          // Update location when marker is dragged
+          markerRef.current.on('dragend', (e) => {
+            const pos = e.target.getLatLng();
+            setTempLocation({ lat: pos.lat, lng: pos.lng });
+          });
+        });
+      };
+
+      loadLeaflet();
     }
-  };
+
+    // Cleanup
+    return () => {
+      if (leafletMapRef.current) {
+        leafletMapRef.current.remove();
+        leafletMapRef.current = null;
+      }
+    };
+  }, [showMap]);
 
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -34,23 +109,50 @@ export default function LocationPicker({ onLocationSelect, selectedLocation }) {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        onLocationSelect(location);
-        setManualCoords({
-          lat: location.lat.toFixed(6),
-          lng: location.lng.toFixed(6),
-        });
-        setShowMap(false);
+        setTempLocation(location);
+        
+        // Update map view and marker
+        if (leafletMapRef.current && window.L) {
+          leafletMapRef.current.setView([location.lat, location.lng], 15);
+          
+          if (markerRef.current) {
+            leafletMapRef.current.removeLayer(markerRef.current);
+          }
+          
+          markerRef.current = window.L.marker([location.lat, location.lng], {
+            draggable: true,
+          }).addTo(leafletMapRef.current);
+
+          markerRef.current.on('dragend', (e) => {
+            const pos = e.target.getLatLng();
+            setTempLocation({ lat: pos.lat, lng: pos.lng });
+          });
+        }
       },
       (error) => {
         console.error('Geolocation error:', error);
-        alert('Unable to retrieve your location. Please enter coordinates manually.');
+        alert('Unable to retrieve your location. Please click on the map to select a location.');
       }
     );
   };
 
   const handleClear = () => {
     onLocationSelect(null);
-    setManualCoords({ lat: '', lng: '' });
+    setTempLocation(null);
+  };
+
+  const handleConfirmLocation = () => {
+    if (tempLocation) {
+      onLocationSelect(tempLocation);
+      setShowMap(false);
+    } else {
+      alert('Please select a location on the map');
+    }
+  };
+
+  const handleCancelMap = () => {
+    setTempLocation(selectedLocation);
+    setShowMap(false);
   };
 
   // Popular Egyptian locations
@@ -63,33 +165,38 @@ export default function LocationPicker({ onLocationSelect, selectedLocation }) {
   ];
 
   const handleQuickSelect = (location) => {
-    onLocationSelect({ lat: location.lat, lng: location.lng });
-    setManualCoords({
-      lat: location.lat.toFixed(6),
-      lng: location.lng.toFixed(6),
-    });
-    setShowMap(false);
+    setTempLocation({ lat: location.lat, lng: location.lng });
+    
+    // Update map view and marker
+    if (leafletMapRef.current && window.L) {
+      leafletMapRef.current.setView([location.lat, location.lng], 13);
+      
+      if (markerRef.current) {
+        leafletMapRef.current.removeLayer(markerRef.current);
+      }
+      
+      markerRef.current = window.L.marker([location.lat, location.lng], {
+        draggable: true,
+      }).addTo(leafletMapRef.current);
+
+      markerRef.current.on('dragend', (e) => {
+        const pos = e.target.getLatLng();
+        setTempLocation({ lat: pos.lat, lng: pos.lng });
+      });
+    }
   };
 
   return (
     <div className={styles.pickerWrapper}>
       {!selectedLocation && !showMap && (
-        <div className={styles.actionButtons}>
-          <button
-            type="button"
-            onClick={() => setShowMap(true)}
-            className={styles.actionBtn}
-          >
-            📍 Pin Location
-          </button>
-          <button
-            type="button"
-            onClick={handleUseCurrentLocation}
-            className={styles.actionBtn}
-          >
-            🧭 Use Current Location
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setShowMap(true)}
+          className={styles.pinLocationBtn}
+        >
+          <span className={styles.pinIcon}>📍</span>
+          <span className={styles.pinText}>Pin Meeting Location on Map</span>
+        </button>
       )}
 
       {selectedLocation && (
@@ -97,112 +204,125 @@ export default function LocationPicker({ onLocationSelect, selectedLocation }) {
           <div className={styles.selectedHeader}>
             <div className={styles.selectedIcon}>✅</div>
             <div className={styles.selectedInfo}>
-              <div className={styles.selectedTitle}>Location Pinned</div>
+              <div className={styles.selectedTitle}>Location Pinned Successfully</div>
               <div className={styles.selectedCoords}>
-                Lat: {selectedLocation.lat.toFixed(6)}, Lng: {selectedLocation.lng.toFixed(6)}
+                📍 {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
               </div>
             </div>
-            <button
-              type="button"
-              onClick={handleClear}
-              className={styles.clearBtn}
-              aria-label="Clear location"
-            >
-              ×
-            </button>
           </div>
-          <div className={styles.mapPreview}>
+          <div className={styles.selectedActions}>
             <a
               href={`https://www.google.com/maps?q=${selectedLocation.lat},${selectedLocation.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.mapLink}
+              className={styles.viewMapBtn}
             >
               🗺️ View on Google Maps
             </a>
+            <button
+              type="button"
+              onClick={() => setShowMap(true)}
+              className={styles.changeLocationBtn}
+            >
+              📍 Change Location
+            </button>
+            <button
+              type="button"
+              onClick={handleClear}
+              className={styles.removeBtn}
+            >
+              🗑️ Remove
+            </button>
           </div>
         </div>
       )}
 
       {showMap && (
-        <div className={styles.mapModal}>
-          <div className={styles.modalHeader}>
-            <h4>Select Meeting Location</h4>
-            <button
-              type="button"
-              onClick={() => setShowMap(false)}
-              className={styles.closeBtn}
-            >
-              ×
-            </button>
-          </div>
-
-          <div className={styles.modalContent}>
-            {/* Quick Select */}
-            <div className={styles.quickSelect}>
-              <label className={styles.sectionLabel}>Popular Locations</label>
-              <div className={styles.locationChips}>
-                {popularLocations.map((loc) => (
-                  <button
-                    key={loc.name}
-                    type="button"
-                    onClick={() => handleQuickSelect(loc)}
-                    className={styles.locationChip}
-                  >
-                    {loc.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Manual Entry */}
-            <div className={styles.manualEntry}>
-              <label className={styles.sectionLabel}>Enter Coordinates</label>
-              <div className={styles.coordInputs}>
-                <div className={styles.coordField}>
-                  <label>Latitude</label>
-                  <input
-                    type="number"
-                    value={manualCoords.lat}
-                    onChange={(e) =>
-                      setManualCoords({ ...manualCoords, lat: e.target.value })
-                    }
-                    placeholder="e.g., 29.9792"
-                    step="0.000001"
-                    className={styles.coordInput}
-                  />
-                </div>
-                <div className={styles.coordField}>
-                  <label>Longitude</label>
-                  <input
-                    type="number"
-                    value={manualCoords.lng}
-                    onChange={(e) =>
-                      setManualCoords({ ...manualCoords, lng: e.target.value })
-                    }
-                    placeholder="e.g., 31.1342"
-                    step="0.000001"
-                    className={styles.coordInput}
-                  />
-                </div>
-              </div>
+        <div className={styles.mapModalOverlay} onClick={handleCancelMap}>
+          <div className={styles.mapModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>📍 Select Meeting Location</h3>
               <button
                 type="button"
-                onClick={handleManualSubmit}
-                className={styles.submitBtn}
+                onClick={handleCancelMap}
+                className={styles.closeBtn}
+                aria-label="Close map"
               >
-                Set Location
+                ✕
               </button>
             </div>
 
-            {/* Info */}
-            <div className={styles.infoBox}>
-              <strong>💡 Tip:</strong> You can find coordinates by right-clicking on Google Maps
-              and selecting "What's here?"
+            <div className={styles.modalBody}>
+              {/* Quick Actions */}
+              <div className={styles.quickActions}>
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  className={styles.quickActionBtn}
+                >
+                  <span className={styles.quickActionIcon}>🧭</span>
+                  <span>Use My Location</span>
+                </button>
+              </div>
+
+              {/* Quick Select */}
+              <div className={styles.quickSelect}>
+                <label className={styles.sectionLabel}>Popular Locations</label>
+                <div className={styles.locationChips}>
+                  {popularLocations.map((loc) => (
+                    <button
+                      key={loc.name}
+                      type="button"
+                      onClick={() => handleQuickSelect(loc)}
+                      className={styles.locationChip}
+                    >
+                      {loc.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Interactive Map */}
+              <div className={styles.mapContainer}>
+                <div ref={mapRef} className={styles.interactiveMap}></div>
+                <div className={styles.mapInstructions}>
+                  🗺️ Click anywhere on the map to pin your meeting location, or drag the marker to adjust
+                </div>
+              </div>
+
+              {/* Selected Coordinates Display */}
+              {tempLocation && (
+                <div className={styles.coordsDisplay}>
+                  <span className={styles.coordsLabel}>Selected:</span>
+                  <span className={styles.coordsValue}>
+                    {tempLocation.lat.toFixed(6)}, {tempLocation.lng.toFixed(6)}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                onClick={handleCancelMap}
+                className={styles.cancelBtn}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLocation}
+                className={styles.confirmBtn}
+                disabled={!tempLocation}
+              >
+                Confirm Location
+              </button>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 }

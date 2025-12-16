@@ -10,9 +10,16 @@ export default function SelectGuidePage() {
   const router = useRouter();
   const params = useParams();
   const tripId = params.tripId;
+  const [toast, setToast] = useState(null);
 
   console.log('SelectGuidePage - params:', params);
   console.log('SelectGuidePage - tripId:', tripId);
+
+  // Show toast notification
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   // Check authentication and tripId
   useEffect(() => {
@@ -36,23 +43,38 @@ export default function SelectGuidePage() {
     sortBy: 'distance', // distance, rating, price
   });
 
-  // Fetch compatible guides
+  // Fetch trip details
   const {
-    data: guidesData,
-    isLoading,
-    error,
+    data: tripData,
+    isLoading: loadingTrip,
+    error: tripError,
   } = useQuery({
-    queryKey: ['trip-guides', tripId, filters],
+    queryKey: ['trip', tripId],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/api/tourist/trips/${tripId}/guides`,
+        `http://localhost:5000/api/tourist/trips/${tripId}`,
         {
-          params: {
-            language: filters.language || undefined,
-            maxDistance: filters.maxDistance || undefined,
-            minRating: filters.minRating || undefined,
-            sortBy: filters.sortBy,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
+        }
+      );
+      return response.data?.data?.trip || response.data?.data || null;
+    },
+    enabled: !!tripId,
+  });
+
+  // Fetch all guides
+  const {
+    data: allGuidesData,
+    isLoading: loadingGuides,
+    error: guidesError,
+  } = useQuery({
+    queryKey: ['all-guides'],
+    queryFn: async () => {
+      const response = await axios.get(
+        'http://localhost:5000/api/tourist/guides',
+        {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
@@ -60,8 +82,61 @@ export default function SelectGuidePage() {
       );
       return response.data?.data || [];
     },
-    enabled: !!tripId,
   });
+
+  const isLoading = loadingTrip || loadingGuides;
+  const error = tripError || guidesError;
+
+  // Filter guides based on trip's provinceId
+  const getFilteredGuides = () => {
+    if (!tripData || !allGuidesData) return [];
+
+    const tripProvinceId = tripData.provinceId || tripData.province?._id;
+    
+    if (!tripProvinceId) {
+      console.log('No provinceId found in trip:', tripData);
+      return allGuidesData;
+    }
+
+    // Filter guides by province
+    const filteredByProvince = allGuidesData.filter(guide => {
+      // Check if guide works in this province
+      if (guide.provinces && Array.isArray(guide.provinces)) {
+        return guide.provinces.some(p => p._id === tripProvinceId || p === tripProvinceId);
+      }
+      if (guide.province) {
+        return guide.province._id === tripProvinceId || guide.province === tripProvinceId;
+      }
+      return false;
+    });
+
+    // Apply additional filters
+    let filtered = filteredByProvince;
+
+    if (filters.language) {
+      filtered = filtered.filter(guide => 
+        guide.languages?.includes(filters.language)
+      );
+    }
+
+    if (filters.minRating > 0) {
+      filtered = filtered.filter(guide => 
+        (guide.rating || 0) >= filters.minRating
+      );
+    }
+
+    // Sort guides
+    if (filters.sortBy === 'rating') {
+      filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (filters.sortBy === 'price') {
+      filtered.sort((a, b) => (a.pricePerHour || 0) - (b.pricePerHour || 0));
+    }
+
+    return filtered;
+  };
+
+  const guides = getFilteredGuides();
+  const trip = tripData;
 
   // Select guide mutation
   const selectGuideMutation = useMutation({
@@ -78,14 +153,18 @@ export default function SelectGuidePage() {
       return response.data;
     },
     onSuccess: () => {
-      router.push(`/my-trips/${tripId}`);
+      showToast('Guide selected successfully! Redirecting...', 'success');
+      setTimeout(() => {
+        router.push(`/my-trips/${tripId}`);
+      }, 1500);
+    },
+    onError: (error) => {
+      showToast(error.response?.data?.message || 'Failed to select guide', 'error');
     },
   });
 
   const handleSelectGuide = async (guideId) => {
-    if (window.confirm('Select this guide for your trip?')) {
-      selectGuideMutation.mutate(guideId);
-    }
+    selectGuideMutation.mutate(guideId);
   };
 
   // Show error if tripId is invalid
@@ -108,11 +187,18 @@ export default function SelectGuidePage() {
     );
   }
 
-  const guides = guidesData?.guides || [];
-  const trip = guidesData?.trip;
-
   return (
     <div className={styles.pageWrapper}>
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`${styles.toast} ${styles[toast.type]}`}>
+          <span className={styles.toastIcon}>
+            {toast.type === 'success' ? '✓' : '✕'}
+          </span>
+          <span className={styles.toastMessage}>{toast.message}</span>
+        </div>
+      )}
+
       {/* Header */}
       <section className={styles.headerSection}>
         <div className="container">
@@ -125,6 +211,9 @@ export default function SelectGuidePage() {
               <span>📅 {new Date(trip.startAt).toLocaleDateString()}</span>
               <span>⏱️ {trip.totalDurationMinutes} min</span>
               <span>📍 {trip.meetingAddress}</span>
+              {trip.province && (
+                <span>🗺️ {trip.province.name || 'Province not set'}</span>
+              )}
             </div>
           )}
         </div>

@@ -17,6 +17,53 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
   const [error, setError] = useState(null);
   const [itinerary, setItinerary] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [provinces, setProvinces] = useState([]);
+  const [loadingProvinces, setLoadingProvinces] = useState(true);
+
+  // Fallback governorate list (with actual MongoDB IDs from API)
+  const FALLBACK_GOVERNORATES = [
+    { _id: '6935efa247a0b161dbdeee4e', name: 'Alexandria', slug: 'alexandria' },
+    { _id: '6935efa347a0b161dbdeee50', name: 'Aswan', slug: 'aswan' },
+    { _id: '6935efa747a0b161dbdeee59', name: 'Beheira', slug: 'beheira' },
+    { _id: '6935efaa47a0b161dbdeee62', name: 'Beni Suef', slug: 'beni-suef' },
+    { _id: '6935efa247a0b161dbdeee4c', name: 'Cairo', slug: 'cairo' },
+    { _id: '6935efa847a0b161dbdeee5d', name: 'Damietta', slug: 'damietta' },
+    { _id: '6935efaa47a0b161dbdeee63', name: 'Fayoum', slug: 'fayoum' },
+    { _id: '6935efa847a0b161dbdeee5b', name: 'Gharbia', slug: 'gharbia' },
+    { _id: '6935efa247a0b161dbdeee4d', name: 'Giza', slug: 'giza' },
+    { _id: '6935efa747a0b161dbdeee58', name: 'Ismailia', slug: 'ismailia' },
+    { _id: '6935efa847a0b161dbdeee5a', name: 'Kafr El Sheikh', slug: 'kafr-el-sheikh' },
+    { _id: '6935efa347a0b161dbdeee4f', name: 'Luxor', slug: 'luxor' },
+    { _id: '6935efaa47a0b161dbdeee64', name: 'Matrouh', slug: 'matrouh' },
+    { _id: '6935efaa47a0b161dbdeee65', name: 'North Sinai', slug: 'north-sinai' },
+    { _id: '6935efa647a0b161dbdeee55', name: 'Qalyubia', slug: 'qalyubia' },
+    { _id: '6935efa947a0b161dbdeee61', name: 'Qena', slug: 'qena' },
+    { _id: '6935efa447a0b161dbdeee51', name: 'Red Sea', slug: 'red-sea' },
+    { _id: '6935efa547a0b161dbdeee54', name: 'Sharqia', slug: 'sharqia' },
+    { _id: '6935efa747a0b161dbdeee57', name: 'Suez', slug: 'suez' },
+  ];
+
+  // Fetch provinces
+  React.useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/provinces');
+        if (response.data?.success && response.data?.data?.provinces) {
+          setProvinces(response.data.data.provinces);
+        } else {
+          // Use fallback if API doesn't return data
+          setProvinces(FALLBACK_GOVERNORATES);
+        }
+      } catch (err) {
+        console.error('Failed to fetch provinces:', err);
+        // Use fallback governorates if API fails
+        setProvinces(FALLBACK_GOVERNORATES);
+      } finally {
+        setLoadingProvinces(false);
+      }
+    };
+    fetchProvinces();
+  }, []);
 
   const validationSchema = Yup.object({
     startAt: Yup.date()
@@ -31,6 +78,8 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
       .required('Duration is required'),
     notes: Yup.string()
       .max(500, 'Notes cannot exceed 500 characters'),
+    provinceId: Yup.string()
+      .required('Please select a governorate for your trip'),
   });
 
   const formik = useFormik({
@@ -39,6 +88,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
       meetingAddress: '',
       totalDurationMinutes: 240,
       notes: '',
+      provinceId: '',
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -57,13 +107,21 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
           meetingAddress: values.meetingAddress,
           totalDurationMinutes: values.totalDurationMinutes,
           notes: values.notes,
-          itinerary: itinerary.map(item => ({
+          provinceId: values.provinceId, // Always include the selected province
+        };
+
+        // Add itinerary if provided
+        if (itinerary.length > 0) {
+          tripData.itinerary = itinerary.map(item => ({
             placeId: item.placeId,
             visitDurationMinutes: item.visitDurationMinutes,
             notes: item.notes || '',
             ticketRequired: item.ticketRequired || false,
-          })),
-        };
+          }));
+          
+          // Use createdFromPlaceId if itinerary exists
+          tripData.createdFromPlaceId = itinerary[0].placeId;
+        }
 
         if (selectedLocation) {
           tripData.meetingPoint = {
@@ -189,6 +247,38 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
               </div>
             )}
 
+            {/* Governorate Selection */}
+            <div className={styles.formGroup}>
+              <label className={styles.label}>
+                Governorate <span className={styles.required}>*</span>
+              </label>
+              <p className={styles.helpText}>
+                Select the governorate where your trip will take place
+              </p>
+              <select
+                name="provinceId"
+                value={formik.values.provinceId}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className={`${styles.select} ${
+                  formik.touched.provinceId && formik.errors.provinceId
+                    ? styles.inputError
+                    : ''
+                }`}
+                disabled={loadingProvinces}
+              >
+                <option value="">Select a governorate...</option>
+                {provinces.map((province) => (
+                  <option key={province._id} value={province._id}>
+                    {province.name}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.provinceId && formik.errors.provinceId && (
+                <div className={styles.errorText}>{formik.errors.provinceId}</div>
+              )}
+            </div>
+
             {/* Trip Date & Time */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
@@ -311,7 +401,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
                 Trip Itinerary (Optional)
               </label>
               <p className={styles.helpText}>
-                Add places you want to visit during this trip
+                Add destinations to help us find suitable guides in your area
               </p>
               <ItineraryBuilder
                 itinerary={itinerary}

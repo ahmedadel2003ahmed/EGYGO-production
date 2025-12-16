@@ -13,7 +13,6 @@ export default function TripDetailsPage() {
   const queryClient = useQueryClient();
   const [guideFilters, setGuideFilters] = useState({
     language: '',
-    maxDistanceKm: '',
   });
 
   // Debug logging
@@ -55,28 +54,86 @@ export default function TripDetailsPage() {
     enabled: !!tripId,
   });
 
-  // Fetch compatible guides (only if trip status is selecting_guide)
+  // Extract trip from response data
+  const trip = tripData?.trip || tripData;
+
+  // Fetch selected guide details if guideId exists but guide object doesn't
   const {
-    data: guidesData = [],
-    isLoading: guidesLoading,
+    data: selectedGuideData,
+    isLoading: selectedGuideLoading,
   } = useQuery({
-    queryKey: ['trip-guides', tripId, guideFilters],
+    queryKey: ['selected-guide', trip?.guideId],
     queryFn: async () => {
+      if (!trip?.guideId) return null;
       const response = await axios.get(
-        `http://localhost:5000/api/tourist/trips/${tripId}/guides`,
+        `http://localhost:5000/api/tourist/guides/${trip.guideId}`,
         {
-          params: {
-            language: guideFilters.language || undefined,
-            maxDistanceKm: guideFilters.maxDistanceKm || undefined,
-          },
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         }
       );
-      return response.data?.data || [];
+      return response.data?.data;
     },
-    enabled: !!tripId && tripData?.status === 'selecting_guide',
+    enabled: !!trip?.guideId && !trip?.guide,
+  });
+
+  // Use the populated guide or fetch it separately
+  const tripGuide = trip?.guide || selectedGuideData;
+
+  // Fetch all guides and filter based on trip itinerary provinces
+  const {
+    data: guidesData = [],
+    isLoading: guidesLoading,
+  } = useQuery({
+    queryKey: ['guides-for-trip', tripId, guideFilters],
+    queryFn: async () => {
+      // First, get all guides
+      const guidesResponse = await axios.get(
+        'http://localhost:5000/api/tourist/guides',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
+      
+      let guides = guidesResponse.data?.data || [];
+      
+      // Extract unique provinces from trip itinerary
+      const tripProvinces = new Set();
+      if (tripData?.itinerary && Array.isArray(tripData.itinerary)) {
+        tripData.itinerary.forEach(item => {
+          if (item.placeId?.province?._id) {
+            tripProvinces.add(item.placeId.province._id);
+          }
+        });
+      }
+      
+      // Filter guides by provinces if we have any
+      if (tripProvinces.size > 0) {
+        guides = guides.filter(guide => {
+          // Check if guide works in any of the trip provinces
+          if (guide.provinces && Array.isArray(guide.provinces)) {
+            return guide.provinces.some(p => tripProvinces.has(p._id));
+          }
+          if (guide.province?._id) {
+            return tripProvinces.has(guide.province._id);
+          }
+          return false;
+        });
+      }
+      
+      // Apply language filter if selected
+      if (guideFilters.language) {
+        guides = guides.filter(guide => 
+          guide.languages?.includes(guideFilters.language)
+        );
+      }
+      
+      return guides;
+    },
+    enabled: !!tripId && !!tripData && !tripGuide,
   });
 
   // Cancel trip mutation
@@ -172,10 +229,11 @@ export default function TripDetailsPage() {
     });
   };
 
-  const trip = tripData?.trip || tripData;
-
   console.log('Trip data received:', tripData);
   console.log('Extracted trip:', trip);
+  console.log('Trip guide:', trip?.guide);
+  console.log('Trip guideId:', trip?.guideId);
+  console.log('Trip status:', trip?.status);
   console.log('Is loading:', isLoading);
   console.log('Error:', error);
 
@@ -315,14 +373,14 @@ export default function TripDetailsPage() {
               )}
 
               {/* Guide Selection Section */}
-              {trip.status === 'selecting_guide' && (
+              {!tripGuide && trip.status !== 'cancelled' && trip.status !== 'completed' && (
                 <div className={styles.guideSelectionSection}>
                   <h3 className={styles.sectionTitle}>Select a Guide</h3>
                   
                   {/* Filters */}
                   <div className={styles.guideFilters}>
                     <div className={styles.filterGroup}>
-                      <label>Language (Optional)</label>
+                      <label>Filter by Language</label>
                       <select
                         value={guideFilters.language}
                         onChange={(e) =>
@@ -334,25 +392,30 @@ export default function TripDetailsPage() {
                         <option value="English">English</option>
                         <option value="Arabic">Arabic</option>
                         <option value="French">French</option>
-                      </select>
-                    </div>
-                    <div className={styles.filterGroup}>
-                      <label>Max Distance (km) (Optional)</label>
-                      <select
-                        value={guideFilters.maxDistanceKm}
-                        onChange={(e) =>
-                          setGuideFilters({ ...guideFilters, maxDistanceKm: e.target.value })
-                        }
-                        className={styles.filterSelect}
-                      >
-                        <option value="">Any Distance</option>
-                        <option value="5">Within 5 km</option>
-                        <option value="10">Within 10 km</option>
-                        <option value="20">Within 20 km</option>
-                        <option value="50">Within 50 km</option>
+                        <option value="German">German</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Italian">Italian</option>
                       </select>
                     </div>
                   </div>
+                  
+                  {/* Province Info */}
+                  {tripData?.itinerary && tripData.itinerary.length > 0 && (
+                    <div className={styles.provinceInfo}>
+                      <p className={styles.infoText}>
+                        📍 Showing guides available in: {' '}
+                        <strong>
+                          {Array.from(
+                            new Set(
+                              tripData.itinerary
+                                .map(item => item.placeId?.province?.name)
+                                .filter(Boolean)
+                            )
+                          ).join(', ') || 'your selected areas'}
+                        </strong>
+                      </p>
+                    </div>
+                  )}
 
                   {/* Loading State */}
                   {guidesLoading && (
@@ -366,7 +429,17 @@ export default function TripDetailsPage() {
                   {!guidesLoading && guidesData.length === 0 && (
                     <div className={styles.emptyGuidesState}>
                       <div className={styles.emptyIcon}>🔍</div>
-                      <p>No compatible guides available. Try adjusting filters.</p>
+                      <h3>No Guides Available</h3>
+                      <p>
+                        {guideFilters.language 
+                          ? 'No guides found with the selected language filter. Try selecting "All Languages".' 
+                          : 'No guides are available in the governorates where your trip destinations are located.'}
+                      </p>
+                      {tripData?.itinerary && tripData.itinerary.length === 0 && (
+                        <p className={styles.warningText}>
+                          ⚠️ Your trip doesn't have any destinations yet. Please add destinations to find suitable guides.
+                        </p>
+                      )}
                     </div>
                   )}
 
@@ -408,9 +481,14 @@ export default function TripDetailsPage() {
                                 <span>💰 EGP {guide.pricePerHour}/hour</span>
                               </div>
                             )}
-                            {guide.experienceYears && (
+                            {(guide.provinces?.length > 0 || guide.province) && (
                               <div className={styles.detailItem}>
-                                <span>🎓 {guide.experienceYears} years experience</span>
+                                <span>📍 {guide.provinces?.map(p => p.name).join(', ') || guide.province?.name}</span>
+                              </div>
+                            )}
+                            {guide.totalTrips > 0 && (
+                              <div className={styles.detailItem}>
+                                <span>🎯 {guide.totalTrips} trips completed</span>
                               </div>
                             )}
                           </div>
@@ -439,34 +517,34 @@ export default function TripDetailsPage() {
             {/* Sidebar */}
             <div className={styles.sidebar}>
               {/* Guide Info */}
-              {trip.guide && (
+              {tripGuide && (
                 <div className={styles.sidebarCard}>
                   <h3 className={styles.cardTitle}>Your Guide</h3>
                   <div className={styles.guideInfo}>
                     <div className={styles.guideAvatar}>
-                      {trip.guide.profilePicture ? (
+                      {tripGuide.photo?.url || tripGuide.profilePicture ? (
                         <img
-                          src={trip.guide.profilePicture}
-                          alt={trip.guide.name}
+                          src={tripGuide.photo?.url || tripGuide.profilePicture}
+                          alt={tripGuide.name}
                           className={styles.avatarImg}
                         />
                       ) : (
                         <div className={styles.avatarPlaceholder}>
-                          {trip.guide.name?.charAt(0)}
+                          {tripGuide.name?.charAt(0)}
                         </div>
                       )}
                     </div>
                     <div className={styles.guideDetails}>
-                      <div className={styles.guideName}>{trip.guide.name}</div>
-                      {trip.guide.rating && (
+                      <div className={styles.guideName}>{tripGuide.name}</div>
+                      {tripGuide.rating && (
                         <div className={styles.guideRating}>
-                          ⭐ {trip.guide.rating.toFixed(1)}
+                          ⭐ {tripGuide.rating.toFixed(1)}
                         </div>
                       )}
                     </div>
                   </div>
                   <button
-                    onClick={() => router.push(`/guides/${trip.guide._id}`)}
+                    onClick={() => router.push(`/guides/${tripGuide._id}`)}
                     className={styles.viewProfileBtn}
                   >
                     View Profile

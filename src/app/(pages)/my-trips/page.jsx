@@ -201,26 +201,42 @@ export default function MyTripsPage() {
                     <div className={styles.tripMainInfo}>
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>📅</span>
-                        <span className={styles.infoText}>
-                          {new Date(trip.startAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </span>
+                        <div className={styles.infoContent}>
+                          <span className={styles.infoLabel}>Date & Time</span>
+                          <span className={styles.infoText}>
+                            {new Date(trip.startAt).toLocaleDateString('en-US', {
+                              weekday: 'short',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                            {' at '}
+                            {new Date(trip.startAt).toLocaleTimeString('en-US', {
+                              hour: 'numeric',
+                              minute: '2-digit',
+                              hour12: true,
+                            })}
+                          </span>
+                        </div>
                       </div>
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>⏱️</span>
-                        <span className={styles.infoText}>
-                          {Math.floor(trip.totalDurationMinutes / 60)}h{' '}
-                          {trip.totalDurationMinutes % 60}m
-                        </span>
+                        <div className={styles.infoContent}>
+                          <span className={styles.infoLabel}>Duration</span>
+                          <span className={styles.infoText}>
+                            {Math.floor(trip.totalDurationMinutes / 60)} hour{Math.floor(trip.totalDurationMinutes / 60) !== 1 ? 's' : ''}{' '}
+                            {trip.totalDurationMinutes % 60 > 0 && `${trip.totalDurationMinutes % 60} min`}
+                          </span>
+                        </div>
                       </div>
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>📍</span>
-                        <span className={styles.infoText}>
-                          {trip.meetingAddress?.substring(0, 50)}
-                          {trip.meetingAddress?.length > 50 ? '...' : ''}
-                        </span>
+                        <div className={styles.infoContent}>
+                          <span className={styles.infoLabel}>Meeting Point</span>
+                          <span className={styles.infoText}>
+                            {trip.meetingAddress?.substring(0, 60)}
+                            {trip.meetingAddress?.length > 60 ? '...' : ''}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -236,9 +252,9 @@ export default function MyTripsPage() {
                         style={{ cursor: trip.guide._id ? 'pointer' : 'default' }}
                       >
                         <div className={styles.guideAvatar}>
-                          {trip.guide.profilePicture ? (
+                          {(trip.guide.photo?.url || trip.guide.profilePicture) ? (
                             <img
-                              src={trip.guide.profilePicture}
+                              src={trip.guide.photo?.url || trip.guide.profilePicture}
                               alt={trip.guide.name}
                               className={styles.avatarImg}
                             />

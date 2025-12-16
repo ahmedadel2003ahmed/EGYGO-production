@@ -46,9 +46,13 @@
   padding: 28px;
   border: 2px solid #E6D4A6;
   height: fit-content;
+  max-height: calc(100vh - 120px);
   position: sticky;
   top: 20px;
   box-shadow: 0 8px 32px rgba(212, 175, 55, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .columnTitle {
@@ -59,28 +63,78 @@
   border-bottom: 3px solid #D4AF37;
   padding-bottom: 8px;
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .citiesWrap {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  flex: 1;
+}
+
+/* Custom Scrollbar for Governorates List */
+.citiesWrap::-webkit-scrollbar {
+  width: 8px;
+}
+
+.citiesWrap::-webkit-scrollbar-track {
+  background: #FAF7F0;
+  border-radius: 4px;
+}
+
+.citiesWrap::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #D4AF37, #B8941E);
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.citiesWrap::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #C19A2E, #A67F1A);
+}
+
+/* Firefox Scrollbar */
+.citiesWrap {
+  scrollbar-width: thin;
+  scrollbar-color: #D4AF37 #FAF7F0;
 }
 
 .cityItem {
   background: linear-gradient(135deg, #FFFFFF, #FAF7F0);
   border: 2px solid #E6D4A6;
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-align: left;
   width: 100%;
+  min-height: 70px;
   position: relative;
+  overflow: visible;
+}
+
+.cityItem > div {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
+}
+
+.cityItem strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2D1B1B;
+  margin-bottom: 4px;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.3;
 }
 
 .cityItem::before {
@@ -118,15 +172,20 @@
 
 .cityDesc {
   color: #8B7355;
-  font-size: 0.85rem;
-  margin-top: 3px;
+  font-size: 0.8rem;
+  margin-top: 2px;
   font-style: italic;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.3;
 }
 
 .bell {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   opacity: 0.8;
   filter: sepia(1) saturate(2) hue-rotate(25deg);
+  flex-shrink: 0;
+  margin-left: 8px;
 }
 
 /* ===== RIGHT COLUMN (Guides) ===== */
@@ -449,6 +508,10 @@
     flex-direction: column;
     gap: 16px;
     text-align: center;
+  }
+  
+  .leftCol {
+    max-height: 400px;
   }
   
   .citiesWrap {

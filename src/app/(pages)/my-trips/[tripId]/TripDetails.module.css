@@ -488,9 +488,37 @@
   margin-bottom: 12px;
 }
 
+.emptyGuidesState h3 {
+  color: #2d3748;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
 .emptyGuidesState p {
   color: #718096;
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.warningText {
+  color: #d97706 !important;
+  font-weight: 600;
+  margin-top: 16px !important;
+}
+
+.provinceInfo {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-left: 4px solid #3b82f6;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.infoText {
   margin: 0;
+  color: #1e40af;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .guidesList {
