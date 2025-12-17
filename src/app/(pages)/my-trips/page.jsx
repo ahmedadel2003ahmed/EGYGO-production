@@ -13,6 +13,29 @@ export default function MyTripsPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Governorate lookup map
+  const GOVERNORATE_MAP = {
+    '6935efa247a0b161dbdeee4e': 'Alexandria',
+    '6935efa347a0b161dbdeee50': 'Aswan',
+    '6935efa747a0b161dbdeee59': 'Beheira',
+    '6935efaa47a0b161dbdeee62': 'Beni Suef',
+    '6935efa247a0b161dbdeee4c': 'Cairo',
+    '6935efa847a0b161dbdeee5d': 'Damietta',
+    '6935efaa47a0b161dbdeee63': 'Fayoum',
+    '6935efa847a0b161dbdeee5b': 'Gharbia',
+    '6935efa247a0b161dbdeee4d': 'Giza',
+    '6935efa747a0b161dbdeee58': 'Ismailia',
+    '6935efa847a0b161dbdeee5a': 'Kafr El Sheikh',
+    '6935efa347a0b161dbdeee4f': 'Luxor',
+    '6935efaa47a0b161dbdeee64': 'Matrouh',
+    '6935efaa47a0b161dbdeee65': 'North Sinai',
+    '6935efa647a0b161dbdeee55': 'Qalyubia',
+    '6935efa947a0b161dbdeee61': 'Qena',
+    '6935efa447a0b161dbdeee51': 'Red Sea',
+    '6935efa547a0b161dbdeee54': 'Sharqia',
+    '6935efa747a0b161dbdeee57': 'Suez',
+  };
+
   // Check authentication
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -38,7 +61,16 @@ export default function MyTripsPage() {
             },
           }
         );
-        return response.data?.data || [];
+        const tripsData = response.data?.data || [];
+        console.log('Trips data:', tripsData);
+        if (tripsData.length > 0) {
+          console.log('First trip province data:', {
+            province: tripsData[0].province,
+            provinceId: tripsData[0].provinceId,
+            provinces: tripsData[0].provinces
+          });
+        }
+        return tripsData;
       } catch (error) {
         console.error('Failed to fetch trips:', error);
         return [];
@@ -199,6 +231,8 @@ export default function MyTripsPage() {
 
                   <div className={styles.tripCardBody}>
                     <div className={styles.tripMainInfo}>
+
+
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>📅</span>
                         <div className={styles.infoContent}>
@@ -218,6 +252,7 @@ export default function MyTripsPage() {
                           </span>
                         </div>
                       </div>
+
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>⏱️</span>
                         <div className={styles.infoContent}>
@@ -228,6 +263,8 @@ export default function MyTripsPage() {
                           </span>
                         </div>
                       </div>
+
+
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>📍</span>
                         <div className={styles.infoContent}>
@@ -238,6 +275,42 @@ export default function MyTripsPage() {
                           </span>
                         </div>
                       </div>
+
+                      {(trip.province || trip.provinceId || trip.provinces) && (
+                        <div className={styles.tripInfoRow}>
+                          <span className={styles.infoIcon}>🏛️</span>
+                          <div className={styles.infoContent}>
+                            <span className={styles.infoLabel}>Governorate</span>
+                            <span className={styles.infoText}>
+                              {(() => {
+                                // Handle different API response structures
+                                // 1. Check if province is populated with name
+                                if (trip.province?.name) return trip.province.name;
+                                // 2. Check if province is a string name
+                                if (typeof trip.province === 'string' && trip.province.length < 30) return trip.province;
+                                // 3. Check if provinceId is populated with name
+                                if (trip.provinceId?.name) return trip.provinceId.name;
+                                // 4. Check if provinceId is a string ID and map it to name
+                                if (typeof trip.provinceId === 'string') {
+                                  const provinceName = GOVERNORATE_MAP[trip.provinceId];
+                                  if (provinceName) return provinceName;
+                                }
+                                // 5. Check if provinces array exists
+                                if (trip.provinces && trip.provinces.length > 0) {
+                                  const firstProvince = trip.provinces[0];
+                                  if (firstProvince?.name) return firstProvince.name;
+                                  if (typeof firstProvince === 'string') {
+                                    const mapped = GOVERNORATE_MAP[firstProvince];
+                                    if (mapped) return mapped;
+                                    if (firstProvince.length < 30) return firstProvince;
+                                  }
+                                }
+                                return 'Not specified';
+                              })()}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {trip.guide && (

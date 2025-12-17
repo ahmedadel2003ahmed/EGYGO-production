@@ -191,8 +191,10 @@ export default function TripDetailsPage() {
       return response.data;
     },
     onSuccess: () => {
+      // Invalidate all related queries to refetch updated data
       queryClient.invalidateQueries(['trip', tripId]);
-      queryClient.invalidateQueries(['trip-guides', tripId]);
+      queryClient.invalidateQueries(['guides-for-trip', tripId]);
+      queryClient.invalidateQueries(['selected-guide']);
       alert('Guide selected successfully!');
     },
   });
@@ -373,7 +375,7 @@ export default function TripDetailsPage() {
               )}
 
               {/* Guide Selection Section */}
-              {!tripGuide && trip.status !== 'cancelled' && trip.status !== 'completed' && (
+              {!tripGuide && !trip.guideId && trip.status !== 'cancelled' && trip.status !== 'completed' && trip.status !== 'awaiting_call' && (
                 <div className={styles.guideSelectionSection}>
                   <h3 className={styles.sectionTitle}>Select a Guide</h3>
                   
