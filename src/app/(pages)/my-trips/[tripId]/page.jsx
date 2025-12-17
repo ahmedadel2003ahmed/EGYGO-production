@@ -205,6 +205,68 @@ export default function TripDetailsPage() {
     }
   };
 
+  // Initiate video call mutation
+  const initiateCallMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post(
+        `http://localhost:5000/api/trips/${tripId}/calls/initiate`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      // Navigate to call page
+      router.push(`/call/${data.callId}`);
+    },
+    onError: (err) => {
+      const errorMsg = err.response?.data?.message || 'Failed to start call';
+      console.error('Call initiation error:', err.response?.data);
+      
+      // If trip is already in_call, try to get the existing call
+      if (errorMsg.includes('in_call')) {
+        alert('This trip already has an active call. Please refresh the page or check your call history.');
+      } else {
+        alert(errorMsg);
+      }
+    },
+  });
+
+  // Create payment checkout mutation
+  const createCheckoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post(
+        `http://localhost:5000/api/tourist/trips/${tripId}/create-checkout-session`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      // Redirect to Stripe checkout
+      window.location.href = data.data.checkoutUrl;
+    },
+    onError: (err) => {
+      alert(err.response?.data?.message || 'Failed to create checkout session');
+    },
+  });
+
+  const handleStartCall = () => {
+    initiateCallMutation.mutate();
+  };
+
+  const handlePayNow = () => {
+    createCheckoutMutation.mutate();
+  };
+
   const handleCancelTrip = () => {
     if (
       window.confirm(
@@ -267,6 +329,10 @@ export default function TripDetailsPage() {
     const statusConfig = {
       pending: { label: 'Pending Guide', color: 'orange', icon: '⏳' },
       guide_selected: { label: 'Guide Selected', color: 'blue', icon: '👤' },
+      awaiting_call: { label: 'Ready for Call', color: 'purple', icon: '📹' },
+      in_call: { label: 'In Video Call', color: 'green', icon: '🎥' },
+      pending_confirmation: { label: 'Awaiting Guide', color: 'yellow', icon: '⏰' },
+      awaiting_payment: { label: 'Payment Required', color: 'orange', icon: '💳' },
       negotiating: { label: 'Negotiating', color: 'purple', icon: '💬' },
       confirmed: { label: 'Confirmed', color: 'green', icon: '✅' },
       in_progress: { label: 'In Progress', color: 'teal', icon: '🚀' },
@@ -439,7 +505,7 @@ export default function TripDetailsPage() {
                       </p>
                       {tripData?.itinerary && tripData.itinerary.length === 0 && (
                         <p className={styles.warningText}>
-                          ⚠️ Your trip doesn't have any destinations yet. Please add destinations to find suitable guides.
+                          ⚠️ Your trip doesnt have any destinations yet. Please add destinations to find suitable guides.
                         </p>
                       )}
                     </div>
@@ -569,7 +635,40 @@ export default function TripDetailsPage() {
                     </button>
                   )}
 
-                  {['pending', 'guide_selected', 'negotiating'].includes(
+                  {(trip.status === 'awaiting_call' || trip.status === 'in_call') && tripGuide && (
+                    <button
+                      onClick={handleStartCall}
+                      disabled={initiateCallMutation.isPending}
+                      className={`${styles.actionBtn} ${styles.callBtn}`}
+                    >
+                      {initiateCallMutation.isPending ? 'Starting Call...' : trip.status === 'in_call' ? '📹 Rejoin Video Call' : '📹 Start Video Call'}
+                    </button>
+                  )}
+
+                  {trip.status === 'awaiting_payment' && trip.negotiatedPrice && (
+                    <>
+                      <div className={styles.priceInfo}>
+                        <span className={styles.priceLabel}>Negotiated Price:</span>
+                        <span className={styles.priceValue}>EGP {trip.negotiatedPrice}</span>
+                      </div>
+                      <button
+                        onClick={handlePayNow}
+                        disabled={createCheckoutMutation.isPending}
+                        className={`${styles.actionBtn} ${styles.payBtn}`}
+                      >
+                        {createCheckoutMutation.isPending ? 'Processing...' : '💳 Pay Now'}
+                      </button>
+                    </>
+                  )}
+
+                  {trip.status === 'pending_confirmation' && (
+                    <div className={styles.waitingMessage}>
+                      <span className={styles.waitingIcon}>⏳</span>
+                      <p>Waiting for guide confirmation...</p>
+                    </div>
+                  )}
+
+                  {['pending', 'awaiting_call', 'pending_confirmation'].includes(
                     trip.status
                   ) && (
                     <button

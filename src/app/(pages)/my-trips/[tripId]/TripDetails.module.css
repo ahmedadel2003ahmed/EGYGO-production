@@ -124,6 +124,12 @@
   color: #553c9a;
 }
 
+.statusyellow {
+  background: #fef5e7;
+  color: #d97706;
+  border: 2px solid #fbbf24;
+}
+
 .statusgreen {
   background: #c6f6d5;
   color: #22543d;
@@ -399,6 +405,84 @@
 .reviewBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.callBtn {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+}
+
+.callBtn:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+.payBtn {
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+}
+
+.payBtn:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.4);
+}
+
+.priceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+  border-radius: 8px;
+  border: 2px solid #cbd5e0;
+}
+
+.priceLabel {
+  font-size: 0.875rem;
+  color: #718096;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.priceValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.waitingMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+  border-radius: 8px;
+  border: 2px dashed #f6ad55;
+  text-align: center;
+}
+
+.waitingIcon {
+  font-size: 2rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.waitingMessage p {
+  margin: 0;
+  color: #c05621;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .reviewCard {

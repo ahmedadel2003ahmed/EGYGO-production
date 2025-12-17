@@ -232,7 +232,41 @@ export default function MyTripsPage() {
                   <div className={styles.tripCardBody}>
                     <div className={styles.tripMainInfo}>
 
-
+ {(trip.province || trip.provinceId || trip.provinces) && (
+                        <div className={styles.tripInfoRow}>
+                          <span className={styles.infoIcon}>🏛️</span>
+                          <div className={styles.infoContent}>
+                            <span className={styles.infoLabel}>Governorate</span>
+                            <span className={styles.infoText}>
+                              {(() => {
+                                // Handle different API response structures
+                                // 1. Check if province is populated with name
+                                if (trip.province?.name) return trip.province.name;
+                                // 2. Check if province is a string name
+                                if (typeof trip.province === 'string' && trip.province.length < 30) return trip.province;
+                                // 3. Check if provinceId is populated with name
+                                if (trip.provinceId?.name) return trip.provinceId.name;
+                                // 4. Check if provinceId is a string ID and map it to name
+                                if (typeof trip.provinceId === 'string') {
+                                  const provinceName = GOVERNORATE_MAP[trip.provinceId];
+                                  if (provinceName) return provinceName;
+                                }
+                                // 5. Check if provinces array exists
+                                if (trip.provinces && trip.provinces.length > 0) {
+                                  const firstProvince = trip.provinces[0];
+                                  if (firstProvince?.name) return firstProvince.name;
+                                  if (typeof firstProvince === 'string') {
+                                    const mapped = GOVERNORATE_MAP[firstProvince];
+                                    if (mapped) return mapped;
+                                    if (firstProvince.length < 30) return firstProvince;
+                                  }
+                                }
+                                return 'Not specified';
+                              })()}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                       <div className={styles.tripInfoRow}>
                         <span className={styles.infoIcon}>📅</span>
                         <div className={styles.infoContent}>
@@ -276,41 +310,7 @@ export default function MyTripsPage() {
                         </div>
                       </div>
 
-                      {(trip.province || trip.provinceId || trip.provinces) && (
-                        <div className={styles.tripInfoRow}>
-                          <span className={styles.infoIcon}>🏛️</span>
-                          <div className={styles.infoContent}>
-                            <span className={styles.infoLabel}>Governorate</span>
-                            <span className={styles.infoText}>
-                              {(() => {
-                                // Handle different API response structures
-                                // 1. Check if province is populated with name
-                                if (trip.province?.name) return trip.province.name;
-                                // 2. Check if province is a string name
-                                if (typeof trip.province === 'string' && trip.province.length < 30) return trip.province;
-                                // 3. Check if provinceId is populated with name
-                                if (trip.provinceId?.name) return trip.provinceId.name;
-                                // 4. Check if provinceId is a string ID and map it to name
-                                if (typeof trip.provinceId === 'string') {
-                                  const provinceName = GOVERNORATE_MAP[trip.provinceId];
-                                  if (provinceName) return provinceName;
-                                }
-                                // 5. Check if provinces array exists
-                                if (trip.provinces && trip.provinces.length > 0) {
-                                  const firstProvince = trip.provinces[0];
-                                  if (firstProvince?.name) return firstProvince.name;
-                                  if (typeof firstProvince === 'string') {
-                                    const mapped = GOVERNORATE_MAP[firstProvince];
-                                    if (mapped) return mapped;
-                                    if (firstProvince.length < 30) return firstProvince;
-                                  }
-                                }
-                                return 'Not specified';
-                              })()}
-                            </span>
-                          </div>
-                        </div>
-                      )}
+                     
                     </div>
 
                     {trip.guide && (
