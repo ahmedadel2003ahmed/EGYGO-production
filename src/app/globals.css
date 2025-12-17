@@ -4,49 +4,160 @@
 
 /* 1. Root Variables (Light Mode by default) */
 :root {
-  /* Brand Colors */
+  /* ==================== BRAND COLORS ==================== */
   --color-primary: #FF543D;
   --color-primary-hover: #ff3a1e;
-  --color-secondary: #96a1a6; /* اختيار اختياري للأزرار الناجحة أو CTA */
+  --color-primary-light: #ff7a68;
+  --color-primary-dark: #d9321a;
+  --color-secondary: #96a1a6;
+  --color-secondary-hover: #7a8589;
+  --color-accent: #FFD700;
+  --color-accent-hover: #FFC700;
 
-  /* Neutral Colors */
+  /* ==================== NEUTRAL COLORS ==================== */
   --color-bg: #faf4f4;
   --color-surface: #ffffff;
+  --color-surface-hover: #f8f9fa;
   --color-text: #222222;
+  --color-text-secondary: #4a5568;
   --color-text-light: #9b9b9b;
+  --color-text-muted: #718096;
   --color-border: #e5e5e5;
+  --color-border-light: #f0f0f0;
+  --color-border-dark: #d1d1d1;
   --color-muted: #9f9f9f;
+  --color-disabled: #e0e0e0;
+  --color-disabled-text: #a0aec0;
 
-  /* Shadows */
+  /* ==================== SEMANTIC COLORS ==================== */
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-success-light: #d1fae5;
+  --color-warning: #f59e0b;
+  --color-warning-hover: #d97706;
+  --color-warning-light: #fef3c7;
+  --color-error: #ef4444;
+  --color-error-hover: #dc2626;
+  --color-error-light: #fee2e2;
+  --color-info: #3b82f6;
+  --color-info-hover: #2563eb;
+  --color-info-light: #dbeafe;
+
+  /* ==================== GRADIENT COLORS ==================== */
+  --gradient-primary: linear-gradient(135deg, #FF543D 0%, #ff3a1e 100%);
+  --gradient-secondary: linear-gradient(135deg, #96a1a6 0%, #7a8589 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-purple: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+  --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-overlay: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+
+  /* ==================== SHADOWS ==================== */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 8px 20px rgba(255, 84, 61, 0.3);
 
-  /* Transitions */
+  /* ==================== TRANSITIONS ==================== */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.35s ease;
   --transition-slow: 0.5s ease;
+  --transition-all: all 0.3s ease;
 
-  /* Typography */
+  /* ==================== TYPOGRAPHY ==================== */
   --font-arabic: "Cairo", "Noto Kufi Arabic", sans-serif;
   --font-english: "Inter", "Roboto", sans-serif;
-  --font-size-base: 16px;
-  --line-height-base: 1.6;
+  
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-md: 1.125rem;     /* 18px */
+  --font-size-lg: 1.25rem;      /* 20px */
+  --font-size-xl: 1.5rem;       /* 24px */
+  --font-size-2xl: 1.875rem;    /* 30px */
+  --font-size-3xl: 2.25rem;     /* 36px */
+  --font-size-4xl: 3rem;        /* 48px */
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 2;
 
-  /* Radii */
+  /* ==================== SPACING ==================== */
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 3rem;      /* 48px */
+  --spacing-3xl: 4rem;      /* 64px */
+  --spacing-4xl: 6rem;      /* 96px */
+
+  /* ==================== BORDER RADIUS ==================== */
+  --radius-none: 0;
+  --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 16px;
   --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* ==================== LAYOUT ==================== */
+  --container-max-width: 1280px;
+  --navbar-height: 70px;
+  --sidebar-width: 280px;
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
 }
 
 /* 2. Dark Mode */
 [data-theme="dark"] {
-  --color-bg: #222222;
-  --color-surface: #2b2b2b;
-  --color-text: #faf4f4;
-  --color-text-light: #9b9b9b;  
-  --color-border: #3a3a3a;
-  --color-muted: #9f9f9f;
+  /* Neutral Colors - Dark Mode */
+  --color-bg: #1a1a1a;
+  --color-surface: #2d2d2d;
+  --color-surface-hover: #3a3a3a;
+  --color-text: #f5f5f5;
+  --color-text-secondary: #d1d5db;
+  --color-text-light: #9ca3af;
+  --color-text-muted: #6b7280;
+  --color-border: #404040;
+  --color-border-light: #333333;
+  --color-border-dark: #555555;
+  --color-muted: #6b7280;
+  --color-disabled: #374151;
+  --color-disabled-text: #6b7280;
+
+  /* Semantic Colors - Dark Mode (slightly adjusted) */
+  --color-success-light: #064e3b;
+  --color-warning-light: #78350f;
+  --color-error-light: #7f1d1d;
+  --color-info-light: #1e3a8a;
+
+  /* Shadows - Dark Mode */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.8);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.9);
 }
 
 /* 3. Base Resets */
@@ -65,14 +176,60 @@ body {
   font-family: var(--font-english);
   background-color: var(--color-bg);
   color: var(--color-text);
-  line-height: var(--line-height-base);
+  line-height: var(--line-height-relaxed);
   transition: background-color var(--transition-slow), color var(--transition-slow);
 }
 
 a {
   text-decoration: none;
-
+  color: inherit;
 }
+
+/* ==================== UTILITY CLASSES ==================== */
+
+/* Container */
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Text Utilities */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
+.text-success { color: var(--color-success); }
+.text-error { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+
+/* Background Utilities */
+.bg-primary { background-color: var(--color-primary); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-success { background-color: var(--color-success); }
+.bg-error { background-color: var(--color-error); }
+.bg-warning { background-color: var(--color-warning); }
+
+/* Gradient Backgrounds */
+.gradient-primary { background: var(--gradient-primary); }
+.gradient-success { background: var(--gradient-success); }
+.gradient-purple { background: var(--gradient-purple); }
+
+/* Shadow Utilities */
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-hover { box-shadow: var(--shadow-hover); }
+
+/* Border Radius */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Transitions */
+.transition { transition: var(--transition-all); }
+.transition-fast { transition: var(--transition-fast); }
+.transition-slow { transition: var(--transition-slow); }
 
 
 
