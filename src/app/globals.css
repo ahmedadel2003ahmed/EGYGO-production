@@ -50,6 +50,10 @@
   --gradient-purple: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
   --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   --gradient-overlay: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+  
+  /* Egyptian Theme Gradient */
+  --gradient-egyptian: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
+  --gradient-egyptian-deep: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 50%, #E6D4A6 100%);
 
   /* ==================== SHADOWS ==================== */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -174,10 +178,11 @@ html {
 
 body {
   font-family: var(--font-english);
-  background-color: var(--color-bg);
+  background: var(--gradient-egyptian);
   color: var(--color-text);
   line-height: var(--line-height-relaxed);
-  transition: background-color var(--transition-slow), color var(--transition-slow);
+  min-height: 100vh;
+  transition: background var(--transition-slow), color var(--transition-slow);
 }
 
 a {

@@ -80,7 +80,19 @@ export default function SelectGuidePage() {
           },
         }
       );
-      return response.data?.data || [];
+      const guides = response.data?.data || [];
+      // Log first guide to check field names
+      if (guides.length > 0) {
+        console.log('Guide data sample:', guides[0]);
+        console.log('Available image fields:', {
+          profilePicture: guides[0].profilePicture,
+          profileImage: guides[0].profileImage,
+          avatar: guides[0].avatar,
+          image: guides[0].image,
+          photo: guides[0].photo
+        });
+      }
+      return guides;
     },
   });
 
@@ -324,21 +336,32 @@ export default function SelectGuidePage() {
               </div>
 
               <div className={styles.guidesGrid}>
-                {guides.map((guide) => (
+                {guides.map((guide) => {
+                  // Check for different possible field names for profile picture
+                  const profileImage = guide.profilePicture || guide.profileImage || guide.avatar || guide.image || guide.photo;
+                  
+                  return (
                   <div key={guide._id} className={styles.guideCard}>
                     <div className={styles.guideHeader}>
                       <div className={styles.guideAvatar}>
-                        {guide.profilePicture ? (
+                        {profileImage ? (
                           <img
-                            src={guide.profilePicture}
+                            src={profileImage}
                             alt={guide.name}
                             className={styles.avatarImg}
+                            onError={(e) => {
+                              console.log('Failed to load image:', profileImage);
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
                           />
-                        ) : (
-                          <div className={styles.avatarPlaceholder}>
-                            {guide.name?.charAt(0) || '?'}
-                          </div>
-                        )}
+                        ) : null}
+                        <div 
+                          className={styles.avatarPlaceholder}
+                          style={{ display: profileImage ? 'none' : 'flex' }}
+                        >
+                          {guide.name?.charAt(0) || '?'}
+                        </div>
                       </div>
                       <div className={styles.guideBasicInfo}>
                         <h3 className={styles.guideName}>{guide.name}</h3>
@@ -412,7 +435,8 @@ export default function SelectGuidePage() {
                       </button>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </>
           )}

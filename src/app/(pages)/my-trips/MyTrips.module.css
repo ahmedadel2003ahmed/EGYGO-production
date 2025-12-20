@@ -1,14 +1,14 @@
 .pageWrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
   padding-bottom: 60px;
 }
 
 .headerSection {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   padding: 50px 0 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
 }
 
 .headerContent {
@@ -35,19 +35,19 @@
 .createBtn {
   padding: 14px 28px;
   background: white;
-  color: #667eea;
+  color: #D4AF37;
   border: none;
   border-radius: 8px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .createBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
 }
 
 .tabsSection {
@@ -88,8 +88,8 @@
 }
 
 .tabActive {
-  color: #667eea;
-  border-bottom-color: #667eea;
+  color: #D4AF37;
+  border-bottom-color: #D4AF37;
 }
 
 .tabCount {
@@ -101,7 +101,7 @@
 }
 
 .tabActive .tabCount {
-  background: #667eea;
+  background: #D4AF37;
   color: white;
 }
 
@@ -162,7 +162,7 @@
 
 .emptyActionBtn {
   padding: 14px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -174,7 +174,7 @@
 
 .emptyActionBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
 }
 
 .tripsGrid {
@@ -319,9 +319,9 @@
 }
 
 .guidePreview:hover {
-  background: linear-gradient(135deg, #667eea15, #764ba215);
+  background: linear-gradient(135deg, #D4AF3715, #F59E0B15);
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
 }
 
 .guideAvatar {
@@ -341,7 +341,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -370,7 +370,7 @@
 
 .viewProfileBtn {
   padding: 6px 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -384,7 +384,7 @@
 
 .viewProfileBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
 }
 
 .itineraryPreview {
@@ -409,7 +409,7 @@
 .viewDetailsBtn {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -420,7 +420,7 @@
 
 .viewDetailsBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
 }
 
 /* Responsive */

@@ -1,57 +1,45 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Image from 'next/image'
-import styles from './GlobalLoader.module.css'
+import React from "react";
+import Image from "next/image";
+import styles from "./GlobalLoader.module.css";
 
-const GlobalLoader = ({ isLoading = false, className = '' }) => {
-  if (!isLoading) return null
+const GlobalLoader = ({ isLoading = false, className = "" }) => {
+  // If not loading, we don't render anything
+  // You can comment this out to test the loader design permanently during dev
+  if (!isLoading) return null;
 
   return (
     <div className={`${styles.loaderOverlay} ${className}`}>
       <div className={styles.loaderContainer}>
-        
-        {/* Spinning Ring Animation */}
-        <div className={styles.spinnerRing}>
-          <div className={styles.spinnerInner}></div>
-        </div>
-        
-        {/* Logo Container */}
+        {/* Logo */}
         <div className={styles.logoContainer}>
           <Image
             src="/images/logo.ico"
-            alt="EgyGo Logo"
-            width={120}
-            height={120}
+            alt="Miniastic Logo"
+            width={100}
+            height={100}
             className={styles.logo}
             priority
           />
         </div>
-        
-        {/* Loading Text */}
+
+        {/* Main Text */}
         <div className={styles.textContainer}>
-          <h2 className={styles.primaryText}>
-            Finding the perfect guide for your next adventure...
-          </h2>
-          <p className={styles.secondaryText}>
-            Please wait — we are preparing your experience.
-          </p>
+          <h1 className={styles.title}>EGYGO</h1>
+          <p className={styles.subtitle}>Discover Ancient Egypt</p>
         </div>
-        
-        {/* Decorative Elements */}
-        <div className={styles.decorativeElements}>
-          <div className={styles.particle}></div>
-          <div className={styles.particle}></div>
-          <div className={styles.particle}></div>
-          <div className={styles.particle}></div>
-          <div className={styles.particle}></div>
+
+        {/* Spinner */}
+        <div className={styles.spinnerWrapper}>
+          <div className={styles.spinner}></div>
         </div>
-        
-        {/* Bottom Glow Effect */}
-        <div className={styles.bottomGlow}></div>
+
+        {/* Footer Text */}
+        <p className={styles.footerText}>Exploring the treasures of Minya...</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default GlobalLoader
+export default GlobalLoader;

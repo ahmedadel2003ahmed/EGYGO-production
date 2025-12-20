@@ -40,7 +40,7 @@
 
 /* Modal Header */
 .modalHeader {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   padding: 30px 40px;
   border-radius: 20px 20px 0 0;
@@ -225,19 +225,19 @@
 }
 
 .durationBtn:hover {
-  border-color: #667eea;
-  background: #f7fafc;
+  border-color: #D4AF37;
+  background: #FAF7F0;
   transform: translateY(-2px);
 }
 
 .durationBtnActive {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
-  border-color: #667eea;
+  border-color: #D4AF37;
 }
 
 .durationBtnActive:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b3f8f 100%);
+  background: linear-gradient(135deg, #C19A2E 0%, #D97706 100%);
   transform: translateY(-2px);
 }
 
@@ -300,14 +300,14 @@
 }
 
 .submitBtn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   color: white;
   min-width: 180px;
 }
 
 .submitBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
 }
 
 .cancelBtn:disabled,

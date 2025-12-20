@@ -82,7 +82,6 @@ const Navbar = () => {
       <div className={styles.navContainer}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="EgyGo - Go to homepage">
-          <span className={styles.logoIcon}>🇪🇬</span>
           <span className={styles.logoText}>EgyGo</span>
         </Link>
 
