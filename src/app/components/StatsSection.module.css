@@ -1,0 +1,58 @@
+/* StatsSection.module.css */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: #204060; /* Dark blue background matching the image */
+  padding: 60px 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.08); /* Slightly lighter transparent background */
+  border-radius: 16px;
+  padding: 40px 20px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.number {
+  color: #dfb163; /* Beige/Gold color for the numbers */
+  font-size: 3.5rem;
+  font-weight: 800; /* Extra bold */
+  margin: 0 0 10px 0;
+  line-height: 1;
+}
+
+.label {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.9;
+}
+
+@media (max-width: 992px) {
+  .card {
+    width: 45%; /* 2 per row on tablet */
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    flex-direction: column;
+  }
+  .card {
+    width: 100%;
+    max-width: 300px;
+  }
+}

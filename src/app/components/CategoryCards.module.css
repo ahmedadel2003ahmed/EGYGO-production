@@ -1,0 +1,103 @@
+/* CategoryCards.module.css */
+.sectionWrapper {
+  position: relative;
+  z-index: 20;
+  margin-top: -50px; /* Pulls the section up to overlap the hero styling */
+}
+
+/* The curved white sheet effect */
+.whiteSheet {
+  background-color: white;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  padding: 60px 0;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
+}
+
+.grid {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 25px;
+  width: 260px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Soft diffuse shadow */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.02);
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+}
+
+/* Icon Styling */
+.iconCircle {
+  width: 80px;
+  height: 80px;
+  background-color: #1a365d; /* Dark Blue matching the design */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .iconCircle {
+  transform: scale(1.1) rotate(5deg);
+  background-color: #F59E0B; /* Brand Gold on hover */
+}
+
+/* Typography */
+.title {
+  color: #1a365d;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subtitle {
+  color: #718096; /* Muted grey text */
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .grid {
+    gap: 20px;
+  }
+  .card {
+    width: 45%; /* 2 per row */
+  }
+}
+
+@media (max-width: 576px) {
+  .sectionWrapper {
+    margin-top: -30px;
+  }
+  .whiteSheet {
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 40px 20px;
+  }
+  .card {
+    width: 100%; /* Stack on mobile */
+  }
+}

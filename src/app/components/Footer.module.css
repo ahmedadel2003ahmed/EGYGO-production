@@ -1,0 +1,289 @@
+.footer {
+  background-color: #3b5d80; /* Approximate the dark blue from the image */
+  color: #fff;
+  font-family: var(--font-english);
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.topSection {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.brandColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.brandLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.logoIconWrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: transparent;
+    border: 1px solid rgba(255,255,255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brandDescription {
+  line-height: 1.6;
+  opacity: 0.9;
+  max-width: 300px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.socialIcon {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: #fff;
+}
+
+.socialIcon:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.linkColumn h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.linkList li a {
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s;
+}
+
+.linkList li a:hover {
+  color: var(--color-accent);
+}
+
+.contactList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.contactIcon {
+  color: var(--color-accent);
+  font-size: 1.1rem;
+}
+
+.downloadSection {
+  margin-top: 1.5rem;
+}
+
+.downloadTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.appButton {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.appButton:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.appIcon {
+  font-size: 1.5rem;
+  color: var(--color-accent);
+}
+
+.appText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.appText small {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+.appText span {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.newsletterCard {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.newsletterContent h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.newsletterContent p {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.newsletterForm {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  max-width: 500px;
+}
+
+.inputWrapper {
+  flex: 1;
+  position: relative;
+}
+
+.emailInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.emailInput::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.subscribeButton {
+  background-color: #d19f6a; /* A brownish gold color like in the image */
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.3s;
+}
+
+.subscribeButton:hover {
+  background-color: #b88653;
+}
+
+.bottomBar {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.bottomLinks a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+  .topSection {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .topSection {
+    grid-template-columns: 1fr;
+  }
+  
+  .newsletterCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .newsletterForm {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .bottomBar {
+    flex-direction: column;
+    text-align: center;
+  }
+}

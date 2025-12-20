@@ -1,0 +1,121 @@
+/* GallerySection.module.css */
+.section {
+  padding: 80px 0;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.title span {
+  color: #d4a373; /* Gold/Bronze accent */
+}
+
+.galleryGrid {
+  display: grid;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  gap: 12px;
+  
+  /* GRID TEMPLATE AREAS DEFINITION */
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 280px); /* Fixed comfortable height */
+  grid-template-areas:
+    "one  four three three"
+    "one  six  six   five"
+    "two  two  seven five";
+}
+
+.galleryItem {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  width: 100%;
+  height: 100%;
+}
+
+.galleryItem:hover {
+  transform: translateY(-5px);
+  z-index: 2;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.galleryItem:hover .image {
+  transform: scale(1.1);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.galleryItem:hover .overlay {
+  opacity: 1;
+}
+
+.caption {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.galleryItem:hover .caption {
+  transform: translateY(0);
+}
+
+/* AREA ASSIGNMENTS */
+/* These match the grid-template-areas names */
+.item-one { grid-area: one; }
+.item-two { grid-area: two; }
+.item-three { grid-area: three; }
+.item-four { grid-area: four; }
+.item-five { grid-area: five; }
+.item-six { grid-area: six; }
+.item-seven { grid-area: seven; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .galleryGrid {
+    grid-template-rows: repeat(3, 220px);
+  }
+}
+
+@media (max-width: 768px) {
+  .galleryGrid {
+    display: flex; /* Fallback to stack on mobile */
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+  }
+  
+  .galleryItem {
+    height: 250px; 
+  }
+}

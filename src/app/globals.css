@@ -5,7 +5,7 @@
 /* 1. Root Variables (Light Mode by default) */
 :root {
   /* ==================== BRAND COLORS ==================== */
-  --color-primary: #FF543D;
+  --color-primary: #F59E0B;
   --color-primary-hover: #ff3a1e;
   --color-primary-light: #ff7a68;
   --color-primary-dark: #d9321a;
@@ -173,7 +173,6 @@
 
 html {
   scroll-behavior: smooth;
-  /* scroll-padding-top: 80px;  */
 }
 
 body {
@@ -188,6 +187,13 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+  outline: none;
+}
+
+a:focus,
+a:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 /* ==================== UTILITY CLASSES ==================== */
