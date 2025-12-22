@@ -157,9 +157,9 @@ export default function GovernorateDetailsPage() {
                           📍 View on Map
                         </a>
                       )}
-                      <button className={styles.detailsButton}>
+                      <Link href={`/place/${item._id}`} className={styles.detailsButton}>
                         View Details →
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
