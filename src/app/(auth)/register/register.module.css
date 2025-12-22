@@ -112,6 +112,17 @@
   text-align: right;
 }
 
+/* Fix Autofill Background Color */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px rgba(255, 255, 255, 0.02);
+}
+
 /* buttons */
 .primaryBtn {
   width: 100%;
@@ -160,7 +171,33 @@
 
 }
 .highlight{
-  color: #00c4cc;  /* اللون المختلف (مثلاً أزرق فيروزي) */
+  color: #00c4cc;
   font-weight: 600;
   cursor: pointer;
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.toggleBtn {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s ease;
+  z-index: 5;
+}
+
+.toggleBtn:hover {
+  color: #fff;
 }

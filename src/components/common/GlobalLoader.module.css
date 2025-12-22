@@ -9,8 +9,8 @@
   height: 100vh;
   z-index: 9999;
 
-  /* Gradient from Deep Blue to Warm Beige/Orange */
-  background: linear-gradient(135deg, #1e4d79 0%, #3e6b94 40%, #c49c7a 100%);
+  /* Egyptian Theme Gradient (Light Beige/Cream) */
+  background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
 
   display: flex;
   align-items: center;
@@ -38,8 +38,8 @@
 
 .logo {
   border-radius: 20px !important; /* Rounded corners like a square app icon */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  border: 4px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+  box-shadow: 0 15px 35px rgba(245, 158, 11, 0.2); /* Soft orange shadow */
+  border: 4px solid rgba(255, 255, 255, 0.6); /* Subtle white border */
 }
 
 /* Text Container */
@@ -52,22 +52,25 @@
 
 .title {
   font-size: 3rem;
-  font-weight: 700;
-  color: #ffffff; /* White or slight gradient */
+  font-weight: 800;
   margin: 0;
   margin-bottom: 8px;
-  letter-spacing: 0.5px;
-  background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+  letter-spacing: -1px;
+  
+  /* Gold/Orange Gradient Text */
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #F59E0B; /* Fallback */
+  
+  text-shadow: 0 10px 20px rgba(245, 158, 11, 0.15);
 }
 
 .subtitle {
   font-size: 1.2rem;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  color: #4a5568; /* Dark grey */
   margin: 0;
   letter-spacing: 0.5px;
 }
@@ -80,20 +83,21 @@
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid #ffffff; /* White spinner head */
+  width: 45px;
+  height: 45px;
+  border: 3px solid rgba(245, 158, 11, 0.2);
+  border-top: 3px solid #F59E0B; /* Primary Orange */
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 /* Footer Text */
 .footerText {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #718096; /* Muted grey */
   letter-spacing: 0.3px;
   animation: pulse 2s ease-in-out infinite;
+  font-weight: 500;
 }
 
 /* Animations */
@@ -109,7 +113,7 @@
 @keyframes pulse {
   0%,
   100% {
-    opacity: 0.7;
+    opacity: 0.6;
   }
   50% {
     opacity: 1;

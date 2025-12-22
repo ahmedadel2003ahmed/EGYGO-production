@@ -44,7 +44,7 @@ export default function Otp() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+      const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -59,7 +59,7 @@ export default function Otp() {
       if (!res.ok || !data.success) {
         setError(
           data?.message?.ar ||
-            "فشل التحقق من الرمز، تأكد من صحته أو أعد المحاولة لاحقًا."
+          "فشل التحقق من الرمز، تأكد من صحته أو أعد المحاولة لاحقًا."
         );
         return;
       }
@@ -67,14 +67,14 @@ export default function Otp() {
       // ✅ نجاح التحقق
       setVerified(true);
       setError("");
-      
+
       // 🔐 Check if backend returned token (auto-login after verification)
       if (data.data?.accessToken && data.data?.user) {
         localStorage.setItem("access_token", data.data.accessToken);
         localStorage.setItem("laqtaha_user", JSON.stringify(data.data.user));
         console.log("✅ Auto-logged in after OTP verification");
       }
-      
+
       localStorage.removeItem("registerEmail");
       localStorage.removeItem("pendingUserId");
     } catch (err) {
@@ -96,10 +96,10 @@ export default function Otp() {
     // تنظيف البيانات المؤقتة
     localStorage.removeItem("pendingUserId");
     localStorage.removeItem("registerEmail");
-    
+
     // Check if user is logged in (has token)
     const token = localStorage.getItem("access_token");
-    
+
     if (token) {
       // User is logged in, go to home
       router.replace("/home");
@@ -118,13 +118,13 @@ export default function Otp() {
           <div className="col-12 col-md-6 d-flex justify-content-center order-1 order-md-1">
             <div className={styles.leftCard}>
               <div className={styles.imageText}>
-   <Image
-                src="/images/logo.png"
-                alt="Logo"
-                width={140}
-                height={100}
-                className={styles.logoImage}
-              />              
+                <Image
+                  src="/images/logo.ico"
+                  alt="Logo"
+                  width={140}
+                  height={100}
+                  className={styles.logoImage}
+                />
                 <h2>مرحبا بكم في لقطها</h2>
                 <p>اطلب مني اللي تريده وخليني ألقطها عشانك</p>
               </div>
@@ -155,7 +155,7 @@ export default function Otp() {
                 {error && <p className={styles.errorText}>{error}</p>}
 
                 <p className={styles.resendText}>لم يصلك الرمز؟</p>
-                <button className={styles.resendLink}onClick={() => alert("سيتم إرسال الكود مجددًا")}
+                <button className={styles.resendLink} onClick={() => alert("سيتم إرسال الكود مجددًا")}
                 >
                   إعادة إرسال رمز التحقق
                 </button>
@@ -169,27 +169,27 @@ export default function Otp() {
                 </button>
               </>
             ) : (
-                <>
+              <>
                 <div className={styles.sccessWrapper}>
-                <h2 className={styles.heading}>
-                  تم التحقق من البريد الإلكتروني بنجاح!!
-                  <br />
-                  لنقم بإعداد التطبيق من أجلك
-                </h2>
+                  <h2 className={styles.heading}>
+                    تم التحقق من البريد الإلكتروني بنجاح!!
+                    <br />
+                    لنقم بإعداد التطبيق من أجلك
+                  </h2>
 
-                <div className={styles.successIcon}>
-                  <Image
-                    src="/images/success-check.svg"
-                    alt="Success"
-                    width={300}
-                    height={300}
-                  />
-                </div>
+                  <div className={styles.successIcon}>
+                    <Image
+                      src="/images/success.png"
+                      alt="Success"
+                      width={300}
+                      height={300}
+                    />
+                  </div>
 
-                {/* ✅ تم استبدال الـ alert بالتوجيه */}
-                <button onClick={handleNext} className={styles.primaryBtn}>
-                  التالي
-                </button>
+                  {/* ✅ تم استبدال الـ alert بالتوجيه */}
+                  <button onClick={handleNext} className={styles.primaryBtn}>
+                    التالي
+                  </button>
                 </div>
               </>
             )}

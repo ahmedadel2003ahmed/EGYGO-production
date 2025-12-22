@@ -2,11 +2,10 @@
 
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import Image from 'next/image';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import styles from './HeroCarousel.module.css';
 
@@ -38,7 +37,7 @@ const HeroCarousel = ({ onExploreClick }) => {
     return (
         <div className={styles.heroSection}>
             <Swiper
-                modules={[Autoplay, EffectFade, Navigation, Pagination]}
+                modules={[Autoplay, EffectFade, Pagination]}
                 effect="fade"
                 speed={1000}
                 loop={true}
@@ -46,7 +45,6 @@ const HeroCarousel = ({ onExploreClick }) => {
                     delay: 5000,
                     disableOnInteraction: false,
                 }}
-                navigation={true}
                 pagination={{ clickable: true }}
                 className={styles.swiper}
             >

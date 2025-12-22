@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import Image from "next/image";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "./register.module.css";
 
 export default function RegisterPage() {
@@ -14,6 +15,7 @@ export default function RegisterPage() {
   const auth = useAuth?.() || null;
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -28,9 +30,7 @@ export default function RegisterPage() {
       name: Yup.string().required("مطلوب"),
       email: Yup.string().email("بريد إلكتروني غير صالح").required("مطلوب"),
       password: Yup.string().min(6, "على الأقل 6 أحرف").required("مطلوب"),
-      phone: Yup.string()
-        .matches(/^\+\d{7,15}$/, "يجب أن يكون رقم هاتف صالح (مثال: +201234567890)")
-        .required("مطلوب"),
+      phone: Yup.string(),
       role: Yup.string().oneOf(["tourist", "guide"], "يجب اختيار نوع الحساب").required("مطلوب"),
     }),
 
@@ -41,7 +41,7 @@ export default function RegisterPage() {
       setServerError(null);
 
       try {
-        const registerRes = await axios.post("http://localhost:5000/api/auth/register", {
+        const registerRes = await axios.post("/api/auth/register", {
           name: values.name,
           email: values.email,
           password: values.password,
@@ -62,7 +62,7 @@ export default function RegisterPage() {
           } else {
             // 2️⃣ إرسال OTP للمستخدم
             try {
-              await axios.post("http://localhost:5000/api/auth/send-verify-otp", { userId });
+              await axios.post("/api/auth/send-verify-otp", { userId });
               console.log("✅ OTP sent successfully");
             } catch (otpError) {
               console.warn("⚠️ Failed to send OTP, but continuing to OTP page:", otpError);
@@ -83,8 +83,8 @@ export default function RegisterPage() {
         console.error("REGISTER ERROR:", err);
         setServerError(
           err.response?.data?.message ||
-            err.message ||
-            "حدث خطأ أثناء التسجيل"
+          err.message ||
+          "حدث خطأ أثناء التسجيل"
         );
       } finally {
         setSubmitting(false);
@@ -100,7 +100,7 @@ export default function RegisterPage() {
           <div className={styles.leftCard}>
             <div className={styles.imageText}>
               <Image
-                src="/images/logo.png"
+                src="/images/logo.ico"
                 alt="Logo"
                 width={140}
                 height={100}
@@ -132,16 +132,15 @@ export default function RegisterPage() {
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`${styles.input} ${
-                      formik.touched.name && formik.errors.name ? styles.invalid : ""
-                    }`}
+                    className={`${styles.input} ${formik.touched.name && formik.errors.name ? styles.invalid : ""
+                      }`}
                   />
                   {formik.touched.name && formik.errors.name && (
                     <div className={styles.err}>{formik.errors.name}</div>
                   )}
                 </div>
 
-            
+
               </div>
 
               <div className="mb-3">
@@ -153,9 +152,8 @@ export default function RegisterPage() {
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`${styles.input} ${
-                    formik.touched.email && formik.errors.email ? styles.invalid : ""
-                  }`}
+                  className={`${styles.input} ${formik.touched.email && formik.errors.email ? styles.invalid : ""
+                    }`}
                 />
                 {formik.touched.email && formik.errors.email && (
                   <div className={styles.err}>{formik.errors.email}</div>
@@ -163,18 +161,27 @@ export default function RegisterPage() {
               </div>
 
               <div className="mb-3">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="كلمة المرور"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`${styles.input} ${
-                    formik.touched.password && formik.errors.password ? styles.invalid : ""
-                  }`}
-                />
+                <div className={styles.passwordWrapper}>
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="كلمة المرور"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`${styles.input} ${formik.touched.password && formik.errors.password ? styles.invalid : ""
+                      }`}
+                  />
+                  <button
+                    type="button"
+                    className={styles.toggleBtn}
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex="-1"
+                  >
+                    {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                  </button>
+                </div>
                 {formik.touched.password && formik.errors.password && (
                   <div className={styles.err}>{formik.errors.password}</div>
                 )}
@@ -189,9 +196,8 @@ export default function RegisterPage() {
                   value={formik.values.phone}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`${styles.input} ${
-                    formik.touched.phone && formik.errors.phone ? styles.invalid : ""
-                  }`}
+                  className={`${styles.input} ${formik.touched.phone && formik.errors.phone ? styles.invalid : ""
+                    }`}
                 />
                 {formik.touched.phone && formik.errors.phone && (
                   <div className={styles.err}>{formik.errors.phone}</div>
@@ -205,9 +211,8 @@ export default function RegisterPage() {
                   value={formik.values.role}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`${styles.input} ${
-                    formik.touched.role && formik.errors.role ? styles.invalid : ""
-                  }`}
+                  className={`${styles.input} ${formik.touched.role && formik.errors.role ? styles.invalid : ""
+                    }`}
                 >
                   <option value="tourist">tourist</option>
                   <option value="guide">guide</option>
