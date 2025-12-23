@@ -54,7 +54,7 @@ export default function MyTripsPage() {
     queryFn: async () => {
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/tourist/trips',
+          '/api/tourist/trips',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -119,12 +119,12 @@ export default function MyTripsPage() {
 
   return (
     <>
-      <TripModal 
-        isOpen={isModalOpen} 
+      <TripModal
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleTripCreated}
       />
-      
+
       <div className={styles.pageWrapper}>
         {/* Header */}
         <section className={styles.headerSection}>
@@ -144,236 +144,235 @@ export default function MyTripsPage() {
           </div>
         </section>
 
-      {/* Tabs */}
-      <section className={styles.tabsSection}>
-        <div className="container">
-          <div className={styles.tabs}>
-            {[
-              { key: 'all', label: 'All Trips' },
-              { key: 'upcoming', label: 'Upcoming' },
-              { key: 'active', label: 'Active' },
-              { key: 'past', label: 'Past' },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`${styles.tab} ${
-                  activeTab === tab.key ? styles.tabActive : ''
-                }`}
-              >
-                {tab.label}
-                <span className={styles.tabCount}>
-                  {filterTrips(tab.key).length}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Content */}
-      <section className={styles.contentSection}>
-        <div className="container">
-          {isLoading && (
-            <div className={styles.loadingState}>
-              <div className={styles.spinner}></div>
-              <p>Loading your trips...</p>
-            </div>
-          )}
-
-          {error && (
-            <div className={styles.errorState}>
-              <div className={styles.errorIcon}>⚠️</div>
-              <p>Failed to load trips. Please try again.</p>
-            </div>
-          )}
-
-          {!isLoading && !error && filteredTrips.length === 0 && (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>
-                {activeTab === 'all' ? '✈️' : '🔍'}
-              </div>
-              <h3>
-                {activeTab === 'all'
-                  ? 'No trips yet'
-                  : `No ${activeTab} trips`}
-              </h3>
-              <p>
-                {activeTab === 'all'
-                  ? 'Create your first trip to start exploring Egypt!'
-                  : `You don't have any ${activeTab} trips.`}
-              </p>
-              {activeTab === 'all' && (
+        {/* Tabs */}
+        <section className={styles.tabsSection}>
+          <div className="container">
+            <div className={styles.tabs}>
+              {[
+                { key: 'all', label: 'All Trips' },
+                { key: 'upcoming', label: 'Upcoming' },
+                { key: 'active', label: 'Active' },
+                { key: 'past', label: 'Past' },
+              ].map((tab) => (
                 <button
-                  onClick={() => setIsModalOpen(true)}
-                  className={styles.emptyActionBtn}
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`${styles.tab} ${activeTab === tab.key ? styles.tabActive : ''
+                    }`}
                 >
-                  Create Your First Trip
+                  {tab.label}
+                  <span className={styles.tabCount}>
+                    {filterTrips(tab.key).length}
+                  </span>
                 </button>
-              )}
+              ))}
             </div>
-          )}
+          </div>
+        </section>
 
-          {!isLoading && !error && filteredTrips.length > 0 && (
-            <div className={styles.tripsGrid}>
-              {filteredTrips.map((trip) => (
-                <div key={trip._id} className={styles.tripCard}>
-                  <div className={styles.tripCardHeader}>
-                    {getStatusBadge(trip.status)}
-                    <span className={styles.tripDate}>
-                      {new Date(trip.startAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </span>
-                  </div>
+        {/* Content */}
+        <section className={styles.contentSection}>
+          <div className="container">
+            {isLoading && (
+              <div className={styles.loadingState}>
+                <div className={styles.spinner}></div>
+                <p>Loading your trips...</p>
+              </div>
+            )}
 
-                  <div className={styles.tripCardBody}>
-                    <div className={styles.tripMainInfo}>
+            {error && (
+              <div className={styles.errorState}>
+                <div className={styles.errorIcon}>⚠️</div>
+                <p>Failed to load trips. Please try again.</p>
+              </div>
+            )}
 
- {(trip.province || trip.provinceId || trip.provinces) && (
-                        <div className={styles.tripInfoRow}>
-                          <span className={styles.infoIcon}>🏛️</span>
-                          <div className={styles.infoContent}>
-                            <span className={styles.infoLabel}>Governorate</span>
-                            <span className={styles.infoText}>
-                              {(() => {
-                                // Handle different API response structures
-                                // 1. Check if province is populated with name
-                                if (trip.province?.name) return trip.province.name;
-                                // 2. Check if province is a string name
-                                if (typeof trip.province === 'string' && trip.province.length < 30) return trip.province;
-                                // 3. Check if provinceId is populated with name
-                                if (trip.provinceId?.name) return trip.provinceId.name;
-                                // 4. Check if provinceId is a string ID and map it to name
-                                if (typeof trip.provinceId === 'string') {
-                                  const provinceName = GOVERNORATE_MAP[trip.provinceId];
-                                  if (provinceName) return provinceName;
-                                }
-                                // 5. Check if provinces array exists
-                                if (trip.provinces && trip.provinces.length > 0) {
-                                  const firstProvince = trip.provinces[0];
-                                  if (firstProvince?.name) return firstProvince.name;
-                                  if (typeof firstProvince === 'string') {
-                                    const mapped = GOVERNORATE_MAP[firstProvince];
-                                    if (mapped) return mapped;
-                                    if (firstProvince.length < 30) return firstProvince;
+            {!isLoading && !error && filteredTrips.length === 0 && (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>
+                  {activeTab === 'all' ? '✈️' : '🔍'}
+                </div>
+                <h3>
+                  {activeTab === 'all'
+                    ? 'No trips yet'
+                    : `No ${activeTab} trips`}
+                </h3>
+                <p>
+                  {activeTab === 'all'
+                    ? 'Create your first trip to start exploring Egypt!'
+                    : `You don't have any ${activeTab} trips.`}
+                </p>
+                {activeTab === 'all' && (
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className={styles.emptyActionBtn}
+                  >
+                    Create Your First Trip
+                  </button>
+                )}
+              </div>
+            )}
+
+            {!isLoading && !error && filteredTrips.length > 0 && (
+              <div className={styles.tripsGrid}>
+                {filteredTrips.map((trip) => (
+                  <div key={trip._id} className={styles.tripCard}>
+                    <div className={styles.tripCardHeader}>
+                      {getStatusBadge(trip.status)}
+                      <span className={styles.tripDate}>
+                        {new Date(trip.startAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </span>
+                    </div>
+
+                    <div className={styles.tripCardBody}>
+                      <div className={styles.tripMainInfo}>
+
+                        {(trip.province || trip.provinceId || trip.provinces) && (
+                          <div className={styles.tripInfoRow}>
+                            <span className={styles.infoIcon}>🏛️</span>
+                            <div className={styles.infoContent}>
+                              <span className={styles.infoLabel}>Governorate</span>
+                              <span className={styles.infoText}>
+                                {(() => {
+                                  // Handle different API response structures
+                                  // 1. Check if province is populated with name
+                                  if (trip.province?.name) return trip.province.name;
+                                  // 2. Check if province is a string name
+                                  if (typeof trip.province === 'string' && trip.province.length < 30) return trip.province;
+                                  // 3. Check if provinceId is populated with name
+                                  if (trip.provinceId?.name) return trip.provinceId.name;
+                                  // 4. Check if provinceId is a string ID and map it to name
+                                  if (typeof trip.provinceId === 'string') {
+                                    const provinceName = GOVERNORATE_MAP[trip.provinceId];
+                                    if (provinceName) return provinceName;
                                   }
-                                }
-                                return 'Not specified';
-                              })()}
+                                  // 5. Check if provinces array exists
+                                  if (trip.provinces && trip.provinces.length > 0) {
+                                    const firstProvince = trip.provinces[0];
+                                    if (firstProvince?.name) return firstProvince.name;
+                                    if (typeof firstProvince === 'string') {
+                                      const mapped = GOVERNORATE_MAP[firstProvince];
+                                      if (mapped) return mapped;
+                                      if (firstProvince.length < 30) return firstProvince;
+                                    }
+                                  }
+                                  return 'Not specified';
+                                })()}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        <div className={styles.tripInfoRow}>
+                          <span className={styles.infoIcon}>📅</span>
+                          <div className={styles.infoContent}>
+                            <span className={styles.infoLabel}>Date & Time</span>
+                            <span className={styles.infoText}>
+                              {new Date(trip.startAt).toLocaleDateString('en-US', {
+                                weekday: 'short',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                              {' at '}
+                              {new Date(trip.startAt).toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true,
+                              })}
                             </span>
                           </div>
                         </div>
+
+                        <div className={styles.tripInfoRow}>
+                          <span className={styles.infoIcon}>⏱️</span>
+                          <div className={styles.infoContent}>
+                            <span className={styles.infoLabel}>Duration</span>
+                            <span className={styles.infoText}>
+                              {Math.floor(trip.totalDurationMinutes / 60)} hour{Math.floor(trip.totalDurationMinutes / 60) !== 1 ? 's' : ''}{' '}
+                              {trip.totalDurationMinutes % 60 > 0 && `${trip.totalDurationMinutes % 60} min`}
+                            </span>
+                          </div>
+                        </div>
+
+
+                        <div className={styles.tripInfoRow}>
+                          <span className={styles.infoIcon}>📍</span>
+                          <div className={styles.infoContent}>
+                            <span className={styles.infoLabel}>Meeting Point</span>
+                            <span className={styles.infoText}>
+                              {trip.meetingAddress?.substring(0, 60)}
+                              {trip.meetingAddress?.length > 60 ? '...' : ''}
+                            </span>
+                          </div>
+                        </div>
+
+
+                      </div>
+
+                      {trip.guide && (
+                        <div
+                          className={styles.guidePreview}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (trip.guide._id) {
+                              router.push(`/guides/${trip.guide._id}`);
+                            }
+                          }}
+                          style={{ cursor: trip.guide._id ? 'pointer' : 'default' }}
+                        >
+                          <div className={styles.guideAvatar}>
+                            {(trip.guide.photo?.url || trip.guide.profilePicture) ? (
+                              <img
+                                src={trip.guide.photo?.url || trip.guide.profilePicture}
+                                alt={trip.guide.name}
+                                className={styles.avatarImg}
+                              />
+                            ) : (
+                              <div className={styles.avatarPlaceholder}>
+                                {trip.guide.name?.charAt(0)}
+                              </div>
+                            )}
+                          </div>
+                          <div className={styles.guideInfo}>
+                            <div className={styles.guideName}>
+                              {trip.guide.name}
+                            </div>
+                            {trip.guide.rating && (
+                              <div className={styles.guideRating}>
+                                ⭐ {trip.guide.rating.toFixed(1)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       )}
-                      <div className={styles.tripInfoRow}>
-                        <span className={styles.infoIcon}>📅</span>
-                        <div className={styles.infoContent}>
-                          <span className={styles.infoLabel}>Date & Time</span>
-                          <span className={styles.infoText}>
-                            {new Date(trip.startAt).toLocaleDateString('en-US', {
-                              weekday: 'short',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                            {' at '}
-                            {new Date(trip.startAt).toLocaleTimeString('en-US', {
-                              hour: 'numeric',
-                              minute: '2-digit',
-                              hour12: true,
-                            })}
+
+                      {trip.itinerary && trip.itinerary.length > 0 && (
+                        <div className={styles.itineraryPreview}>
+                          <span className={styles.itineraryLabel}>
+                            📋 {trip.itinerary.length} place
+                            {trip.itinerary.length !== 1 ? 's' : ''} planned
                           </span>
                         </div>
-                      </div>
-
-                      <div className={styles.tripInfoRow}>
-                        <span className={styles.infoIcon}>⏱️</span>
-                        <div className={styles.infoContent}>
-                          <span className={styles.infoLabel}>Duration</span>
-                          <span className={styles.infoText}>
-                            {Math.floor(trip.totalDurationMinutes / 60)} hour{Math.floor(trip.totalDurationMinutes / 60) !== 1 ? 's' : ''}{' '}
-                            {trip.totalDurationMinutes % 60 > 0 && `${trip.totalDurationMinutes % 60} min`}
-                          </span>
-                        </div>
-                      </div>
-
-
-                      <div className={styles.tripInfoRow}>
-                        <span className={styles.infoIcon}>📍</span>
-                        <div className={styles.infoContent}>
-                          <span className={styles.infoLabel}>Meeting Point</span>
-                          <span className={styles.infoText}>
-                            {trip.meetingAddress?.substring(0, 60)}
-                            {trip.meetingAddress?.length > 60 ? '...' : ''}
-                          </span>
-                        </div>
-                      </div>
-
-                     
+                      )}
                     </div>
 
-                    {trip.guide && (
-                      <div 
-                        className={styles.guidePreview}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (trip.guide._id) {
-                            router.push(`/guides/${trip.guide._id}`);
-                          }
-                        }}
-                        style={{ cursor: trip.guide._id ? 'pointer' : 'default' }}
+                    <div className={styles.tripCardFooter}>
+                      <button
+                        onClick={() => router.push(`/my-trips/${trip._id}`)}
+                        className={styles.viewDetailsBtn}
                       >
-                        <div className={styles.guideAvatar}>
-                          {(trip.guide.photo?.url || trip.guide.profilePicture) ? (
-                            <img
-                              src={trip.guide.photo?.url || trip.guide.profilePicture}
-                              alt={trip.guide.name}
-                              className={styles.avatarImg}
-                            />
-                          ) : (
-                            <div className={styles.avatarPlaceholder}>
-                              {trip.guide.name?.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <div className={styles.guideInfo}>
-                          <div className={styles.guideName}>
-                            {trip.guide.name}
-                          </div>
-                          {trip.guide.rating && (
-                            <div className={styles.guideRating}>
-                              ⭐ {trip.guide.rating.toFixed(1)}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {trip.itinerary && trip.itinerary.length > 0 && (
-                      <div className={styles.itineraryPreview}>
-                        <span className={styles.itineraryLabel}>
-                          📋 {trip.itinerary.length} place
-                          {trip.itinerary.length !== 1 ? 's' : ''} planned
-                        </span>
-                      </div>
-                    )}
+                        View Details
+                      </button>
+                    </div>
                   </div>
-
-                  <div className={styles.tripCardFooter}>
-                    <button
-                      onClick={() => router.push(`/my-trips/${trip._id}`)}
-                      className={styles.viewDetailsBtn}
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
       </div>
     </>
   );

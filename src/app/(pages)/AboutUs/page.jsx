@@ -259,14 +259,7 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Footer Note */}
-      <section className={styles.footerNote}>
-        <div className="container">
-          <p className={styles.footerText}>
-            🎓 Graduation Project 2025 | Made with ❤️ in Egypt
-          </p>
-        </div>
-      </section>
+
     </div>
   );
 }

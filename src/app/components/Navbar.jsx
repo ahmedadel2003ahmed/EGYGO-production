@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { FaUser } from 'react-icons/fa';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -64,7 +65,7 @@ const Navbar = () => {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/ExploreDestinations', label: 'Destinations' },
-    { href: '/Governorate', label: 'Governorates' },
+    { href: '/Governorate', label: 'Guides' },
     { href: '/my-trips', label: 'My Trips' },
     { href: '/AboutUs', label: 'About' },
   ];
@@ -113,7 +114,7 @@ const Navbar = () => {
             </>
           ) : (
             <Link href="/profile" className={styles.profileBtn} aria-label="User profile">
-              Profile
+              <FaUser size={20} />
             </Link>
           )}
         </div>

@@ -11,7 +11,7 @@ const guides = [
         role: 'Tour guide',
         description: '',
         languages: ['English', 'Arabic'],
-        image: '/images/gide1.png', // Using existing local image
+        image: '/images/gide3.jpg', // Using existing local image
         socials: { facebook: '#', instagram: '#' }
     },
     {
@@ -29,7 +29,7 @@ const guides = [
         role: 'Tour Guide',
         description: 'Tour Guide (personal tour guide) — contact for custom tours in Minya.',
         languages: ['English', 'Arabic'],
-        image: '/images/gide1.png', // Using existing local image
+        image: '/images/gide2.png', // Using existing local image
         socials: { facebook: '#' }
     }
 ];

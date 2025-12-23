@@ -123,7 +123,7 @@ const normalizeImagePath = (img = "") => {
 const fetchDestinations = async () => {
   try {
     const response = await axios.get('http://localhost:5000/api/places');
-    
+
     if (response.data?.success && Array.isArray(response.data?.data?.places)) {
       // Transform the API data to match the component's expected format
       const formatted = response.data.data.places.map((place) => ({
@@ -133,10 +133,10 @@ const fetchDestinations = async () => {
         subtitle: place.shortDescription || "",
         imageUrl: place.images?.[0] || getPlaceholderImage(place.name),
       }));
-      
+
       return formatted.length > 0 ? formatted : MOCK_DESTINATIONS;
     }
-    
+
     return MOCK_DESTINATIONS;
   } catch (err) {
     console.warn("Could not load places from API — using fallback MOCK.", err.message || err);
@@ -147,7 +147,7 @@ const fetchDestinations = async () => {
 // Helper function to get placeholder images based on place name/type
 const getPlaceholderImage = (name = '') => {
   const nameLower = name.toLowerCase();
-  
+
   // Match specific types of places with relevant Unsplash images
   if (nameLower.includes('pyramid') || nameLower.includes('giza')) {
     return 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=1200&h=800&fit=crop'; // Pyramids
@@ -185,7 +185,7 @@ const getPlaceholderImage = (name = '') => {
   if (nameLower.includes('park') || nameLower.includes('garden')) {
     return 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200&h=800&fit=crop'; // Park
   }
-  
+
   // Default Egypt tourism image
   return 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop';
 };
@@ -194,7 +194,7 @@ const fetchGovernorates = async () => {
   const endpoint = 'http://localhost:5000/api/provinces';
   try {
     const response = await axios.get(endpoint);
-    
+
     if (response.data?.success && Array.isArray(response.data?.data)) {
       // Transform the API data to match the component's expected format
       const formatted = response.data.data.map((province) => ({
@@ -205,10 +205,10 @@ const fetchGovernorates = async () => {
         slug: province.slug,
         coverImage: province.coverImage || 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop',
       }));
-      
+
       return formatted.length > 0 ? formatted : MOCK_GOVERNORATES;
     }
-    
+
     return MOCK_GOVERNORATES;
   } catch (error) {
     console.warn("API endpoint not available, using mock data:", error.message);
@@ -256,34 +256,46 @@ const ErrorMessage = ({ message }) => (
 );
 
 /**
- * Renders a single destination card.
+ * Renders a single destination card with skeleton loading.
  */
-const DestinationCard = ({ title, subtitle, imageUrl, slug }) => (
-  <div className={`card h-100 border-0 ${styles.destinationCard}`}>
-    <div className={styles.cardImageWrapper}>
-      <Image
-        src={imageUrl}
-        alt={`View of ${title}`}
-        width={400}
-        height={250}
-        className={`card-img-top ${styles.cardImage}`}
-        placeholder="blur"
-        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvdsaywAAAABJRU5ErkJggg==" // Simple grey blur
-      />
-      <div className={styles.cardImageOverlay}></div>
+const DestinationCard = ({ title, subtitle, imageUrl, slug }) => {
+  const [imageLoading, setImageLoading] = React.useState(true);
+
+  return (
+    <div className={`card h-100 border-0 ${styles.destinationCard}`}>
+      <div className={styles.cardImageWrapper}>
+        {/* Skeleton loader */}
+        {imageLoading && (
+          <div className={styles.imageSkeleton}>
+            <div className={styles.skeletonShimmer}></div>
+          </div>
+        )}
+
+        <Image
+          src={imageUrl}
+          alt={`View of ${title}`}
+          width={400}
+          height={250}
+          className={`card-img-top ${styles.cardImage} ${imageLoading ? styles.imageHidden : styles.imageVisible}`}
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvdsaywAAAABJRU5ErkJggg=="
+          onLoad={() => setImageLoading(false)}
+        />
+        <div className={styles.cardImageOverlay}></div>
+      </div>
+      <div className={`card-body d-flex flex-column ${styles.cardBody}`}>
+        <h5 className={`card-title fw-bold ${styles.cardTitle}`}>{title}</h5>
+        <p className={`card-text ${styles.cardText} mb-3`}>{subtitle}</p>
+        <Link
+          href={`/destinations/${slug}`}
+          className={`mt-auto align-self-start ${styles.ctaLink}`}
+        >
+          More Details
+        </Link>
+      </div>
     </div>
-    <div className={`card-body d-flex flex-column ${styles.cardBody}`}>
-      <h5 className={`card-title fw-bold ${styles.cardTitle}`}>{title}</h5>
-      <p className={`card-text ${styles.cardText} mb-3`}>{subtitle}</p>
-      <Link
-        href={`/destinations/${slug}`}
-        className={`mt-auto align-self-start ${styles.ctaLink}`}
-      >
-        More Details 
-      </Link>
-    </div>
-  </div>
-);
+  );
+};
 
 /**
  * Renders a single governorate tile with cover image.
@@ -295,7 +307,7 @@ const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug, coverImage }
     <Link href={`/Governorate/${slug}`} className="text-decoration-none">
       <div className={`rounded-3 overflow-hidden h-100 ${styles.governorateTile}`}>
         {/* Background Image */}
-        <div 
+        <div
           className={styles.tileImageWrapper}
           style={{
             backgroundImage: `url(${coverImage || 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800&h=600&fit=crop'})`,
@@ -305,12 +317,9 @@ const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug, coverImage }
         >
           {/* Overlay Gradient */}
           <div className={styles.tileOverlay}></div>
-          
+
           {/* Content */}
-          <div className={`${styles.tileContent} text-center`}>
-            <div className={styles.tileIcon} aria-hidden="true">
-              {icon}
-            </div>
+          <div className={`${styles.tileContent}`}>
             <h5 className={`fw-bold ${styles.tileTitle}`}>{name}</h5>
             <p className={styles.tileDesc}>{shortDesc}</p>
           </div>
@@ -354,37 +363,37 @@ export default function ExploreDestinations() {
   // we can directly use the returned data
   const allDestinations = destinationsData || MOCK_DESTINATIONS;
   const allGovernorates = governoratesData || MOCK_GOVERNORATES;
-  
+
   // Filter destinations based on search query
   const filteredDestinations = React.useMemo(() => {
     if (!destinationSearchQuery.trim()) return allDestinations;
-    
+
     const query = destinationSearchQuery.toLowerCase().trim();
-    return allDestinations.filter(dest => 
+    return allDestinations.filter(dest =>
       dest.title.toLowerCase().includes(query) ||
       dest.subtitle.toLowerCase().includes(query)
     );
   }, [allDestinations, destinationSearchQuery]);
-  
+
   // Show only 6 destinations initially (from filtered results)
-  const destinations = showAllDestinations 
-    ? filteredDestinations 
+  const destinations = showAllDestinations
+    ? filteredDestinations
     : filteredDestinations.slice(0, 6);
-  
+
   // Filter governorates based on search query
   const filteredGovernorates = React.useMemo(() => {
     if (!searchQuery.trim()) return allGovernorates;
-    
+
     const query = searchQuery.toLowerCase().trim();
-    return allGovernorates.filter(gov => 
+    return allGovernorates.filter(gov =>
       gov.name.toLowerCase().includes(query) ||
       gov.shortDesc.toLowerCase().includes(query)
     );
   }, [allGovernorates, searchQuery]);
-  
+
   // Show only 6 governorates initially (from filtered results)
-  const governorates = showAllGovernorates 
-    ? filteredGovernorates 
+  const governorates = showAllGovernorates
+    ? filteredGovernorates
     : filteredGovernorates.slice(0, 6);
 
   const isLoading = isLoadingDestinations || isLoadingGovernorates;
@@ -395,9 +404,9 @@ export default function ExploreDestinations() {
     <>
       {/* Professional Global Loader */}
       <GlobalLoader isLoading={isLoading} />
-      
+
       {/* Hero Section */}
-      <section 
+      <section
         className={styles.heroSection}
         style={{
           backgroundImage: 'url(/images/Govern_Panner.jpeg)',
@@ -425,7 +434,7 @@ export default function ExploreDestinations() {
             <h2 className={styles.sectionTitle}>
               Popular Destinations
             </h2>
-            
+
             {/* Compact Search Bar for Destinations */}
             <div className={styles.searchBarContainer}>
               <span className={styles.searchIcon}>🔍</span>
@@ -465,7 +474,7 @@ export default function ExploreDestinations() {
                       </div>
                     ))}
                   </div>
-                  
+
                   {/* Show More Button for Destinations */}
                   {hasMoreDestinations && (
                     <div className="text-center mt-4">
@@ -497,7 +506,7 @@ export default function ExploreDestinations() {
             <h2 className={styles.sectionTitle}>
               Explore Egyptian Governorates
             </h2>
-            
+
             {/* Compact Search Bar */}
             <div className={styles.searchBarContainer}>
               <span className={styles.searchIcon}>🔍</span>
@@ -540,7 +549,7 @@ export default function ExploreDestinations() {
                       </div>
                     ))}
                   </div>
-                  
+
                   {/* Show More Button */}
                   {hasMoreGovernorates && (
                     <div className="text-center mt-4">

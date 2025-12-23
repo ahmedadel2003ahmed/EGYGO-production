@@ -10,46 +10,49 @@ import GallerySection from './components/GallerySection';
 import HeroCarousel from './components/HeroCarousel';
 import CategoryCards from './components/CategoryCards';
 import FeaturedCarousel from './components/FeaturedCarousel';
+import RevealOnScroll from './components/RevealOnScroll';
 
 export default function HomeClient() {
-  const router = useRouter();
-  const storyRef = useRef(null);
-  const footerRef = useRef(null);
+    const router = useRouter();
+    const storyRef = useRef(null);
+    const footerRef = useRef(null);
 
-  const scrollToStory = () => storyRef.current?.scrollIntoView({ behavior: 'smooth' });
-  const scrollToFooter = () => footerRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const scrollToStory = () => storyRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const scrollToFooter = () => footerRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-  return (
-    <>
+    return (
+        <>
+            {/* ===== HERO SECTION ===== */}
+            <HeroCarousel onExploreClick={scrollToStory} />
 
+            {/* ===== CATEGORY CARDS ===== */}
+            {/* zIndex: 20 prevents it from being hidden behind other relative elements if they overlap */}
+            <RevealOnScroll style={{ position: 'relative', zIndex: 20 }}>
+                <CategoryCards />
+            </RevealOnScroll>
 
-      {/* ===== HERO SECTION ===== */}
-      {/* ===== HERO SECTION ===== */}
-      <HeroCarousel onExploreClick={scrollToStory} />
+            {/* ===== FEATURED CAROUSEL ===== */}
+            <RevealOnScroll delay={100}>
+                <FeaturedCarousel />
+            </RevealOnScroll>
 
-      {/* ===== CATEGORY CARDS ===== */}
-      <CategoryCards />
+            {/* ===== STATS SECTION ===== */}
+            <RevealOnScroll delay={100}>
+                <StatsSection />
+            </RevealOnScroll>
 
+            {/* ===== GALLERY SECTION ===== */}
+            <RevealOnScroll delay={100}>
+                <GallerySection />
+            </RevealOnScroll>
 
-      {/* ===== FEATURED CAROUSEL ===== */}
-      <FeaturedCarousel />
-     {/* ===== STATS SECTION ===== */}
-      <StatsSection />
+            {/* ===== TOUR GUIDES SECTION ===== */}
+            <RevealOnScroll delay={100}>
+                <TourGuides />
+            </RevealOnScroll>
 
-
-      {/* ===== GALLERY SECTION ===== */}
-      <GallerySection />
-
- 
-      {/* ===== TOUR GUIDES SECTION ===== */}
-      <TourGuides />
-
-
-
-      {/* ===== FOOTER ===== */}
-      {/* ===== FOOTER ===== */}
-      {/* Footer is now handled globally in RootLayout via ConditionalFooter */}
-      <div ref={footerRef}></div>
-    </>
-  );
+            {/* ===== FOOTER ANCHOR ===== */}
+            <div ref={footerRef}></div>
+        </>
+    );
 }

@@ -170,7 +170,6 @@
 .swiperContainer :global(.swiper-button-next),
 .swiperContainer :global(.swiper-button-prev) {
   color: #1a1a1a;
-  background: white;
   width: 40px;
   height: 40px;
   border-radius: 50%;

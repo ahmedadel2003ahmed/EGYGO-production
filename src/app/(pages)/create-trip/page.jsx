@@ -55,7 +55,7 @@ export default function CreateTripPage() {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/provinces');
+        const response = await axios.get('/api/provinces');
         if (response.data?.success && response.data?.data?.provinces) {
           setProvinces(response.data.data.provinces);
         } else {
@@ -127,7 +127,7 @@ export default function CreateTripPage() {
             notes: item.notes || '',
             ticketRequired: item.ticketRequired || false,
           }));
-          
+
           // Use createdFromPlaceId if itinerary exists
           tripData.createdFromPlaceId = itinerary[0].placeId;
         }
@@ -142,7 +142,7 @@ export default function CreateTripPage() {
         console.log('Creating trip with data:', tripData);
 
         const response = await axios.post(
-          'http://localhost:5000/api/tourist/trips',
+          '/api/tourist/trips',
           tripData,
           {
             headers: {
@@ -155,18 +155,18 @@ export default function CreateTripPage() {
         console.log('Trip creation response:', response.data);
 
         if (response.data?.success) {
-          const tripId = response.data?.data?.trip?._id || 
-                        response.data?.data?._id || 
-                        response.data?.trip?._id ||
-                        response.data?._id;
-          
+          const tripId = response.data?.data?.trip?._id ||
+            response.data?.data?._id ||
+            response.data?.trip?._id ||
+            response.data?._id;
+
           console.log('Extracted tripId:', tripId);
           console.log('Response data structure:', response.data?.data);
-          
+
           if (!tripId) {
             throw new Error('Trip created but no ID returned');
           }
-          
+
           // Redirect to guide selection page
           router.push(`/create-trip/${tripId}/select-guide`);
         } else {
@@ -176,27 +176,27 @@ export default function CreateTripPage() {
         console.error('Create trip error:', err);
         console.error('Error response:', err.response?.data);
         console.error('Error status:', err.response?.status);
-        
+
         // Handle 401 specifically
         if (err.response?.status === 401) {
           setError('Your session has expired. Please login again.');
           setTimeout(() => router.push('/login'), 2000);
           return;
         }
-        
+
         // Handle 422 validation errors
         if (err.response?.status === 422) {
-          const validationError = err.response?.data?.message || 
-                                 err.response?.data?.error ||
-                                 JSON.stringify(err.response?.data);
+          const validationError = err.response?.data?.message ||
+            err.response?.data?.error ||
+            JSON.stringify(err.response?.data);
           setError(`Validation Error: ${validationError}`);
           return;
         }
-        
+
         setError(
           err.response?.data?.message ||
-            err.message ||
-            'Failed to create trip. Please try again.'
+          err.message ||
+          'Failed to create trip. Please try again.'
         );
       } finally {
         setLoading(false);
@@ -245,11 +245,10 @@ export default function CreateTripPage() {
                   value={formik.values.provinceId}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`${styles.select} ${
-                    formik.touched.provinceId && formik.errors.provinceId
+                  className={`${styles.select} ${formik.touched.provinceId && formik.errors.provinceId
                       ? styles.inputError
                       : ''
-                  }`}
+                    }`}
                   disabled={loadingProvinces}
                 >
                   <option value="">Select a governorate...</option>
@@ -277,11 +276,10 @@ export default function CreateTripPage() {
                   minDate={new Date()}
                   dateFormat="MMMM d, yyyy h:mm aa"
                   placeholderText="Select date and time"
-                  className={`${styles.input} ${
-                    formik.touched.startAt && formik.errors.startAt
+                  className={`${styles.input} ${formik.touched.startAt && formik.errors.startAt
                       ? styles.inputError
                       : ''
-                  }`}
+                    }`}
                 />
                 {formik.touched.startAt && formik.errors.startAt && (
                   <div className={styles.errorText}>{formik.errors.startAt}</div>
@@ -299,11 +297,10 @@ export default function CreateTripPage() {
                       key={hours}
                       type="button"
                       onClick={() => handleDurationChange(hours)}
-                      className={`${styles.durationBtn} ${
-                        formik.values.totalDurationMinutes === hours * 60
+                      className={`${styles.durationBtn} ${formik.values.totalDurationMinutes === hours * 60
                           ? styles.durationBtnActive
                           : ''
-                      }`}
+                        }`}
                     >
                       {hours} Hours
                     </button>
@@ -338,11 +335,10 @@ export default function CreateTripPage() {
                   onBlur={formik.handleBlur}
                   placeholder="Enter detailed meeting address (e.g., Giza Pyramids Main Entrance, Cairo)"
                   rows={3}
-                  className={`${styles.textarea} ${
-                    formik.touched.meetingAddress && formik.errors.meetingAddress
+                  className={`${styles.textarea} ${formik.touched.meetingAddress && formik.errors.meetingAddress
                       ? styles.inputError
                       : ''
-                  }`}
+                    }`}
                 />
                 {formik.touched.meetingAddress && formik.errors.meetingAddress && (
                   <div className={styles.errorText}>

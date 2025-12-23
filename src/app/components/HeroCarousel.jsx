@@ -12,24 +12,38 @@ import styles from './HeroCarousel.module.css';
 const slides = [
     {
         id: 1,
-        image: '/images/banner.png',
-        title: 'EXPLORE',
-        subtitle: 'THE MOUNTAIN',
-        desc: 'Live your dream and explore'
+        image: '/images/destination/Giza.jpeg',
+        title: 'DISCOVER',
+        subtitle: 'THE PYRAMIDS',
+        desc: 'Witness the wonders of the ancient world in Giza'
     },
     {
         id: 2,
-        image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=1600&q=80',
-        title: 'DISCOVER',
-        subtitle: 'THE PYRAMIDS',
-        desc: 'Witness the wonders of the ancient world'
+        image: '/images/destination/luxor.jpeg',
+        title: 'EXPERIENCE',
+        subtitle: 'ANCIENT THEBES',
+        desc: 'Walk through history in the open-air museum of Luxor'
     },
     {
         id: 3,
-        image: 'https://images.unsplash.com/photo-1528659587786-e24c2543e3f3?auto=format&fit=crop&w=1600&q=80',
-        title: 'EXPERIENCE',
-        subtitle: 'THE NILE',
-        desc: 'Sail through the heart of Egypt'
+        image: '/images/destination/sharm.jpeg',
+        title: 'RELAX',
+        subtitle: 'BY THE RED SEA',
+        desc: 'Dive into the crystal clear waters of Sharm El Sheikh'
+    },
+    {
+        id: 4,
+        image: '/images/destination/siwa.jpeg',
+        title: 'ADVENTURE',
+        subtitle: 'IN SIWA OASIS',
+        desc: 'Escape to the serene beauty of the Western Desert'
+    },
+    {
+        id: 5,
+        image: '/images/destination/alex.jpeg',
+        title: 'EXPLORE',
+        subtitle: 'THE MEDITERRANEAN BRIDE',
+        desc: 'Enjoy the classic charm of Alexandria'
     }
 ];
 

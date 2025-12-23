@@ -274,6 +274,54 @@
   border-radius: 16px 16px 0 0;
 }
 
+/* --- Image Skeleton Loader --- */
+.imageSkeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  z-index: 10;
+}
+
+.skeletonShimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.imageHidden {
+  opacity: 0;
+  transition: opacity 0.4s ease-in;
+}
+
+.imageVisible {
+  opacity: 1;
+  transition: opacity 0.4s ease-in;
+}
+
 .cardImage {
   object-fit: cover;
   height: 250px;
@@ -343,8 +391,9 @@
   height: 100%;
   min-height: 280px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
 }
 
 .tileOverlay {
@@ -369,37 +418,34 @@
 .tileContent {
   position: relative;
   z-index: 2;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   color: white;
+  width: 100%;
+  text-align: left;
 }
 
-.tileIcon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  line-height: 1;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-  transition: transform 0.3s ease;
-}
 
-.governorateTile:hover .tileIcon {
-  transform: scale(1.15) rotate(5deg);
-}
+
+
 
 .tileTitle {
-  font-size: 1.6rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: white;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 
 .tileDesc {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.9);
-  line-height: 1.5;
-  text-align: center;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  line-height: 1.4;
+  text-align: left;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  font-weight: 400;
+  margin: 0;
 }
 
 /* Enhanced Governorate Tile Colors */
@@ -514,11 +560,9 @@
   .tileContent {
     padding: 1.5rem 1rem;
   }
-  
-  .tileIcon {
-    font-size: 2.5rem;
-  }
 }
+  
+
 
 @media (max-width: 576px) {
   .sectionTitle {
@@ -585,9 +629,7 @@
     padding: 1.25rem 1rem;
   }
   
-  .tileIcon {
-    font-size: 2rem;
-  }
+
   
   .tileTitle {
     font-size: 1.25rem;

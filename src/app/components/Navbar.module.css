@@ -206,6 +206,41 @@
   box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
 }
 
+/* Profile Button (Icon) */
+.profileBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.navbar:not(.navbarScrolled) .profileBtn {
+  color: white;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(5px);
+}
+
+.navbar:not(.navbarScrolled) .profileBtn:hover {
+  background: white;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+}
+
+.navbarScrolled .profileBtn {
+  color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.navbarScrolled .profileBtn:hover {
+  color: #F59E0B;
+  border-color: #F59E0B;
+  background: rgba(245, 158, 11, 0.1);
+}
+
 /* Mobile Menu Toggle */
 .menuToggle {
   display: none;
