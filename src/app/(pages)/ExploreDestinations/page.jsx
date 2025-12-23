@@ -122,7 +122,7 @@ const normalizeImagePath = (img = "") => {
 //
 const fetchDestinations = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/api/places');
+    const response = await axios.get('/api/places');
 
     if (response.data?.success && Array.isArray(response.data?.data?.places)) {
       // Transform the API data to match the component's expected format
@@ -191,7 +191,7 @@ const getPlaceholderImage = (name = '') => {
 };
 
 const fetchGovernorates = async () => {
-  const endpoint = 'http://localhost:5000/api/provinces';
+  const endpoint = '/api/provinces';
   try {
     const response = await axios.get(endpoint);
 

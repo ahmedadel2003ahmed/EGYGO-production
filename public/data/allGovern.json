@@ -213,8 +213,8 @@
         },
         {
             "_id": "6935efa947a0b161dbdeee5e",
-            "slug": "minya",
-            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639183/minya_tysp9o.jpg",
+            "slug": "Egypt",
+            "coverImage": "https://res.cloudinary.com/dr0vwz9uc/image/upload/v1765639183/Egypt_tysp9o.jpg",
             "description": "Middle Egypt governorate with significant Christian heritage and ancient archaeological sites.",
             "location": {
                 "type": "Point",
@@ -223,7 +223,7 @@
                     28.0871
                 ]
             },
-            "name": "Minya"
+            "name": "Egypt"
         },
         {
             "_id": "6935efa847a0b161dbdeee5c",

@@ -42,7 +42,7 @@ const Footer = () => {
               <span>EGYGO </span>
             </div>
             <p className={styles.brandDescription}>
-              Discover the hidden treasures of Minya, Egypt.
+              Discover the hidden treasures of Egypt, Egypt.
               Explore ancient attractions, rich culture, and
               unforgettable experiences along the Nile River.
             </p>
@@ -84,7 +84,7 @@ const Footer = () => {
             <ul className={styles.contactList}>
               <li className={styles.contactItem}>
                 <FaMapMarkerAlt className={styles.contactIcon} />
-                <span>Minya, Egypt</span>
+                <span>Egypt, Egypt</span>
               </li>
               <li className={styles.contactItem}>
                 <FaPhoneAlt className={styles.contactIcon} />
@@ -92,7 +92,7 @@ const Footer = () => {
               </li>
               <li className={styles.contactItem}>
                 <FaEnvelope className={styles.contactIcon} />
-                <span>info@minyatourism.com</span>
+                <span>info@Egypttourism.com</span>
               </li>
             </ul>
 
@@ -114,7 +114,7 @@ const Footer = () => {
         <div className={styles.newsletterCard}>
           <div className={styles.newsletterContent}>
             <h3>Stay Updated</h3>
-            <p>Subscribe to our newsletter for the latest travel tips and updates about Minya.</p>
+            <p>Subscribe to our newsletter for the latest travel tips and updates about Egypt.</p>
           </div>
           <form className={styles.newsletterForm} onSubmit={(e) => e.preventDefault()}>
             <div className={styles.inputWrapper}>
@@ -133,7 +133,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className={styles.bottomBar}>
-          <div>&copy; 2024 Minya Tourism. All rights reserved.</div>
+          <div>&copy; 2024 Egypt Tourism. All rights reserved.</div>
           <div className={styles.bottomLinks}>
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>

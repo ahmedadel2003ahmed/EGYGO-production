@@ -62,7 +62,7 @@
 }
 
 .headerSection {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   padding: 40px 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -319,7 +319,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   display: flex;
   align-items: center;
@@ -374,7 +374,7 @@
 }
 
 .actionBtn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
 }
 
@@ -648,7 +648,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   display: flex;
   align-items: center;
@@ -700,7 +700,7 @@
 .selectGuideBtn {
   width: 100%;
   padding: 10px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   border: none;
   border-radius: 6px;

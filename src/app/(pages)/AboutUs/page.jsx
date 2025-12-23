@@ -15,17 +15,17 @@ export default function AboutUs() {
       name: 'Ebrahim Mamdouh',
       role: 'Frontend Developer',
       icon: '⚛️',
-      image: '/images/team/ebrahim.jpg',
+      image: '/images/team/Ebrhaim1.jpeg',
       color: '#61dafb',
       description: 'Crafting beautiful and responsive user interfaces with modern web technologies',
       skills: ['React', 'Next.js', 'TypeScript', 'CSS'],
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      gradient: '#3b5d80',
     },
     {
       name: 'Kerolles Sobhy',
       role: 'Backend Developer',
       icon: '⚙️',
-      image: '/images/team/kerolles.jpg',
+      image: '/images/team/kero.jpeg',
       color: '#68a063',
       description: 'Building robust and scalable server architectures with secure APIs',
       skills: ['Node.js', 'Express', 'MongoDB', 'REST API'],
@@ -35,7 +35,7 @@ export default function AboutUs() {
       name: 'Mohamed Ali',
       role: 'Flutter Developer',
       icon: '📱',
-      image: '/images/team/mohamed.jpg',
+      image: '/images/team/moAli.jpeg',
       color: '#02569b',
       description: 'Creating seamless cross-platform mobile experiences with Flutter',
       skills: ['Flutter', 'Dart', 'Mobile UI', 'iOS/Android'],
@@ -45,7 +45,7 @@ export default function AboutUs() {
       name: 'Basel Hesham',
       role: 'UI/UX Designer',
       icon: '🎨',
-      image: '/images/team/basel.jpg',
+      image: '/images/team/basel.jpeg',
       color: '#ff6b6b',
       description: 'Designing intuitive and delightful user experiences that captivate',
       skills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research'],
@@ -100,7 +100,7 @@ export default function AboutUs() {
               <span className={styles.titleWordHighlight}>Dream Team</span>
             </h1>
             <p className={styles.heroSubtitle}>
-              A passionate group of developers and designers crafting EgyGo - 
+              A passionate group of developers and designers crafting EgyGo -
               Your gateway to exploring Egypts wonders
             </p>
             <div className={styles.heroDecoration}>✨ EGYGO ✨</div>
@@ -129,15 +129,15 @@ export default function AboutUs() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className={styles.cardImageWrapper}>
-                  <img 
-                    src={member.image} 
+                  <img
+                    src={member.image}
                     alt={member.name}
                     className={styles.memberImage}
                     onError={(e) => {
                       e.target.style.display = 'none';
                       e.target.nextElementSibling.style.display = 'flex';
                     }}
-                  /> 
+                  />
                   <div className={styles.memberIconFallback} style={{ background: member.gradient }}>
                     <span>{member.icon}</span>
                   </div>
@@ -187,14 +187,14 @@ export default function AboutUs() {
             <div className={styles.storyIcon}>📖</div>
             <h2 className={styles.sectionTitle}>Our Story</h2>
             <p className={styles.storyText}>
-              EgyGo was born from a simple yet powerful vision: to connect travelers 
-              with the rich heritage and breathtaking beauty of Egypt. As a graduation 
-              project, we combined our diverse skills and shared passion to create a 
+              EgyGo was born from a simple yet powerful vision: to connect travelers
+              with the rich heritage and breathtaking beauty of Egypt. As a graduation
+              project, we combined our diverse skills and shared passion to create a
               platform that transforms how people discover and experience Egyptian destinations.
             </p>
             <p className={styles.storyText}>
-              From the bustling streets of Cairo to the serene shores of the Red Sea, 
-              our platform brings Egypts magic to your fingertips. Were not just building 
+              From the bustling streets of Cairo to the serene shores of the Red Sea,
+              our platform brings Egypts magic to your fingertips. Were not just building
               an app – were crafting experiences and creating memories.
             </p>
           </div>
@@ -228,9 +228,9 @@ export default function AboutUs() {
             <div className={styles.missionIcon}>🎯</div>
             <h2 className={styles.missionTitle}>Our Mission</h2>
             <p className={styles.missionText}>
-              To revolutionize travel experiences in Egypt by connecting adventurers 
-              with local guides, hidden gems, and unforgettable journeys. We believe 
-              every trip should be extraordinary, and every traveler should have access 
+              To revolutionize travel experiences in Egypt by connecting adventurers
+              with local guides, hidden gems, and unforgettable journeys. We believe
+              every trip should be extraordinary, and every traveler should have access
               to authentic Egyptian experiences.
             </p>
             <div className={styles.missionQuote}>
@@ -248,7 +248,7 @@ export default function AboutUs() {
             <p className={styles.ctaText}>
               Join thousands of travelers discovering the magic of Egypt with EgyGo
             </p>
-            <button 
+            <button
               className={styles.ctaButton}
               onClick={() => window.location.href = '/ExploreDestinations'}
             >

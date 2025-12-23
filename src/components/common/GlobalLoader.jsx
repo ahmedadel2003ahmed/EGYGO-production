@@ -36,7 +36,7 @@ const GlobalLoader = ({ isLoading = false, className = "" }) => {
         </div>
 
         {/* Footer Text */}
-        <p className={styles.footerText}>Exploring the treasures of Minya...</p>
+        <p className={styles.footerText}>Exploring the treasures of Egypt...</p>
       </div>
     </div>
   );

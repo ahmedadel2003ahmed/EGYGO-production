@@ -23,7 +23,7 @@ export default function GovernorateClient({ initialGuides = [] }) {
           }
         });
       }
-      
+
       // Handle guides with single province object
       if (guide.province?.name && guide.province?._id) {
         governorateMap.set(guide.province.name, {
@@ -35,7 +35,7 @@ export default function GovernorateClient({ initialGuides = [] }) {
     });
 
     // Convert map to sorted array
-    return Array.from(governorateMap.values()).sort((a, b) => 
+    return Array.from(governorateMap.values()).sort((a, b) =>
       a.name.localeCompare(b.name)
     );
   }, [initialGuides]);
@@ -48,10 +48,10 @@ export default function GovernorateClient({ initialGuides = [] }) {
     return initialGuides.filter((g) => {
       const provinces = g.provinces || [];
       const province = g.province;
-      
+
       const hasProvince = provinces.some(p => p?.name === governorateName);
       const hasMainProvince = province?.name === governorateName;
-      
+
       return hasProvince || hasMainProvince;
     }).length;
   };
@@ -65,11 +65,11 @@ export default function GovernorateClient({ initialGuides = [] }) {
       filtered = filtered.filter((g) => {
         const provinces = g.provinces || [];
         const province = g.province;
-        
+
         // Check if guide works in selected governorate
         const hasProvince = provinces.some(p => p?.name === selectedGovernorate);
         const hasMainProvince = province?.name === selectedGovernorate;
-        
+
         return hasProvince || hasMainProvince;
       });
     }
@@ -98,9 +98,8 @@ export default function GovernorateClient({ initialGuides = [] }) {
           {governorates.map((gov) => (
             <button
               key={gov.id}
-              className={`${styles.cityItem} ${
-                selectedGovernorate === gov.name ? styles.activeCity : ""
-              }`}
+              className={`${styles.cityItem} ${selectedGovernorate === gov.name ? styles.activeCity : ""
+                }`}
               onClick={() => setSelectedGovernorate(gov.name)}
             >
               <div>
@@ -134,7 +133,7 @@ export default function GovernorateClient({ initialGuides = [] }) {
 
         {filteredGuides.length === 0 ? (
           <div className={styles.empty}>
-            No guides found for <strong>{selectedCity}</strong>.
+            No guides found for <strong>{selectedGovernorate}</strong>.
           </div>
         ) : (
           <div className={`row g-3 ${styles.cardsGrid}`}>

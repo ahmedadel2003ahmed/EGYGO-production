@@ -43,7 +43,7 @@ const CATEGORIES = [
 
 // Fetch governorate data from API
 const fetchGovernorateData = async (slug) => {
-  const response = await axios.get(`http://localhost:5000/api/provinces/${slug}`);
+  const response = await axios.get(`/api/provinces/${slug}`);
   return response.data;
 };
 
@@ -85,7 +85,7 @@ export default function GovernorateDetailsPage() {
       <section className={styles.itemsSection}>
         <div className="container">
           <div className={styles.categoryHeader}>
-            <button 
+            <button
               onClick={() => setSelectedCategory(null)}
               className={styles.backToCategoriesBtn}
             >
@@ -120,7 +120,7 @@ export default function GovernorateDetailsPage() {
                     <p className={styles.placeDescription}>
                       {item.shortDescription}
                     </p>
-                    
+
                     <div className={styles.placeDetails}>
                       {item.openingHours && (
                         <div className={styles.placeDetail}>
@@ -205,13 +205,13 @@ export default function GovernorateDetailsPage() {
   return (
     <div className={styles.pageWrapper}>
       <GlobalLoader isLoading={isLoading} />
-      
+
       {/* Hero Section with province cover image */}
-      <section 
+      <section
         className={styles.heroSection}
         style={{
-          backgroundImage: province.coverImage 
-            ? `url(${province.coverImage})` 
+          backgroundImage: province.coverImage
+            ? `url(${province.coverImage})`
             : 'linear-gradient(135deg, #0A2342, #00797C)'
         }}
       >

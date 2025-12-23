@@ -18,7 +18,7 @@ const guides = [
         id: 2,
         name: 'Neveen Nagy',
         role: 'Tour gide1.png',
-        description: 'Tour guide and cultural interpreter based in Minya.',
+        description: 'Tour guide and cultural interpreter based in Egypt.',
         languages: ['English', 'Arabic'],
         image: '/images/gide1.png', // External placeholder
         socials: { facebook: '#', instagram: '#' }
@@ -27,7 +27,7 @@ const guides = [
         id: 3,
         name: 'Dr. Mohammed Farghal El Far',
         role: 'Tour Guide',
-        description: 'Tour Guide (personal tour guide) — contact for custom tours in Minya.',
+        description: 'Tour Guide (personal tour guide) — contact for custom tours in Egypt.',
         languages: ['English', 'Arabic'],
         image: '/images/gide2.png', // Using existing local image
         socials: { facebook: '#' }
@@ -43,7 +43,7 @@ const TourGuides = () => {
                 <div className={styles.heroContent}>
                     <h1 className={styles.heroTitle}>Tourguide</h1>
                     <p className={styles.heroSubtitle}>
-                        Find licensed local guides, interpreters, and experts to lead your Minya experience.
+                        Find licensed local guides, interpreters, and experts to lead your Egypt experience.
                     </p>
                 </div>
             </div>

@@ -7,7 +7,7 @@
 
 /* Header Section */
 .headerSection {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   padding: 100px 0 60px;
   position: relative;
@@ -111,7 +111,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -303,7 +303,7 @@
 }
 
 .saveBtn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   border: 2px solid transparent;
 }
@@ -508,7 +508,7 @@
 .backBtn {
   margin-top: 20px;
   padding: 12px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b5d80;
   color: white;
   border: none;
   border-radius: 12px;

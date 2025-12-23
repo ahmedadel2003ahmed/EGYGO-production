@@ -6,25 +6,25 @@ import { useRouter, useSearchParams } from 'next/navigation';
 export default function LegacyPaymentSuccessRedirect() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   useEffect(() => {
     // Extract session_id from URL
     const sessionId = searchParams.get('session_id');
-    
+
     // Get trip ID from the current path
     const pathParts = window.location.pathname.split('/');
     const tripIdIndex = pathParts.indexOf('trips') + 1;
     const tripId = pathParts[tripIdIndex];
-    
+
     console.log('Detected incorrect redirect. Fixing...');
     console.log('Extracted tripId:', tripId);
     console.log('Extracted sessionId:', sessionId);
-    
+
     if (sessionId && tripId) {
       // Redirect to correct URL
       const correctUrl = `/payment/success?session_id=${sessionId}&trip_id=${tripId}`;
       console.log('Redirecting to:', correctUrl);
-      
+
       // Small delay to show message
       setTimeout(() => {
         router.push(correctUrl);
@@ -43,7 +43,7 @@ export default function LegacyPaymentSuccessRedirect() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#3b5d80',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
       <div style={{
@@ -55,11 +55,11 @@ export default function LegacyPaymentSuccessRedirect() {
         boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
       }}>
         <div style={{ fontSize: '60px', marginBottom: '20px' }}>🔄</div>
-        <h1 style={{ 
-          fontSize: '1.8rem', 
-          fontWeight: '700', 
-          color: '#1f2937', 
-          margin: '0 0 16px 0' 
+        <h1 style={{
+          fontSize: '1.8rem',
+          fontWeight: '700',
+          color: '#1f2937',
+          margin: '0 0 16px 0'
         }}>
           Redirecting...
         </h1>
@@ -71,7 +71,7 @@ export default function LegacyPaymentSuccessRedirect() {
         }}>
           Payment successful! We&apos;re redirecting you to the correct page.
         </p>
-        
+
         <div style={{
           marginTop: '30px',
           padding: '16px',
