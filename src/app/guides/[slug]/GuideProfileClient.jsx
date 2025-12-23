@@ -5,13 +5,19 @@ import styles from "./GuideProfile.module.css";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaCheckCircle, FaStar } from "react-icons/fa";
+import TripChat from "../../components/chat/TripChat";
+import { useAuth } from "../../context/AuthContext";
 
 export default function GuideProfileClient() {
   const { slug } = useParams();
   const router = useRouter();
+  const authContext = useAuth();
+  const user = authContext?.user || null;
   const [guide, setGuide] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+  const [tripId, setTripId] = useState(null);
 
   useEffect(() => {
     async function fetchGuideData() {
@@ -25,7 +31,8 @@ export default function GuideProfileClient() {
           headers.Authorization = `Bearer ${token}`;
         }
         
-        const res = await fetch(`http://localhost:5000/api/tourist/guides/${slug}`, {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const res = await fetch(`${API_URL}/api/tourist/guides/${slug}`, {
           headers
         });
         
@@ -58,6 +65,79 @@ export default function GuideProfileClient() {
   const handleBookNow = () => {
     if (guide && guide.slug) {
       router.push(`/booking/${guide.slug}`);
+    }
+  };
+
+  // Handle Start Chat - create trip or use existing one
+  const handleStartChat = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert('Please login to start a chat');
+        router.push('/login');
+        return;
+      }
+
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      
+      // Check if there's an active trip with this guide
+      const tripsRes = await fetch(`${API_URL}/api/trips`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+      });
+
+      if (tripsRes.ok) {
+        const tripsData = await tripsRes.json();
+        console.log('All trips:', tripsData.data);
+        console.log('Current guide ID:', guide._id);
+        console.log('Current guide slug:', guide.slug);
+        
+        // Find trip with this guide (check both _id and slug)
+        const existingTrip = tripsData.data?.find((trip) => {
+          console.log('Checking trip:', {
+            tripId: trip._id,
+            status: trip.status,
+            selectedGuide: trip.selectedGuide,
+            selectedGuideId: trip.selectedGuide?._id,
+            selectedGuideSlug: trip.selectedGuide?.slug,
+          });
+          
+          const validStatuses = ['selecting_guide', 'pending_confirmation', 'awaiting_payment', 'confirmed', 'awaiting_call', 'in_call'];
+          const hasValidStatus = validStatuses.includes(trip.status);
+          const hasGuideMatch = trip.selectedGuide?._id === guide._id || 
+                               trip.selectedGuide?.slug === guide.slug ||
+                               trip.selectedGuide === guide._id;
+          
+          return hasGuideMatch && hasValidStatus;
+        });
+
+        console.log('Found trip:', existingTrip);
+
+        if (existingTrip) {
+          setTripId(existingTrip._id);
+          setShowChat(true);
+          return;
+        }
+        
+        // Check if there's ANY trip that can have a guide selected
+        const tripWithoutGuide = tripsData.data?.find(
+          (trip) => trip.status === 'selecting_guide' && !trip.selectedGuide
+        );
+        
+        if (tripWithoutGuide) {
+          alert('You have a trip waiting for guide selection. Please select this guide for your trip first.');
+          router.push(`/create-trip/${tripWithoutGuide._id}/select-guide`);
+          return;
+        }
+      }
+
+      // If no active trip exists, guide user to create one
+      alert('Please create a trip first to chat with the guide');
+      router.push('/create-trip');
+    } catch (err) {
+      console.error('Error starting chat:', err);
+      alert('Failed to start chat. Please try again.');
     }
   };
 
@@ -177,7 +257,12 @@ export default function GuideProfileClient() {
 
               {/* BUTTONS */}
               <div className="d-grid gap-2 mt-3">
-                <button className={styles.btnOutline}>Start Chat</button>
+                <button 
+                  className={styles.btnOutline}
+                  onClick={handleStartChat}
+                >
+                  Start Chat
+                </button>
                 <button className={styles.btnOutline}>Voice Call</button>
                 <button className={styles.btnOutline}>Video Call</button>
                 <button 
@@ -283,6 +368,16 @@ export default function GuideProfileClient() {
           )}
         </div>
       </div>
+
+      {/* Chat Component */}
+      {showChat && tripId && (
+        <TripChat
+          tripId={tripId}
+          guideName={guide?.name}
+          isOpen={showChat}
+          onClose={ () => setShowChat(false)}
+        />
+      )}
     </div>
   );
 }

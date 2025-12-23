@@ -5,6 +5,7 @@ import BootstrapClient from "@/app/lib/BootstrapClient"; // ✅
 import ConditionalNavbar from "@/app/components/ConditionalNavbar";
 import ConditionalMainWrapper from "@/app/components/ConditionalMainWrapper";
 import QueryProvider from "@/app/components/QueryProvider";
+import { AuthProvider } from "@/app/context/AuthContext";
 
 import ConditionalFooter from "@/app/components/ConditionalFooter";
 
@@ -23,13 +24,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <BootstrapClient /> {/* Loads Bootstrap JS safely on client */}
-        <QueryProvider>
-          <ConditionalNavbar />
-          <ConditionalMainWrapper>
-            {children}
-          </ConditionalMainWrapper>
-          <ConditionalFooter />
-        </QueryProvider>
+        <AuthProvider>
+          <QueryProvider>
+            <ConditionalNavbar />
+            <ConditionalMainWrapper>
+              {children}
+            </ConditionalMainWrapper>
+            <ConditionalFooter />
+          </QueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

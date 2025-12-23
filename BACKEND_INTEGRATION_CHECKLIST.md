@@ -130,7 +130,7 @@ res.json({
 ### 3. Stripe Webhook Handler
 **Endpoint:** `POST /api/webhooks/stripe`
 
-**Required Implementation:**
+**Required Implementatfion:**
 ```javascript
 // 1. Verify Stripe signature
 const sig = req.headers['stripe-signature'];
