@@ -1,8 +1,6 @@
-/**
- * Chat Service - REST API for message history and access validation
- */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export const chatService = {
   /**
@@ -11,7 +9,7 @@ export const chatService = {
   getMessages: async (tripId, limit = 100, skip = 0) => {
     const token = localStorage.getItem("access_token");
     const response = await fetch(
-      `${API_BASE_URL}/chat/${tripId}/messages?limit=${limit}&skip=${skip}`,
+      `${API_BASE_URL}/api/chat/${tripId}/messages?limit=${limit}&skip=${skip}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -36,7 +34,7 @@ export const chatService = {
    */
   checkAccess: async (tripId) => {
     const token = localStorage.getItem("access_token");
-    const response = await fetch(`${API_BASE_URL}/chat/${tripId}/access`, {
+    const response = await fetch(`${API_BASE_URL}/api/chat/${tripId}/access`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

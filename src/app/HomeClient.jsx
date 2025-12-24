@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
+import TripModal from '@/components/trip/TripModal';
+import FloatingTripButton from '@/components/common/FloatingTripButton';
+
 import TourGuides from './components/TourGuides';
 import StatsSection from './components/StatsSection';
 import GallerySection from './components/GallerySection';
@@ -16,9 +19,14 @@ export default function HomeClient() {
     const router = useRouter();
     const storyRef = useRef(null);
     const footerRef = useRef(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const scrollToStory = () => storyRef.current?.scrollIntoView({ behavior: 'smooth' });
     const scrollToFooter = () => footerRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    const handleTripCreated = () => {
+        router.push('/my-trips');
+    };
 
     return (
         <>
@@ -53,6 +61,14 @@ export default function HomeClient() {
 
             {/* ===== FOOTER ANCHOR ===== */}
             <div ref={footerRef}></div>
+
+            {/* ===== FLOATING ACTION BUTTON & MODAL ===== */}
+            <TripModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={handleTripCreated}
+            />
+            <FloatingTripButton onClick={() => setIsModalOpen(true)} />
         </>
     );
 }

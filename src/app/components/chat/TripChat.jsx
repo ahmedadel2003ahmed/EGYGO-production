@@ -26,7 +26,11 @@ export default function TripChat({ tripId, guideName, onClose, isOpen }) {
 
   // Initialize chat
   useEffect(() => {
-    if (!isOpen || !tripId) return;
+    if (!isOpen || !tripId) {
+      // Clear loading state when chat is closed
+      setLoading(true);
+      return;
+    }
 
     const initChat = async () => {
       const token = localStorage.getItem("access_token");
@@ -97,15 +101,14 @@ export default function TripChat({ tripId, guideName, onClose, isOpen }) {
 
     initChat();
 
-    // Cleanup on close
+    // Cleanup on unmount or when tripId changes
     return () => {
-      if (!isOpen) {
-        socketChatService.leaveChat(tripId);
-        hasJoinedRef.current = false;
-        messageListenersSetup.current = false;
-      }
+      // Only cleanup when component unmounts or tripId changes, not when chat just closes
+      socketChatService.leaveChat(tripId);
+      hasJoinedRef.current = false;
+      messageListenersSetup.current = false;
     };
-  }, [isOpen, tripId]);
+  }, [tripId, isOpen]); // Depend on both tripId and isOpen
 
   // Send message
   const handleSend = useCallback(() => {
