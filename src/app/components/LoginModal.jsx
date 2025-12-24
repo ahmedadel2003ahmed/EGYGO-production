@@ -43,8 +43,8 @@ const LoginModal = ({ isOpen, onClose }) => {
             password: '',
         },
         validationSchema: Yup.object({
-            email: Yup.string().email('بريد إلكتروني غير صالح').required('مطلوب'),
-            password: Yup.string().min(6, 'على الأقل 6 أحرف').required('مطلوب'),
+            email: Yup.string().email('Invalid email address').required('Required'),
+            password: Yup.string().min(6, 'At least 6 characters').required('Required'),
         }),
         onSubmit: async (values) => {
             setSubmitting(true);
@@ -72,12 +72,12 @@ const LoginModal = ({ isOpen, onClose }) => {
                     onClose(); // Close modal on success
                     // No page reload needed - state management handles UI updates
                 } else {
-                    throw new Error(response.data?.message || 'فشل تسجيل الدخول');
+                    throw new Error(response.data?.message || 'Login failed');
                 }
             } catch (err) {
                 console.error('login error', err);
                 setServerError(
-                    err.response?.data?.message || err.message || 'حدث خطأ أثناء تسجيل الدخول'
+                    err.response?.data?.message || err.message || 'An error occurred during login'
                 );
             } finally {
                 setSubmitting(false);
@@ -98,23 +98,23 @@ const LoginModal = ({ isOpen, onClose }) => {
                 <div className={styles.imageSection}>
                     <div className={styles.imageOverlay}></div>
                     <div className={styles.imageContent}>
-                        <h2>EgyGo</h2>
+                        <Image src="/images/logo.ico" alt="EgyGo Logo" width={120} height={120} />
                         <p>
-                            استكشف جمال مصر، وخطط لرحلتك بسهولة.
+                            Explore the beauty of Egypt, plan your trip with ease.
                         </p>
                     </div>
                 </div>
 
                 {/* Right Section (Form) */}
                 <div className={styles.formSection}>
-                    <h2 className={styles.heading}>تسجيل الدخول</h2>
-                    <p className={styles.subHeading}>أهلا بك مجدداً، سجل دخولك للمتابعة</p>
+                    <h2 className={styles.heading}>Log In</h2>
+                    <p className={styles.subHeading}>Welcome back, sign in to continue</p>
 
                     <form className={styles.form} onSubmit={formik.handleSubmit} noValidate>
 
                         {/* Email Field */}
                         <div className={styles.inputGroup}>
-                            <label className={styles.label}>البريد الإلكتروني *</label>
+                            <label className={styles.label}>Email Address *</label>
                             <div className={styles.inputWrapper}>
                                 <input
                                     name="email"
@@ -133,7 +133,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
                         {/* Password Field */}
                         <div className={styles.inputGroup}>
-                            <label className={styles.label}>كلمة المرور *</label>
+                            <label className={styles.label}>Password *</label>
                             <div className={styles.inputWrapper}>
                                 <input
                                     name="password"
@@ -160,9 +160,9 @@ const LoginModal = ({ isOpen, onClose }) => {
                         {/* Options Row */}
                         <div className={styles.optionsRow}>
                             <label className={styles.rememberMe}>
-                                <input type="checkbox" /> تذكرني
+                                <input type="checkbox" /> Remember me
                             </label>
-                            <a href="#" className={styles.forgotPassword}>نسيت كلمة المرور؟</a>
+                            <a href="#" className={styles.forgotPassword}>Forgot password?</a>
                         </div>
 
                         {/* Server Error */}
@@ -173,13 +173,13 @@ const LoginModal = ({ isOpen, onClose }) => {
                             type="submit"
                             className={styles.loginBtn}
                             disabled={submitting}
-                            style={{ background: '#7C3AED' }} // Matching the "purple" vibe requested
+                            style={{ background: '#d2a16e' }} // Matching the "purple" vibe requested
                         >
-                            {submitting ? 'جاري الدخول...' : 'دخول'}
+                            {submitting ? 'Logging in...' : 'Log In'}
                         </button>
 
                         {/* Social Login */}
-                        <div className={styles.divider}>أو سجل الدخول عبر</div>
+                        <div className={styles.divider}>Or sign in with</div>
                         <div className={styles.socialButtons}>
                             <button type="button" className={styles.socialBtn} onClick={() => { }}>
                                 <FaGoogle size={20} color="#DB4437" />
@@ -190,8 +190,8 @@ const LoginModal = ({ isOpen, onClose }) => {
                         </div>
 
                         <p className={styles.registerLink}>
-                            ليس لديك حساب؟
-                            <button type="button" onClick={() => router.push('/register')}>سجل مجاناً</button>
+                            Don't have an account?
+                            <button type="button" onClick={() => auth.switchToRegister()}>Sign up for free</button>
                         </p>
 
                     </form>

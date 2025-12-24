@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { FaUser } from 'react-icons/fa';
 import styles from './Navbar.module.css';
 import LoginModal from './LoginModal';
+import RegisterModal from './RegisterModal';
 import { useAuth } from '@/app/context/AuthContext';
 
 const Navbar = () => {
@@ -16,9 +17,10 @@ const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const auth = useAuth();
-  
+
   const isAuthenticated = !!auth?.token;
   const isLoginModalOpen = auth?.showLoginModal || false;
+  const isRegisterModalOpen = auth?.showRegisterModal || false;
 
   // Scroll behavior logic
   useEffect(() => {
@@ -107,13 +109,13 @@ const Navbar = () => {
             {!isAuthenticated ? (
               <>
                 <button
-                  onClick={() => auth?.requireAuth?.(() => {})}
+                  onClick={() => auth?.openLoginModal()}
                   className={styles.loginBtn}
                   aria-label="Login to your account"
                 >
-                  Get started
+                  Get Started
                 </button>
-               
+            
               </>
             ) : (
               <Link href="/profile" className={styles.profileBtn} aria-label="User profile">
@@ -158,7 +160,7 @@ const Navbar = () => {
             <div className={styles.mobileAuthButtons}>
               <button
                 onClick={() => {
-                  auth?.requireAuth?.(() => {});
+                  auth?.openLoginModal();
                   setIsMenuOpen(false);
                 }}
                 className={styles.mobileLoginBtn}
@@ -166,23 +168,31 @@ const Navbar = () => {
               >
                 Login
               </button>
-              <Link
-                href="/register"
+              <button
+                onClick={() => {
+                  auth?.openRegisterModal();
+                  setIsMenuOpen(false);
+                }}
                 className={styles.mobileRegisterBtn}
-                onClick={() => setIsMenuOpen(false)}
                 aria-label="Create new account"
               >
                 Register
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Login Modal */}
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={() => auth?.closeLoginModal?.()} 
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => auth?.closeLoginModal?.()}
+      />
+
+      {/* Register Modal */}
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => auth?.closeRegisterModal?.()}
       />
     </>
   );

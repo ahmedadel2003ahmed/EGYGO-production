@@ -16,6 +16,7 @@
   overflow: hidden;
   background: #3b5d80;
   opacity: 0;
+  padding:70px 0px 0px;
   transform: translateY(30px);
   transition: all 1s ease;
 }

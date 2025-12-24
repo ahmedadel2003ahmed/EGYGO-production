@@ -8,7 +8,10 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null); // { name, email, profileComplete: boolean, onboarding: {...} }
   const [loading, setLoading] = useState(true);
+
+  // Modal states
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ export function AuthProvider({ children }) {
   function setAuth({ token: newToken, user: newUser, isRegister = false }) {
     setToken(newToken);
 
-    // لو مستخدم جديد (register) نضيف profileComplete = false
+    // If new user (register), add profileComplete = false
     const preparedUser = isRegister
       ? { ...newUser, profileComplete: false }
       : newUser;
@@ -75,21 +78,54 @@ export function AuthProvider({ children }) {
   // Close login modal
   function closeLoginModal() {
     setShowLoginModal(false);
-    setPendingAction(null);
+    // Don't clear pending action here immediately if we are switching, 
+    // but typically closing means cancelling. 
+    // If switching, the switcher will handle it.
+    if (!showRegisterModal) setPendingAction(null);
+  }
+
+  function openLoginModal() {
+    setShowLoginModal(true);
+    setShowRegisterModal(false);
+  }
+
+  function openRegisterModal() {
+    setShowRegisterModal(true);
+    setShowLoginModal(false);
+  }
+
+  function closeRegisterModal() {
+    setShowRegisterModal(false);
+  }
+
+  function switchToRegister() {
+    setShowLoginModal(false);
+    setTimeout(() => setShowRegisterModal(true), 200); // Small delay for smooth transition
+  }
+
+  function switchToLogin() {
+    setShowRegisterModal(false);
+    setTimeout(() => setShowLoginModal(true), 200);
   }
 
   return (
     <AuthContext.Provider
-      value={{ 
-        token, 
-        user, 
-        loading, 
-        setAuth, 
-        completeOnboarding, 
+      value={{
+        token,
+        user,
+        loading,
+        setAuth,
+        completeOnboarding,
         logout,
         requireAuth,
         showLoginModal,
-        closeLoginModal
+        openLoginModal,
+        closeLoginModal,
+        showRegisterModal,
+        openRegisterModal,
+        closeRegisterModal,
+        switchToRegister,
+        switchToLogin
       }}
     >
       {children}

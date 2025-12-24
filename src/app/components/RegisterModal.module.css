@@ -1,6 +1,6 @@
-/* LoginModal.module.css */
+/* RegisterModal.module.css */
 
-/* Overlay/Backdrop */
+/* Reusing core styles from LoginModal for consistency */
 .overlay {
   position: fixed;
   top: 0;
@@ -27,27 +27,25 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Modal Content Container */
 .modalContainer {
   display: flex;
   width: 100%;
-  max-width: 900px; /* Adjust based on image ratio */
+  max-width: 900px;
   height: auto;
-  min-height: 550px;
+  max-height: 90vh; /* Prevent it from being taller than viewport */
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
   animation: slideUp 0.3s ease-out 0.1s backwards;
-  direction: ltr; /* Ensure flex direction works as expected, content inside will be RTL if needed */
+  direction: ltr; 
 }
 
-/* Close Button */
 .closeBtn {
   position: absolute;
   top: 15px;
-  right: 15px; /* Or left depending on preference, usually right */
+  right: 15px;
   background: rgba(0, 0, 0, 0.05);
   border: none;
   border-radius: 50%;
@@ -67,24 +65,21 @@
   transform: rotate(90deg);
 }
 
-/* Left Section: Image */
 .imageSection {
   flex: 1;
-  background: url("/images/2.svg") center/cover no-repeat; /* Fallback or reuse */
+  background: url("/images/3.svg") center/cover no-repeat;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 40px;
   color: white;
-  /* Overlay for text readability */
 }
 
-/* Optional: Overlay on the image to make text pop */
 .imageOverlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%);
     z-index: 1;
 }
 
@@ -96,30 +91,28 @@
 }
 
 .imageContent h2 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
     margin-bottom: 10px;
 }
 
 .imageContent p {
-    font-size: 16px;
+    font-size: 15px;
     opacity: 0.9;
     line-height: 1.5;
 }
 
-
-/* Right Section: Form */
 .formSection {
   flex: 1;
   background: #fff;
   padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* To allow scrolling */
+  overflow-y: auto; /* Enable scrolling for form */
   direction: ltr;
 }
 
-/* Form Styling */
 .heading {
   font-size: 24px;
   font-weight: 700;
@@ -131,14 +124,23 @@
 .subHeading {
   font-size: 14px;
   color: #666;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   text-align: left;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  gap: 15px;
+}
+
+.col {
+  flex: 1;
 }
 
 .inputGroup {
@@ -148,7 +150,7 @@
 }
 
 .label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #444;
 }
@@ -159,8 +161,8 @@
 
 .input {
   width: 100%;
-  padding: 12px 15px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
   border: 1px solid #e0e0e0;
   background: #fdfdfd;
   font-size: 14px;
@@ -173,15 +175,6 @@
   border-color: #E85F25;
   box-shadow: 0 0 0 4px rgba(232, 95, 37, 0.1);
   background: #fff;
-}
-
-.inputIcon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    pointer-events: none;
 }
 
 .passwordToggle {
@@ -197,30 +190,8 @@
     display: flex;
 }
 
-.optionsRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    margin-top: -5px;
-}
-
-.rememberMe {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #666;
-    cursor: pointer;
-}
-
-.forgotPassword {
-    color: #E85F25; /* Primary color */
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.loginBtn {
-  background-color: #d2a16e; /* Purple from the image example, or use Primary #E85F25 */
+.submitBtn {
+background-color: #d2a16e;
   color: white;
   border: none;
   padding: 14px;
@@ -232,70 +203,19 @@
   margin-top: 10px;
 }
 
-.loginBtn:hover {
+.submitBtn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-.loginBtn:active {
-    transform: translateY(0);
-}
-
-.divider {
-    text-align: center;
-    margin: 20px 0;
-    position: relative;
-    font-size: 13px;
-    color: #999;
-}
-
-.divider::before,
-.divider::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 30%;
-    height: 1px;
-    background: #eee;
-}
-
-.divider::before { left: 0; }
-.divider::after { right: 0; }
-
-
-.socialButtons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.socialBtn {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    border: 1px solid #eee;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.socialBtn:hover {
-    border-color: #ddd;
-    background: #f9f9f9;
-}
-
-.registerLink {
+.loginLink {
     text-align: center;
     font-size: 14px;
     color: #666;
     margin-top: 10px;
 }
 
-.registerLink button {
+.loginLink button {
     background: none;
     border: none;
     color: #7C3AED;
@@ -307,7 +227,7 @@
 .error {
     color: #dc2626;
     font-size: 12px;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .serverError {
@@ -320,17 +240,31 @@
     margin-bottom: 10px;
 }
 
+.terms {
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1.5;
+}
+
+.highlight {
+    color: #7C3AED;
+    font-weight: 600;
+    cursor: pointer;
+}
 
 @media (max-width: 768px) {
   .modalContainer {
     flex-direction: column;
-    width: 90%;
-    height: auto;
-    max-height: 90vh;
-    overflow-y: auto;
+    overflow-y: hidden; /* Main container hidden, form scrolls */
   }
 
   .imageSection {
-    display: none; /* Hide image on mobile to save space */
+    display: none;
+  }
+  
+  .formSection {
+      overflow-y: auto;
   }
 }

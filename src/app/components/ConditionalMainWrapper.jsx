@@ -29,7 +29,7 @@ const ConditionalMainWrapper = ({ children }) => {
   // If navbar is hidden OR it has floating navbar, we want 0 top padding.
   // This allows the Hero float effect on Home and ExploreDestinations.
   const mainStyle = {
-    paddingTop: (shouldHideNavbar || hasFloatingNavbar) ? '0' : '80px',
+    paddingTop: (shouldHideNavbar || hasFloatingNavbar) ? '0' : '0',
     minHeight: '100vh' // Ensure full height
   };
 

@@ -11,9 +11,13 @@
   background: linear-gradient(135deg, #0A2342, #00797C);
   background-size: cover;
   background-position: center;
-  padding: 120px 0 100px;
-  margin-bottom: 4rem;
+  padding: 0;
+  margin-bottom: 0;
   overflow: hidden;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .heroSection::before {
@@ -23,7 +27,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(10, 35, 66, 0.88), rgba(0, 121, 124, 0.75));
+  background: linear-gradient(
+    180deg, 
+    rgba(0,0,0,0.1) 0%, 
+    rgba(0,0,0,0.3) 50%, 
+    rgba(0,0,0,0.6) 100%
+  );
   z-index: 1;
 }
 
@@ -33,9 +42,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
-  background-size: 100px 100px;
-  opacity: 0.1;
+  pointer-events: none;
   z-index: 1;
 }
 
@@ -99,7 +106,7 @@
 
 /* --- Categories Section --- */
 .categoriesSection {
-  padding: 3rem 0 5rem;
+  padding: 4rem 0 5rem;
 }
 
 .sectionTitle {
