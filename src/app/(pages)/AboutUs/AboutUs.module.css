@@ -2,6 +2,7 @@
 .pageWrapper {
   min-height: 100vh;
   background: #ffffff;
+  margin-top: -80px;
   overflow-x: hidden;
 }
 
@@ -83,8 +84,8 @@
   z-index: 10;
   text-align: center;
   color: white;
-  padding: 40px 20px;
-  max-width: 900px;
+  padding: 150px 20px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 

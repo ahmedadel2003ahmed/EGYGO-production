@@ -81,7 +81,7 @@
 
 /* Scrolled Logo Color (Gold Gradient) */
 .navbarScrolled .logoText {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -152,6 +152,7 @@
   padding: 8px 24px;
   border-radius: 50px; /* Pill shape */
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .navbar:not(.navbarScrolled) .loginBtn {
@@ -197,7 +198,7 @@
 }
 
 .navbarScrolled .registerBtn {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
 }
 

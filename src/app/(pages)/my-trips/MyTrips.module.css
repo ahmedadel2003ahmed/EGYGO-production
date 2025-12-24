@@ -2,12 +2,13 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
   padding-bottom: 60px;
+  margin-top: -80px;
 }
 
 .headerSection {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
-  padding: 50px 0 40px;
+  padding: 150px 0 40px;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
 }
 
@@ -162,7 +163,7 @@
 
 .emptyActionBtn {
   padding: 14px 32px;
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -341,7 +342,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   display: flex;
   align-items: center;
@@ -370,7 +371,7 @@
 
 .viewProfileBtn {
   padding: 6px 14px;
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   border: none;
   border-radius: 6px;
@@ -409,7 +410,7 @@
 .viewDetailsBtn {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   border: none;
   border-radius: 8px;

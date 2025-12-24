@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import styles from './CreateTrip.module.css';
 import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
 import LocationPicker from '@/components/trip/LocationPicker';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function CreateTripPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function CreateTripPage() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [provinces, setProvinces] = useState([]);
   const [loadingProvinces, setLoadingProvinces] = useState(true);
+  const auth = useAuth();
 
   // Fallback governorate list (with actual MongoDB IDs from API)
   const FALLBACK_GOVERNORATES = [
@@ -43,13 +45,12 @@ export default function CreateTripPage() {
     { _id: '6935efa747a0b161dbdeee57', name: 'Suez', slug: 'suez' },
   ];
 
-  // Check authentication
+  // Redirect to home if not authenticated (this page requires auth)
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      router.push('/login');
+    if (!auth?.loading && !auth?.token) {
+      router.push('/');
     }
-  }, [router]);
+  }, [auth?.loading, auth?.token, router]);
 
   // Fetch provinces for selection
   useEffect(() => {
@@ -107,7 +108,10 @@ export default function CreateTripPage() {
         // Check authentication
         const token = localStorage.getItem('access_token');
         if (!token) {
-          router.push('/login');
+          auth?.requireAuth?.(() => {
+            // Retry form submission after login
+            formik.handleSubmit();
+          });
           return;
         }
 
@@ -180,7 +184,10 @@ export default function CreateTripPage() {
         // Handle 401 specifically
         if (err.response?.status === 401) {
           setError('Your session has expired. Please login again.');
-          setTimeout(() => router.push('/login'), 2000);
+          auth?.requireAuth?.(() => {
+            // Retry after login
+            formik.handleSubmit();
+          });
           return;
         }
 

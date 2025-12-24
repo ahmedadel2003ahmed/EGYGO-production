@@ -10,30 +10,45 @@
 
 /* ===== PAGE CONTAINER ===== */
 .pageContainer {
-  padding: 60px 0;
   min-height: 100vh;
   background: linear-gradient(135deg, #FAF7F0 0%, #F4E4BC 100%);
+  margin-top: -80px;
+  padding-bottom: 60px;
+}
+
+/* ===== HEADER SECTION ===== */
+.headerSection {
+  background: #d19f6a;
+  color: white;
+  padding: 150px 0 40px;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+}
+
+.headerContent {
+  text-align: left;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pageSubtitle {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .inner {
   max-width: 1200px;
+  padding: 40px 0;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.subtitle {
-  color: #8B7355;
-  font-size: 1rem;
-  margin-top: 8px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ===== GRID LAYOUT ===== */
 .grid {
   margin: 0;
   min-height: 500px;

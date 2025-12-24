@@ -5,12 +5,14 @@ import { useRouter, useParams } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './SelectGuide.module.css';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function SelectGuidePage() {
   const router = useRouter();
   const params = useParams();
   const tripId = params.tripId;
   const [toast, setToast] = useState(null);
+  const auth = useAuth();
 
   console.log('SelectGuidePage - params:', params);
   console.log('SelectGuidePage - tripId:', tripId);
@@ -23,9 +25,8 @@ export default function SelectGuidePage() {
 
   // Check authentication and tripId
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      router.push('/login');
+    if (!auth?.loading && !auth?.token) {
+      router.push('/');
       return;
     }
     

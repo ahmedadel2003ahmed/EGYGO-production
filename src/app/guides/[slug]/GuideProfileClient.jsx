@@ -73,8 +73,11 @@ export default function GuideProfileClient() {
     try {
       const token = localStorage.getItem('access_token');
       if (!token) {
-        alert('Please login to start a chat');
-        router.push('/login');
+        // Show login modal instead of redirecting
+        authContext?.requireAuth?.(() => {
+          // After login, retry the chat action
+          handleStartChat();
+        });
         return;
       }
 

@@ -30,20 +30,24 @@ export default async function Governorate() {
   }
 
   return (
-    <main className={styles.pageContainer}>
-      <section className={`container ${styles.inner}`}>
-        <header className={styles.header}>
-          <h1>Explore Egypt by Governorate</h1>
-          <p className={styles.subtitle}>
-            Discover local guides in various regions across Egypt. Select a
-            governorate to see available guides and embark on an unforgettable
-            journey.
-          </p>
-        </header>
+    <div className={styles.pageContainer}>
+      {/* Header Section */}
+      <section className={styles.headerSection}>
+        <div className="container">
+          <div className={styles.headerContent}>
+            <h1 className={styles.pageTitle}>Explore Governorates</h1>
+            <p className={styles.pageSubtitle}>
+              Discover local guides across Egypt's regions
+            </p>
+          </div>
+        </div>
+      </section>
 
+      {/* Content Section */}
+      <section className={`container ${styles.inner}`}>
         {/* Client Interactive Section */}
         <GovernorateClient initialGuides={guides} />
       </section>
-    </main>
+    </div>
   );
 }

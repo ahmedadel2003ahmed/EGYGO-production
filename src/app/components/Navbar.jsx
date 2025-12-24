@@ -1,24 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaUser } from 'react-icons/fa';
 import styles from './Navbar.module.css';
+import LoginModal from './LoginModal';
+import { useAuth } from '@/app/context/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const pathname = usePathname();
-
-  // Check authentication status
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    setIsAuthenticated(!!token);
-  }, []);
+  const router = useRouter();
+  const auth = useAuth();
+  
+  const isAuthenticated = !!auth?.token;
+  const isLoginModalOpen = auth?.showLoginModal || false;
 
   // Scroll behavior logic
   useEffect(() => {
@@ -75,104 +75,116 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className={`${styles.navbar} ${!isVisible ? styles.navbarHidden : ''} ${isScrolled ? styles.navbarScrolled : ''}`}
-      role="navigation"
-      aria-label="Main navigation"
-    >
-      <div className={styles.navContainer}>
-        {/* Logo */}
-        <Link href="/" className={styles.logo} aria-label="EgyGo - Go to homepage">
-          <span className={styles.logoText}>EgyGo</span>
-        </Link>
-
-        {/* Desktop Navigation Links */}
-        <div className={styles.navLinks}>
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`${styles.navLink} ${isActiveLink(link.href) ? styles.activeLink : ''
-                }`}
-              aria-current={isActiveLink(link.href) ? 'page' : undefined}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Auth Buttons */}
-        <div className={styles.authButtons}>
-          {!isAuthenticated ? (
-            <>
-              <Link href="/login" className={styles.loginBtn} aria-label="Login to your account">
-                Login
-              </Link>
-              <Link href="/register" className={styles.registerBtn} aria-label="Create new account">
-                Get Started
-              </Link>
-            </>
-          ) : (
-            <Link href="/profile" className={styles.profileBtn} aria-label="User profile">
-              <FaUser size={20} />
-            </Link>
-          )}
-        </div>
-
-        {/* Mobile Menu Toggle */}
-        <button
-          className={styles.menuToggle}
-          onClick={toggleMenu}
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-menu"
-          aria-label="Toggle navigation menu"
-        >
-          <span className={styles.hamburgerLine}></span>
-          <span className={styles.hamburgerLine}></span>
-          <span className={styles.hamburgerLine}></span>
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        id="mobile-menu"
-        className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}
-        aria-hidden={!isMenuOpen}
+    <>
+      <nav
+        className={`${styles.navbar} ${!isVisible ? styles.navbarHidden : ''} ${isScrolled ? styles.navbarScrolled : ''}`}
+        role="navigation"
+        aria-label="Main navigation"
       >
-        <div className={styles.mobileNavLinks}>
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`${styles.mobileNavLink} ${isActiveLink(link.href) ? styles.activeMobileLink : ''
-                }`}
-              onClick={() => setIsMenuOpen(false)}
-              aria-current={isActiveLink(link.href) ? 'page' : undefined}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className={styles.mobileAuthButtons}>
-            <Link
-              href="/login"
-              className={styles.mobileLoginBtn}
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Login to your account"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className={styles.mobileRegisterBtn}
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Create new account"
-            >
-              Register
-            </Link>
+        <div className={styles.navContainer}>
+          {/* Logo */}
+          <Link href="/" className={styles.logo} aria-label="EgyGo - Go to homepage">
+            <span className={styles.logoText}>EgyGo</span>
+          </Link>
+
+          {/* Desktop Navigation Links */}
+          <div className={styles.navLinks}>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`${styles.navLink} ${isActiveLink(link.href) ? styles.activeLink : ''
+                  }`}
+                aria-current={isActiveLink(link.href) ? 'page' : undefined}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Auth Buttons */}
+          <div className={styles.authButtons}>
+            {!isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => auth?.requireAuth?.(() => {})}
+                  className={styles.loginBtn}
+                  aria-label="Login to your account"
+                >
+                  Get started
+                </button>
+               
+              </>
+            ) : (
+              <Link href="/profile" className={styles.profileBtn} aria-label="User profile">
+                <FaUser size={20} />
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className={styles.menuToggle}
+            onClick={toggleMenu}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label="Toggle navigation menu"
+          >
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          id="mobile-menu"
+          className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}
+          aria-hidden={!isMenuOpen}
+        >
+          <div className={styles.mobileNavLinks}>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`${styles.mobileNavLink} ${isActiveLink(link.href) ? styles.activeMobileLink : ''
+                  }`}
+                onClick={() => setIsMenuOpen(false)}
+                aria-current={isActiveLink(link.href) ? 'page' : undefined}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className={styles.mobileAuthButtons}>
+              <button
+                onClick={() => {
+                  auth?.requireAuth?.(() => {});
+                  setIsMenuOpen(false);
+                }}
+                className={styles.mobileLoginBtn}
+                aria-label="Login to your account"
+              >
+                Login
+              </button>
+              <Link
+                href="/register"
+                className={styles.mobileRegisterBtn}
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Create new account"
+              >
+                Register
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => auth?.closeLoginModal?.()} 
+      />
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext();
 
@@ -7,6 +8,8 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null); // { name, email, profileComplete: boolean, onboarding: {...} }
   const [loading, setLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
 
   useEffect(() => {
     try {
@@ -31,6 +34,12 @@ export function AuthProvider({ children }) {
     setUser(preparedUser);
     localStorage.setItem("access_token", newToken);
     localStorage.setItem("laqtaha_user", JSON.stringify(preparedUser));
+
+    // Execute pending action if exists
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
+    }
   }
 
   // Update user after onboarding complete
@@ -51,9 +60,37 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("laqtaha_user");
   }
 
+  // Request authentication for protected actions
+  function requireAuth(action) {
+    if (token) {
+      // Already authenticated, execute action immediately
+      action();
+    } else {
+      // Not authenticated, save action and show login modal
+      setPendingAction(() => action);
+      setShowLoginModal(true);
+    }
+  }
+
+  // Close login modal
+  function closeLoginModal() {
+    setShowLoginModal(false);
+    setPendingAction(null);
+  }
+
   return (
     <AuthContext.Provider
-      value={{ token, user, loading, setAuth, completeOnboarding, logout }}
+      value={{ 
+        token, 
+        user, 
+        loading, 
+        setAuth, 
+        completeOnboarding, 
+        logout,
+        requireAuth,
+        showLoginModal,
+        closeLoginModal
+      }}
     >
       {children}
     </AuthContext.Provider>

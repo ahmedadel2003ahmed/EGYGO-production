@@ -6,12 +6,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './MyTrips.module.css';
 import TripModal from '@/components/trip/TripModal';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function MyTripsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const auth = useAuth();
 
   // Governorate lookup map
   const GOVERNORATE_MAP = {
@@ -36,15 +38,7 @@ export default function MyTripsPage() {
     '6935efa747a0b161dbdeee57': 'Suez',
   };
 
-  // Check authentication
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      router.push('/login');
-    }
-  }, [router]);
-
-  // Fetch user's trips
+  // Fetch user's trips (only if authenticated)
   const {
     data: trips = [],
     isLoading,
@@ -52,12 +46,18 @@ export default function MyTripsPage() {
   } = useQuery({
     queryKey: ['my-trips'],
     queryFn: async () => {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        // Return empty array if not authenticated instead of redirecting
+        return [];
+      }
+      
       try {
         const response = await axios.get(
           '/api/tourist/trips',
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -204,7 +204,13 @@ export default function MyTripsPage() {
                 </p>
                 {activeTab === 'all' && (
                   <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                      if (!auth?.token) {
+                        auth?.requireAuth?.(() => setIsModalOpen(true));
+                      } else {
+                        setIsModalOpen(true);
+                      }
+                    }}
                     className={styles.emptyActionBtn}
                   >
                     Create Your First Trip

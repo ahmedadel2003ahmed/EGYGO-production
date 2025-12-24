@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './TripDetails.module.css';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function TripDetailsPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function TripDetailsPage() {
   const [guideFilters, setGuideFilters] = useState({
     language: '',
   });
+  const auth = useAuth();
 
   // Debug logging
   useEffect(() => {
@@ -22,14 +24,12 @@ export default function TripDetailsPage() {
     console.log('Full params:', params);
   }, [tripId, params]);
 
-  // Check authentication
+  // Redirect to home if not authenticated (this page requires auth)
   useEffect(() => {
-    const token = localStorage.getItem('laqtaha_token');
-    if (!token) {
-      console.log('No token found, redirecting to login');
-      router.push('/login');
+    if (!auth?.loading && !auth?.token) {
+      router.push('/');
     }
-  }, [router]);
+  }, [auth?.loading, auth?.token, router]);
 
   // Fetch trip details
   const {

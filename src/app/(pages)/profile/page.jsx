@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 import styles from './Profile.module.css';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -15,16 +16,9 @@ export default function ProfilePage() {
     name: '',
     phone: '',
   });
+  const auth = useAuth();
 
-  // Check authentication
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      router.push('/login');
-    }
-  }, [router]);
-
-  // Fetch user profile
+  // Fetch user profile (only if authenticated)
   const {
     data: userData,
     isLoading,
@@ -34,6 +28,9 @@ export default function ProfilePage() {
     queryKey: ['user-profile'],
     queryFn: async () => {
       const token = localStorage.getItem('access_token');
+      if (!token) {
+        return null;
+      }
       const response = await axios.get(
         'http://localhost:5000/api/auth/me',
         {
@@ -45,18 +42,19 @@ export default function ProfilePage() {
       return response.data?.data;
     },
     onSuccess: (data) => {
-      setEditedData({
-        name: data?.name || '',
-        phone: data?.phone || '',
-      });
+      if (data) {
+        setEditedData({
+          name: data?.name || '',
+          phone: data?.phone || '',
+        });
+      }
     },
   });
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('laqtaha_user');
-      router.push('/login');
+      auth?.logout?.();
+      router.push('/'); // Redirect to home page, not login
     }
   };
 
@@ -121,14 +119,17 @@ export default function ProfilePage() {
     );
   }
 
-  if (error) {
+  if (!auth?.token || !userData) {
     return (
       <div className={styles.errorWrapper}>
-        <div className={styles.errorIcon}>⚠️</div>
-        <h2>Failed to Load Profile</h2>
-        <p>{error?.response?.data?.message || 'Unable to load profile data'}</p>
-        <button onClick={() => router.push('/login')} className={styles.backBtn}>
-          Go to Login
+        <div className={styles.errorIcon}>🔒</div>
+        <h2>Authentication Required</h2>
+        <p>Please log in to view your profile</p>
+        <button 
+          onClick={() => auth?.requireAuth?.(() => {})} 
+          className={styles.backBtn}
+        >
+          Login
         </button>
       </div>
     );

@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import styles from './TripModal.module.css';
 import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
 import LocationPicker from '@/components/trip/LocationPicker';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function TripModal({ isOpen, onClose, onSuccess }) {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [provinces, setProvinces] = useState([]);
   const [loadingProvinces, setLoadingProvinces] = useState(true);
+  const auth = useAuth();
 
   // Fallback governorate list (with actual MongoDB IDs from API)
   const FALLBACK_GOVERNORATES = [
@@ -98,7 +100,13 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
       try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-          router.push('/login');
+          // Show login modal instead of redirecting
+          onClose();
+          auth?.requireAuth?.(() => {
+            // Reopen trip modal after login
+            // Note: You might need to handle this differently
+            console.log('User logged in, trip creation can continue');
+          });
           return;
         }
 
@@ -177,7 +185,10 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
         
         if (err.response?.status === 401) {
           setError('Your session has expired. Please login again.');
-          setTimeout(() => router.push('/login'), 2000);
+          onClose();
+          auth?.requireAuth?.(() => {
+            console.log('Session refreshed');
+          });
           return;
         }
         

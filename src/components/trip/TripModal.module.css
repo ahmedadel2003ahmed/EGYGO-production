@@ -40,7 +40,7 @@
 
 /* Modal Header */
 .modalHeader {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   padding: 30px 40px;
   border-radius: 20px 20px 0 0;
@@ -231,7 +231,7 @@
 }
 
 .durationBtnActive {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   border-color: #D4AF37;
 }
@@ -300,7 +300,7 @@
 }
 
 .submitBtn {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: #d19f6a;
   color: white;
   min-width: 180px;
 }
