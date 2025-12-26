@@ -18,6 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 150px 0 55px;
 }
 
 .heroSection::before {

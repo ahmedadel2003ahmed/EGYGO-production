@@ -214,9 +214,10 @@
 }
 
 .forgotPassword {
-    color: #E85F25; /* Primary color */
+    color: #666;
+
     text-decoration: none;
-    font-weight: 600;
+    font-weight: bold;
 }
 
 .loginBtn {

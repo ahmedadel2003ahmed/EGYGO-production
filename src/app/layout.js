@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import BootstrapClient from "@/app/lib/BootstrapClient"; // ✅
@@ -9,7 +9,13 @@ import { AuthProvider } from "@/app/context/AuthContext";
 
 import ConditionalFooter from "@/app/components/ConditionalFooter";
 
-const inter = Inter({ subsets: ["latin"] });
+// Montserrat font with optimized subsets and weights
+const montserrat = Montserrat({ 
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-montserrat"
+});
 
 export const metadata = {
   icons: {
@@ -22,7 +28,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={montserrat.className}>
         <BootstrapClient /> {/* Loads Bootstrap JS safely on client */}
         <AuthProvider>
           <QueryProvider>

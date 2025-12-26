@@ -149,7 +149,12 @@ export default function GovernorateClient({ initialGuides = [] }) {
                       height={80}
                     />
                     <div className={styles.cardTitleWrap}>
-                      <h4 className={styles.cardName}>{g.name}</h4>
+                      <h4 className={styles.cardName}>
+                        {g.name}
+                        {g.isVerified && (
+                          <span className={styles.verifiedIcon} title="Verified Guide">✓</span>
+                        )}
+                      </h4>
                       <div className={styles.ratingWrap}>
                         <span className={styles.stars}>⭐</span>
                         <span className={styles.rating}>
@@ -162,11 +167,6 @@ export default function GovernorateClient({ initialGuides = [] }) {
                       <div className={styles.spec}>
                         {g.languages?.join(', ') || 'No languages specified'}
                       </div>
-                      {g.isVerified && (
-                        <div className={styles.verifiedBadge}>
-                          ✓ Verified
-                        </div>
-                      )}
                     </div>
                   </div>
 

@@ -24,29 +24,29 @@ export default function GuideProfileClient() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const token = localStorage.getItem('access_token');
         const headers = {};
         if (token) {
           headers.Authorization = `Bearer ${token}`;
         }
-        
+
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
         const res = await fetch(`${API_URL}/api/tourist/guides/${slug}`, {
           headers
         });
-        
+
         if (!res.ok) {
           throw new Error("Failed to fetch guide data");
         }
-        
+
         const response = await res.json();
         console.log('Guide API Response:', response);
-        
+
         if (!response.success || !response.data) {
           throw new Error("Guide not found");
         }
-        
+
         setGuide(response.data);
       } catch (err) {
         setError(err.message);
@@ -55,7 +55,7 @@ export default function GuideProfileClient() {
         setLoading(false);
       }
     }
-    
+
     if (slug) {
       fetchGuideData();
     }
@@ -82,7 +82,7 @@ export default function GuideProfileClient() {
       }
 
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      
+
       // Check if there's an active trip with this guide
       const tripsRes = await fetch(`${API_URL}/api/trips`, {
         headers: {
@@ -95,7 +95,7 @@ export default function GuideProfileClient() {
         console.log('All trips:', tripsData.data);
         console.log('Current guide ID:', guide._id);
         console.log('Current guide slug:', guide.slug);
-        
+
         // Find trip with this guide (check both _id and slug)
         const existingTrip = tripsData.data?.find((trip) => {
           console.log('Checking trip:', {
@@ -105,13 +105,13 @@ export default function GuideProfileClient() {
             selectedGuideId: trip.selectedGuide?._id,
             selectedGuideSlug: trip.selectedGuide?.slug,
           });
-          
+
           const validStatuses = ['selecting_guide', 'pending_confirmation', 'awaiting_payment', 'confirmed', 'awaiting_call', 'in_call'];
           const hasValidStatus = validStatuses.includes(trip.status);
-          const hasGuideMatch = trip.selectedGuide?._id === guide._id || 
-                               trip.selectedGuide?.slug === guide.slug ||
-                               trip.selectedGuide === guide._id;
-          
+          const hasGuideMatch = trip.selectedGuide?._id === guide._id ||
+            trip.selectedGuide?.slug === guide.slug ||
+            trip.selectedGuide === guide._id;
+
           return hasGuideMatch && hasValidStatus;
         });
 
@@ -122,12 +122,12 @@ export default function GuideProfileClient() {
           setShowChat(true);
           return;
         }
-        
+
         // Check if there's ANY trip that can have a guide selected
         const tripWithoutGuide = tripsData.data?.find(
           (trip) => trip.status === 'selecting_guide' && !trip.selectedGuide
         );
-        
+
         if (tripWithoutGuide) {
           alert('You have a trip waiting for guide selection. Please select this guide for your trip first.');
           router.push(`/create-trip/${tripWithoutGuide._id}/select-guide`);
@@ -161,8 +161,8 @@ export default function GuideProfileClient() {
         <div className="alert alert-danger" role="alert">
           <h4>Error Loading Guide</h4>
           <p>{error}</p>
-          <button 
-            className="btn btn-primary" 
+          <button
+            className="btn btn-primary"
             onClick={() => window.location.reload()}
           >
             Try Again
@@ -178,8 +178,8 @@ export default function GuideProfileClient() {
         <div className="alert alert-warning" role="alert">
           <h4>Guide Not Found</h4>
           <p>The guide you&apos;re looking for doesn&apos;t exist.</p>
-          <button 
-            className="btn btn-primary" 
+          <button
+            className="btn btn-primary"
             onClick={() => router.push('/guides')}
           >
             Browse All Guides
@@ -193,8 +193,8 @@ export default function GuideProfileClient() {
     <div className={`${styles.pageWrapper} container`}>
       <div className="row">
         {/* LEFT SIDEBAR */}
-        <div className="col-lg-3 mb-4">
-          <div className={styles.sidebarCard}>
+        <div className="col-lg-3 ">
+          <div className={`${styles.sidebarCard} h-100`}>
             <div className="text-center">
               <Image
                 src={guide.photo?.url || '/images/default-avatar.png'}
@@ -235,8 +235,8 @@ export default function GuideProfileClient() {
                 <div className={styles.ratingSection}>
                   <div className={styles.stars}>
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <FaStar 
-                        key={i} 
+                      <FaStar
+                        key={i}
                         color={i < Math.round(guide.rating) ? '#ffc107' : '#e0e0e0'}
                       />
                     ))}
@@ -260,15 +260,14 @@ export default function GuideProfileClient() {
 
               {/* BUTTONS */}
               <div className="d-grid gap-2 mt-3">
-                <button 
+                <button
                   className={styles.btnOutline}
                   onClick={handleStartChat}
                 >
                   Start Chat
                 </button>
-                <button className={styles.btnOutline}>Voice Call</button>
                 <button className={styles.btnOutline}>Video Call</button>
-                <button 
+                <button
                   className={styles.btnPrimary}
                   onClick={handleBookNow}
                   disabled={!guide}
@@ -280,107 +279,111 @@ export default function GuideProfileClient() {
           </div>
         </div>
 
-        {/* RIGHT SECTION */}
+        {/* RIGHT SECTION - Toggle between Guide Details and Chat */}
         <div className="col-lg-9">
-          {/* STATUS - Moved to top */}
-          <div className={styles.sectionCard}>
-            <h5 className={styles.sectionTitle}>Guide Status</h5>
-            <div className={styles.statusBadges}>
-              <span className={guide.isActive ? styles.badgeActive : styles.badgeInactive}>
-                {guide.isActive ? '✅ Active & Available' : '❌ Currently Unavailable'}
-              </span>
-              {guide.user?.isActive && (
-                <span className={styles.badgeActive}>
-                  ✅ Account Verified
-                </span>
-              )}
-              {guide.isVerified && (
-                <span className={styles.badgeActive}>
-                  ✅ Identity Verified
-                </span>
-              )}
-              {guide.isLicensed && (
-                <span className={styles.badgeActive}>
-                  ✅ Licensed Guide
-                </span>
-              )}
-              {guide.canEnterArchaeologicalSites && (
-                <span className={styles.badgeActive}>
-                  ✅ Archaeological Sites Access
-                </span>
-              )}
+          {showChat && tripId ? (
+            <div className={styles.fadeIn} style={{ height: '100%' }}>
+              <TripChat
+                tripId={tripId}
+                guideName={guide?.name}
+                isOpen={showChat}
+                onClose={() => setShowChat(false)}
+                embedded={true}
+              />
             </div>
-          </div>
+          ) : (
+            <div className={styles.fadeIn}>
+              {/* STATUS - Moved to top */}
+              <div className={styles.sectionCard}>
+                <h5 className={styles.sectionTitle}>Guide Status</h5>
+                <div className={styles.statusBadges}>
+                  <span className={guide.isActive ? styles.badgeActive : styles.badgeInactive}>
+                    {guide.isActive ? '✅ Active & Available' : '❌ Currently Unavailable'}
+                  </span>
+                  {guide.user?.isActive && (
+                    <span className={styles.badgeActive}>
+                      ✅ Account Verified
+                    </span>
+                  )}
+                  {guide.isVerified && (
+                    <span className={styles.badgeActive}>
+                      ✅ Identity Verified
+                    </span>
+                  )}
+                  {guide.isLicensed && (
+                    <span className={styles.badgeActive}>
+                      ✅ Licensed Guide
+                    </span>
+                  )}
+                  {guide.canEnterArchaeologicalSites && (
+                    <span className={styles.badgeActive}>
+                      ✅ Archaeological Sites Access
+                    </span>
+                  )}
+                </div>
+              </div>
 
-          {/* ABOUT ME */}
-          <div className={styles.sectionCard}>
-            <h5 className={styles.sectionTitle}>About Me</h5>
-            <p className={styles.aboutText}>{guide.bio || 'No bio available'}</p>
-            
-            {guide.user?.email && (
-              <div className={styles.contactInfo}>
-                <p><strong>📧 Email:</strong> {guide.user.email}</p>
-                {guide.user.phone && (
-                  <p><strong>📱 Phone:</strong> {guide.user.phone}</p>
+              {/* ABOUT ME */}
+              <div className={styles.sectionCard}>
+                <h5 className={styles.sectionTitle}>About Me</h5>
+                <p className={styles.aboutText}>{guide.bio || 'No bio available'}</p>
+
+                {guide.user?.email && (
+                  <div className={styles.contactInfo}>
+                    <p><strong>📧 Email:</strong> {guide.user.email}</p>
+                    {guide.user.phone && (
+                      <p><strong>📱 Phone:</strong> {guide.user.phone}</p>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
 
-          {/* LOCATION */}
-          {guide.location && (
-            <div className={styles.sectionCard}>
-              <h5 className={styles.sectionTitle}>Location</h5>
-              <p className={styles.aboutText}>
-                📍 Coordinates: {guide.location.coordinates[1]}, {guide.location.coordinates[0]}
-              </p>
-              <a
-                href={`https://www.google.com/maps?q=${guide.location.coordinates[1]},${guide.location.coordinates[0]}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.btnOutline}
-                style={{ display: 'inline-block', marginTop: '10px' }}
-              >
-                🗺️ View on Map
-              </a>
-            </div>
-          )}
+              {/* LOCATION */}
+              {guide.location && (
+                <div className={styles.sectionCard}>
+                  <h5 className={styles.sectionTitle}>Location</h5>
+                  <p className={styles.aboutText}>
+                    📍 Coordinates: {guide.location.coordinates[1]}, {guide.location.coordinates[0]}
+                  </p>
+                  <a
+                    href={`https://www.google.com/maps?q=${guide.location.coordinates[1]},${guide.location.coordinates[0]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.btnOutline}
+                    style={{ display: 'inline-block', marginTop: '10px' }}
+                  >
+                    🗺️ View on Map
+                  </a>
+                </div>
+              )}
 
-          {/* GALLERY */}
-          {guide.gallery && guide.gallery.length > 0 && (
-            <div className={styles.sectionCard}>
-              <h5 className={styles.sectionTitle}>Gallery ({guide.gallery.length})</h5>
+              {/* GALLERY */}
+              {guide.gallery && guide.gallery.length > 0 && (
+                <div className={styles.sectionCard}>
+                  <h5 className={styles.sectionTitle}>Gallery ({guide.gallery.length})</h5>
 
-              <div className="row">
-                {guide.gallery.map((item, i) => (
-                  <div className="col-lg-4 col-md-4 col-6 mb-3" key={item._id || i}>
-                    <Image
-                      src={item.url}
-                      width={400}
-                      height={300}
-                      alt={`Gallery image ${i + 1}`}
-                      className={styles.galleryImg}
-                    />
-                    <p className={styles.galleryDate}>
-                      {new Date(item.uploadedAt).toLocaleDateString()}
-                    </p>
+                  <div className="row">
+                    {guide.gallery.map((item, i) => (
+                      <div className="col-lg-4 col-md-4 col-6 mb-3" key={item._id || i}>
+                        <Image
+                          src={item.url}
+                          width={400}
+                          height={300}
+                          alt={`Gallery image ${i + 1}`}
+                          className={styles.galleryImg}
+                        />
+                        <p className={styles.galleryDate}>
+                          {new Date(item.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
-
-      {/* Chat Component */}
-      {showChat && tripId && (
-        <TripChat
-          tripId={tripId}
-          guideName={guide?.name}
-          isOpen={showChat}
-          onClose={ () => setShowChat(false)}
-        />
-      )}
     </div>
   );
 }

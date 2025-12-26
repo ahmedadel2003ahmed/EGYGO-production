@@ -12,7 +12,7 @@
   padding: 0;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(128, 90, 213, 0.4);
+  box-shadow: 0 4px 15px #d19f6a;
   overflow: hidden;
   width: 60px;
   height: 60px;
@@ -21,9 +21,9 @@
 .floatingBtn:hover {
   width: 200px;
   padding-right: 20px;
-  box-shadow: 0 8px 25px rgba(128, 90, 213, 0.6);
+  box-shadow: 0 8px 25px #d19f6a;
   transform: translateY(-2px);
-}
+} 
 
 .iconContainer {
   width: 60px;

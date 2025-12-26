@@ -27,9 +27,20 @@
   overflow: hidden;
 }
 
+.chatEmbedded {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
 /* Header - WhatsApp Style */
 .header {
-  background: #075e54;
+  background: linear-gradient(135deg, #D4AF37, #F4E4BC);
   color: white;
   padding: 12px 16px;
   display: flex;
@@ -101,7 +112,9 @@
 /* Messages Area */
 .messagesArea {
   flex: 1;
+  min-height: 0; /* Important: allows flex child to shrink below content size */
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px;
   background: #e5ddd5;
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d9d9d9' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
@@ -178,11 +191,13 @@
   }
 }
 
-.myMessage {
+/* Guide messages on the RIGHT */
+.guideMessage {
   justify-content: flex-end;
 }
 
-.otherMessage {
+/* Tourist messages on the LEFT */
+.touristMessage {
   justify-content: flex-start;
 }
 
@@ -194,12 +209,14 @@
   word-wrap: break-word;
 }
 
-.myMessage .messageBubble {
+/* Guide messages styling (right side) */
+.guideMessage .messageBubble {
   background: #dcf8c6;
   border-bottom-right-radius: 2px;
 }
 
-.otherMessage .messageBubble {
+/* Tourist messages styling (left side) */
+.touristMessage .messageBubble {
   background: white;
   border-bottom-left-radius: 2px;
 }

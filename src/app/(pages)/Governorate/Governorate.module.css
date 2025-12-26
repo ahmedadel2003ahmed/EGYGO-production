@@ -20,7 +20,7 @@
 .headerSection {
   background: #d19f6a;
   color: white;
-  padding: 150px 0 40px;
+  padding: 200px 0 40px;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
 }
 
@@ -409,7 +409,7 @@
   background: linear-gradient(135deg, #D4AF37, #F59E0B);
   color: #FFFFFF;
   border: none;
-  padding: 8px 16px;
+  padding: 5px 5px;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;

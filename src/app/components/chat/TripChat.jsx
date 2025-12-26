@@ -6,7 +6,7 @@ import { socketChatService } from "../../../services/socketChatService";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./TripChat.module.css";
 
-export default function TripChat({ tripId, guideName, onClose, isOpen }) {
+export default function TripChat({ tripId, guideName, onClose, isOpen, embedded = false }) {
   const authContext = useAuth();
   const user = authContext?.user || null;
   const [messages, setMessages] = useState([]);
@@ -137,132 +137,140 @@ export default function TripChat({ tripId, guideName, onClose, isOpen }) {
 
   if (!isOpen) return null;
 
-  return (
-    <div className={styles.overlay}>
-      <div className={styles.chatContainer}>
-        {/* Header - WhatsApp Style */}
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <button className={styles.backButton} onClick={onClose}>
+  const chatContent = (
+    <div className={embedded ? styles.chatEmbedded : styles.chatContainer}>
+      {/* Header - WhatsApp Style */}
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <button className={styles.backButton} onClick={onClose}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M15 18L9 12L15 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+          <div className={styles.avatar}>
+            {guideName?.charAt(0).toUpperCase() || "G"}
+          </div>
+          <div className={styles.headerInfo}>
+            <h3 className={styles.headerTitle}>{guideName || "Guide"}</h3>
+            <span
+              className={`${styles.status} ${connected ? styles.online : styles.offline
+                }`}
+            >
+              {connected ? "Online" : "Connecting..."}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Area - WhatsApp Style */}
+      <div className={styles.messagesArea}>
+        {loading && (
+          <div className={styles.centerMessage}>
+            <div className={styles.loader}></div>
+            <span>Loading chat...</span>
+          </div>
+        )}
+
+        {error && (
+          <div className={styles.errorMessage}>
+            <span>⚠️ {error}</span>
+          </div>
+        )}
+
+        {!loading && !error && messages.length === 0 && (
+          <div className={styles.centerMessage}>
+            <div className={styles.emptyChat}>
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="35" stroke="#E5E7EB" strokeWidth="2" />
+                <path
+                  d="M30 35L40 45L50 35"
+                  stroke="#9CA3AF"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <p>Start a conversation with your guide</p>
+            </div>
+          </div>
+        )}
+
+        {!loading &&
+          !error &&
+          messages.map((msg) => {
+            // Guide messages go to the right, tourist messages go to the left
+            const isGuideMessage = msg.sender.role === 'guide';
+            return (
+              <div
+                key={msg._id}
+                className={`${styles.messageWrapper} ${isGuideMessage ? styles.guideMessage : styles.touristMessage
+                  }`}
+              >
+                <div className={styles.messageBubble}>
+                  <div className={styles.messageContent}>{msg.message}</div>
+                  <div className={styles.messageTime}>
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Area - WhatsApp Style */}
+      <div className={styles.inputArea}>
+        <div className={styles.inputWrapper}>
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type a message..."
+            maxLength={5000}
+            className={styles.input}
+            disabled={!connected || sending}
+          />
+          <button
+            onClick={handleSend}
+            disabled={!connected || !inputMessage.trim() || sending}
+            className={styles.sendButton}
+          >
+            {sending ? (
+              <div className={styles.miniLoader}></div>
+            ) : (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path
-                  d="M15 18L9 12L15 6"
+                  d="M22 2L11 13M22 2L15 22L11 13M22 2L2 8L11 13"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
-            <div className={styles.avatar}>
-              {guideName?.charAt(0).toUpperCase() || "G"}
-            </div>
-            <div className={styles.headerInfo}>
-              <h3 className={styles.headerTitle}>{guideName || "Guide"}</h3>
-              <span
-                className={`${styles.status} ${
-                  connected ? styles.online : styles.offline
-                }`}
-              >
-                {connected ? "Online" : "Connecting..."}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Messages Area - WhatsApp Style */}
-        <div className={styles.messagesArea}>
-          {loading && (
-            <div className={styles.centerMessage}>
-              <div className={styles.loader}></div>
-              <span>Loading chat...</span>
-            </div>
-          )}
-
-          {error && (
-            <div className={styles.errorMessage}>
-              <span>⚠️ {error}</span>
-            </div>
-          )}
-
-          {!loading && !error && messages.length === 0 && (
-            <div className={styles.centerMessage}>
-              <div className={styles.emptyChat}>
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                  <circle cx="40" cy="40" r="35" stroke="#E5E7EB" strokeWidth="2" />
-                  <path
-                    d="M30 35L40 45L50 35"
-                    stroke="#9CA3AF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <p>Start a conversation with your guide</p>
-              </div>
-            </div>
-          )}
-
-          {!loading &&
-            !error &&
-            messages.map((msg) => {
-              const isMyMessage = msg.sender.user === user?.id;
-              return (
-                <div
-                  key={msg._id}
-                  className={`${styles.messageWrapper} ${
-                    isMyMessage ? styles.myMessage : styles.otherMessage
-                  }`}
-                >
-                  <div className={styles.messageBubble}>
-                    <div className={styles.messageContent}>{msg.message}</div>
-                    <div className={styles.messageTime}>
-                      {new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Area - WhatsApp Style */}
-        <div className={styles.inputArea}>
-          <div className={styles.inputWrapper}>
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              maxLength={5000}
-              className={styles.input}
-              disabled={!connected || sending}
-            />
-            <button
-              onClick={handleSend}
-              disabled={!connected || !inputMessage.trim() || sending}
-              className={styles.sendButton}
-            >
-              {sending ? (
-                <div className={styles.miniLoader}></div>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M22 2L11 13M22 2L15 22L11 13M22 2L2 8L11 13"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
+            )}
+          </button>
         </div>
       </div>
+    </div>
+  );
+
+  if (embedded) {
+    return chatContent;
+  }
+
+  return (
+    <div className={styles.overlay}>
+      {chatContent}
     </div>
   );
 }

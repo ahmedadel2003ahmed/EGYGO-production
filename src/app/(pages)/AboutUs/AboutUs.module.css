@@ -6,7 +6,7 @@
   overflow-x: hidden;
 }
 
-/* Hero Section */
+/* Hero Section */ 
 .heroSection {
   position: relative;
   min-height: 85vh;
@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #3b5d80;
+  background: #d19f6a;
   opacity: 0;
   padding:70px 0px 0px;
   transform: translateY(30px);

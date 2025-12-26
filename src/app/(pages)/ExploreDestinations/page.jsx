@@ -122,7 +122,7 @@ const normalizeImagePath = (img = "") => {
 //
 const fetchDestinations = async () => {
   try {
-    const response = await axios.get('/api/places');
+    const response = await axios.get('/api/provinces/giza/places?type=archaeological');
 
     if (response.data?.success && Array.isArray(response.data?.data?.places)) {
       // Transform the API data to match the component's expected format
@@ -405,6 +405,16 @@ export default function ExploreDestinations() {
       {/* Professional Global Loader */}
       <GlobalLoader isLoading={isLoading} />
 
+      {/* Page Background Wrapper */}
+      <div 
+        style={{
+          backgroundImage: 'url(https://tourism.minya.gov.eg/assets/images/categories-background.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '100vh'
+        }}
+      >
       {/* Hero Section */}
       <section
         className={styles.heroSection}
@@ -575,6 +585,7 @@ export default function ExploreDestinations() {
           )}
         </section>
       </div>
+      </div> {/* Close background wrapper */}
     </>
   );
 }
