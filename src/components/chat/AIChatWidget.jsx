@@ -5,10 +5,13 @@ import Image from 'next/image';
 import styles from './AIChatWidget.module.css';
 import axios from 'axios';
 
+import { useRouter } from 'next/navigation';
+
 export default function AIChatWidget() {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { id: 1, text: "مرحباً! أنا نفرتيتي، مرشدتك السياحية الذكية. كيف يمكنني مساعدتك في رحلتك اليوم؟", sender: 'bot' }
+        { id: 1, text: "مرحباً! أنا نفرتيتي، مرشدتك السياحية الذكية. كيف يمكنني مساعدتك في رحلتك اليوم؟", sender: 'bot', type: 'text' }
     ]);
     const [inputText, setInputText] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -28,7 +31,8 @@ export default function AIChatWidget() {
         const newUserMessage = {
             id: Date.now(),
             text: inputText,
-            sender: 'user'
+            sender: 'user',
+            type: 'text'
         };
 
         setMessages(prev => [...prev, newUserMessage]);
@@ -41,35 +45,24 @@ export default function AIChatWidget() {
             });
 
             if (response.data && response.data.success) {
-                let botText = "";
+                const { type, content, reply } = response.data;
 
-                // Case 1: Backend returns a direct AI text reply
-                if (response.data.reply) {
-                    botText = response.data.reply;
-                }
-                // Case 2: Backend returns raw content (places/hotels) but no AI text
-                // We format this data on the client side to simulate the AI response
-                else if (response.data.content && Array.isArray(response.data.content)) {
-                    if (response.data.content.length > 0) {
-                        botText = "وجدنا لك هذه الأماكن المميزة:\n\n";
-                        response.data.content.forEach(item => {
-                            // Try to get Arabic name/desc if available, otherwise English
-                            const name = item.name;
-                            botText += `🔹 **${name}**\n`;
-                        });
-                        botText += "\nهل تود معرفة تفاصيل أكثر عن أي منها؟";
-                    } else {
-                        botText = "عذراً، لم أجد معلومات دقيقة حول طلبك في قاعدتي البيانات. هل يمكنك التوضيح أكثر؟";
-                    }
-                } else {
-                    botText = "عذراً، لم أستطع فهم الرد. يرجى المحاولة مرة أخرى.";
-                }
-
-                const newBotMessage = {
+                let newBotMessage = {
                     id: Date.now() + 1,
-                    text: botText,
-                    sender: 'bot'
+                    sender: 'bot',
                 };
+
+                if (type === 'places' && Array.isArray(content)) {
+                    newBotMessage.type = 'places';
+                    newBotMessage.places = content;
+                    // Optional: Add a text intro if needed, or just render cards
+                    newBotMessage.text = "وجدنا لك هذه الأماكن المميزة:";
+                } else {
+                    newBotMessage.type = 'text';
+                    // Fallback to 'reply' or 'content' if it's a string
+                    newBotMessage.text = reply || (typeof content === 'string' ? content : "عذراً، لم أستطع فهم الرد.");
+                }
+
                 setMessages(prev => [...prev, newBotMessage]);
             } else {
                 throw new Error('Invalid response');
@@ -78,12 +71,12 @@ export default function AIChatWidget() {
             console.error('Chat Error:', error);
             const errorMessage = {
                 id: Date.now() + 1,
-                // Customized error for connection refused vs other errors
                 text: error.message === 'Network Error'
                     ? "يبدو أن هناك مشكلة في الاتصال بالخادم. تأكد من تشغيل الباك إند."
                     : "عذراً، حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
                 sender: 'bot',
-                isError: true
+                isError: true,
+                type: 'text'
             };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
@@ -99,6 +92,11 @@ export default function AIChatWidget() {
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
+    };
+
+    const handlePlaceClick = (placeId) => {
+        setIsOpen(false); // Close chat to view page
+        router.push(`/place/${placeId}`);
     };
 
     return (
@@ -136,8 +134,46 @@ export default function AIChatWidget() {
                                 key={msg.id}
                                 className={`${styles.message} ${msg.sender === 'user' ? styles.sent : styles.received} ${msg.isError ? styles.error : ''}`}
                                 dir="auto"
+                                style={msg.type === 'places' ? { background: 'transparent', padding: 0 } : {}}
                             >
-                                {msg.text}
+                                {msg.type === 'text' && msg.text}
+
+                                {msg.type === 'places' && (
+                                    <div className={styles.placesContainer}>
+                                        {msg.text && <div style={{ color: '#fff', marginBottom: '8px', padding: '0 4px' }}>{msg.text}</div>}
+                                        {msg.places.map((place, idx) => (
+                                            <div key={idx} className={styles.placeCard}>
+                                                <div className={styles.placeContent}>
+                                                    <div className={styles.placeHeader}>
+                                                        <h4 className={styles.placeName}>{place.name}</h4>
+                                                        {place.category && <span className={styles.placeCategory}>{place.category}</span>}
+                                                    </div>
+
+                                                    {place.province && (
+                                                        <div className={styles.provinceBadge}>
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                                <circle cx="12" cy="10" r="3"></circle>
+                                                            </svg>
+                                                            {place.province}
+                                                        </div>
+                                                    )}
+
+                                                    <p className={styles.placeDescription}>
+                                                        {place.description || "استمتع بزيارة هذا المكان الرائع وتعرف على تاريخه."}
+                                                    </p>
+
+                                                    <button
+                                                        className={styles.viewBtn}
+                                                        onClick={() => handlePlaceClick(place._id || place.id)}
+                                                    >
+                                                        عرض التفاصيل
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                         {isTyping && (
