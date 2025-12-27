@@ -16,8 +16,10 @@ export default function ItineraryBuilder({ itinerary, onChange, totalDuration })
     queryKey: ['places'],
     queryFn: async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/places');
-        return response.data?.data || [];
+        const response = await axios.get('/api/places');
+        const places = response.data?.data?.places || response.data?.data || [];
+        // Ensure we return an array
+        return Array.isArray(places) ? places : [];
       } catch (error) {
         console.error('Failed to fetch places:', error);
         return [];
@@ -79,8 +81,8 @@ export default function ItineraryBuilder({ itinerary, onChange, totalDuration })
                 {placesLoading
                   ? 'Loading places...'
                   : places.length === 0
-                  ? 'No places available'
-                  : 'Choose a destination...'}
+                    ? 'No places available'
+                    : 'Choose a destination...'}
               </option>
               {places.map((place) => (
                 <option key={place._id} value={place._id}>
