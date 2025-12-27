@@ -1,76 +1,112 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import styles from "./Governorate.module.css";
+import GlobalLoader from "@/components/common/GlobalLoader";
+
+// Fetch function for React Query
+const fetchGuides = async () => {
+  const response = await axios.get("/api/tourist/guides");
+  return response.data?.data || [];
+};
 
 export default function GovernorateClient({ initialGuides = [] }) {
-  // 🏙️ Extract unique governorates from all guides
-  const governorates = useMemo(() => {
-    const governorateMap = new Map();
+  // 🔄 React Query for efficient data fetching, caching, and state management
+  const { data: guides = [], isLoading } = useQuery({
+    queryKey: ["guides"],
+    queryFn: fetchGuides,
+    initialData: initialGuides.length > 0 ? initialGuides : undefined,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000,   // 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,    // Prevent refetch if data is fresh from initialData or cache
+  });
 
-    initialGuides.forEach((guide) => {
-      // Handle guides with provinces array
-      if (guide.provinces && Array.isArray(guide.provinces) && guide.provinces.length > 0) {
-        guide.provinces.forEach((province) => {
-          if (province?.name && province?._id) {
-            governorateMap.set(province.name, {
+  // 🏙️ Optimized: Extract unique governorates and calculate counts in a SINGLE pass O(N)
+  const { governorates, counts } = useMemo(() => {
+    if (!guides.length) return { governorates: [], counts: {} };
+
+    const govMap = new Map(); // key: name, value: governorate object
+    const countMap = {};      // key: name, value: count
+
+    guides.forEach((guide) => {
+      // Create a set of unique province names for this guide to avoid double counting
+      const guideProvinceNames = new Set();
+      const guideProvinces = [];
+
+      if (guide.provinces && Array.isArray(guide.provinces)) {
+        guide.provinces.forEach(p => {
+          if (p?.name && p?._id) guideProvinces.push(p);
+        });
+      }
+      if (guide.province?.name && guide.province?._id) {
+        guideProvinces.push(guide.province);
+      }
+
+      guideProvinces.forEach((province) => {
+        if (!guideProvinceNames.has(province.name)) {
+          guideProvinceNames.add(province.name);
+
+          // Add to governorates map if new
+          if (!govMap.has(province.name)) {
+            govMap.set(province.name, {
               id: province._id,
               name: province.name,
               slug: province.slug || province.name.toLowerCase(),
             });
           }
-        });
-      }
 
-      // Handle guides with single province object
-      if (guide.province?.name && guide.province?._id) {
-        governorateMap.set(guide.province.name, {
-          id: guide.province._id,
-          name: guide.province.name,
-          slug: guide.province.slug || guide.province.name.toLowerCase(),
-        });
-      }
+          // Increment count
+          countMap[province.name] = (countMap[province.name] || 0) + 1;
+        }
+      });
     });
 
     // Convert map to sorted array
-    return Array.from(governorateMap.values()).sort((a, b) =>
+    const sortedGovernorates = Array.from(govMap.values()).sort((a, b) =>
       a.name.localeCompare(b.name)
     );
-  }, [initialGuides]);
 
-  const [selectedGovernorate, setSelectedGovernorate] = useState(governorates[0]?.name || null);
+    return { governorates: sortedGovernorates, counts: countMap };
+  }, [guides]);
+
+  const [selectedGovernorate, setSelectedGovernorate] = useState(null);
   const [query, setQuery] = useState("");
 
-  // Get guide count per governorate
-  const getGuideCount = (governorateName) => {
-    return initialGuides.filter((g) => {
-      const provinces = g.provinces || [];
-      const province = g.province;
+  // Initialize selected governorate once data is ready
+  React.useEffect(() => {
+    if (governorates.length > 0 && !selectedGovernorate) {
+      setSelectedGovernorate(governorates[0].name);
+    }
+  }, [governorates, selectedGovernorate]);
 
-      const hasProvince = provinces.some(p => p?.name === governorateName);
-      const hasMainProvince = province?.name === governorateName;
+  // Memoized handlers
+  const handleGovernorateSelect = useCallback((name) => {
+    setSelectedGovernorate(name);
+  }, []);
 
-      return hasProvince || hasMainProvince;
-    }).length;
-  };
+  const handleQueryChange = useCallback((e) => {
+    setQuery(e.target.value);
+  }, []);
 
-  // 🔍 Filter guides
+  // 🔍 Filter guides efficiently
   const filteredGuides = useMemo(() => {
-    let filtered = initialGuides;
+    let filtered = guides;
 
     // Filter by selected governorate
     if (selectedGovernorate) {
       filtered = filtered.filter((g) => {
-        const provinces = g.provinces || [];
-        const province = g.province;
-
         // Check if guide works in selected governorate
-        const hasProvince = provinces.some(p => p?.name === selectedGovernorate);
-        const hasMainProvince = province?.name === selectedGovernorate;
-
-        return hasProvince || hasMainProvince;
+        // Optimization: checking specific properties first
+        if (g.province?.name === selectedGovernorate) return true;
+        if (g.provinces && Array.isArray(g.provinces)) {
+          return g.provinces.some(p => p?.name === selectedGovernorate);
+        }
+        return false;
       });
     }
 
@@ -87,7 +123,11 @@ export default function GovernorateClient({ initialGuides = [] }) {
     }
 
     return filtered;
-  }, [initialGuides, selectedGovernorate, query]);
+  }, [guides, selectedGovernorate, query]);
+
+  if (isLoading && guides.length === 0) {
+    return <GlobalLoader isLoading={true} />;
+  }
 
   return (
     <div className={`row ${styles.grid}`}>
@@ -98,14 +138,13 @@ export default function GovernorateClient({ initialGuides = [] }) {
           {governorates.map((gov) => (
             <button
               key={gov.id}
-              className={`${styles.cityItem} ${selectedGovernorate === gov.name ? styles.activeCity : ""
-                }`}
-              onClick={() => setSelectedGovernorate(gov.name)}
+              className={`${styles.cityItem} ${selectedGovernorate === gov.name ? styles.activeCity : ""}`}
+              onClick={() => handleGovernorateSelect(gov.name)}
             >
               <div>
                 <strong>{gov.name}</strong>
                 <div className={styles.cityDesc}>
-                  {getGuideCount(gov.name)} {getGuideCount(gov.name) === 1 ? 'guide' : 'guides'} available
+                  {counts[gov.name] || 0} {(counts[gov.name] || 0) === 1 ? 'guide' : 'guides'} available
                 </div>
               </div>
               <span className={styles.bell}>🔔</span>
@@ -126,14 +165,15 @@ export default function GovernorateClient({ initialGuides = [] }) {
               className={styles.search}
               placeholder="Search by name or specialization..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleQueryChange}
             />
           </div>
         </div>
 
         {filteredGuides.length === 0 ? (
           <div className={styles.empty}>
-            No guides found for <strong>{selectedGovernorate}</strong>.
+            {guides.length === 0 ? "No guides available at the moment." :
+              `No guides found for ${selectedGovernorate || "your search"}.`}
           </div>
         ) : (
           <div className={`row g-3 ${styles.cardsGrid}`}>
@@ -141,13 +181,17 @@ export default function GovernorateClient({ initialGuides = [] }) {
               <div className="col-xl-4 col-lg-6 col-md-12" key={g._id}>
                 <article className={styles.card}>
                   <div className={styles.cardTop}>
-                    <Image
-                      src={g.photo?.url || "/images/guides/default.png"}
-                      alt={g.name || "Guide avatar"}
-                      className={styles.avatar}
-                      width={80}
-                      height={80}
-                    />
+                    {/* Using Next.js Image with optimizations */}
+                    <div style={{ position: "relative", width: "80px", height: "80px" }}>
+                      <Image
+                        src={g.photo?.url || "/images/guides/default.png"}
+                        alt={g.name || "Guide avatar"}
+                        className={styles.avatar}
+                        fill
+                        sizes="80px"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
                     <div className={styles.cardTitleWrap}>
                       <h4 className={styles.cardName}>
                         {g.name}
@@ -158,7 +202,7 @@ export default function GovernorateClient({ initialGuides = [] }) {
                       <div className={styles.ratingWrap}>
                         <span className={styles.stars}>⭐</span>
                         <span className={styles.rating}>
-                          {g.rating > 0 ? g.rating.toFixed(1) : '0.0'}
+                          {g.rating > 0 ? Number(g.rating).toFixed(1) : '0.0'}
                         </span>
                         <span className={styles.reviews}>
                           ({g.ratingCount || 0} reviews)
@@ -174,6 +218,7 @@ export default function GovernorateClient({ initialGuides = [] }) {
                     <div className={styles.price}>
                       ${g.pricePerHour} <small>/ hour</small>
                     </div>
+                    {/* Prefetching implicitly handled by Next.js Link */}
                     <Link href={`/guides/${g._id}`} className={styles.viewBtn}>
                       View Profile
                     </Link>

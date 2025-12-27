@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
 import axios from 'axios';
 import styles from './TripDetails.module.css';
 import { useAuth } from '@/app/context/AuthContext';
@@ -104,7 +105,7 @@ export default function TripDetailsPage() {
   // WORKAROUND: Poll for status changes (since CORS may block Socket.IO events)
   // This is a temporary fix until backend adds port 3001 to CORS whitelist
   useEffect(() => {
-    if (!tripId) return;
+    if (!tripId || isSocketConnected) return;
 
     const pollInterval = setInterval(() => {
       console.log('[TripDetails] Polling for status changes...');
@@ -112,7 +113,7 @@ export default function TripDetailsPage() {
     }, 3000); // Poll every 3 seconds
 
     return () => clearInterval(pollInterval);
-  }, [tripId, queryClient]);
+  }, [tripId, queryClient, isSocketConnected]);
 
   // Fetch trip details
   const {
@@ -629,12 +630,14 @@ export default function TripDetailsPage() {
                       {guidesData.map((guide) => (
                         <div key={guide._id} className={styles.guideCard}>
                           <div className={styles.guideCardHeader}>
-                            <div className={styles.guideAvatar}>
+                            <div className={styles.guideAvatar} style={{ position: 'relative' }}>
                               {guide.profilePicture ? (
-                                <img
+                                <Image
                                   src={guide.profilePicture}
                                   alt={guide.name}
+                                  fill
                                   className={styles.avatarImg}
+                                  sizes="50px"
                                 />
                               ) : (
                                 <div className={styles.avatarPlaceholder}>
@@ -701,12 +704,14 @@ export default function TripDetailsPage() {
                 <div className={styles.sidebarCard}>
                   <h3 className={styles.cardTitle}>Your Guide</h3>
                   <div className={styles.guideInfo}>
-                    <div className={styles.guideAvatar}>
+                    <div className={styles.guideAvatar} style={{ position: 'relative' }}>
                       {tripGuide.photo?.url || tripGuide.profilePicture ? (
-                        <img
+                        <Image
                           src={tripGuide.photo?.url || tripGuide.profilePicture}
                           alt={tripGuide.name}
+                          fill
                           className={styles.avatarImg}
+                          sizes="64px"
                         />
                       ) : (
                         <div className={styles.avatarPlaceholder}>

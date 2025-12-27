@@ -259,7 +259,7 @@ const ErrorMessage = ({ message }) => (
  * Renders a single destination card with skeleton loading.
  * Updated to accept destinationId and link to /place/{id}
  */
-const DestinationCard = ({ title, subtitle, imageUrl, slug, destinationId }) => {
+const DestinationCard = React.memo(({ title, subtitle, imageUrl, slug, destinationId }) => {
   const [imageLoading, setImageLoading] = React.useState(true);
 
   return (
@@ -296,12 +296,12 @@ const DestinationCard = ({ title, subtitle, imageUrl, slug, destinationId }) => 
       </div>
     </div>
   );
-};
+});
 
 /**
  * Renders a single governorate tile with cover image.
  */
-const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug, coverImage }) => {
+const GovernorateTile = React.memo(({ name, shortDesc, icon, colorClass, slug, coverImage }) => {
   const tileColorClass = styles[colorClass] || styles.tileDefault;
 
   return (
@@ -328,7 +328,7 @@ const GovernorateTile = ({ name, shortDesc, icon, colorClass, slug, coverImage }
       </div>
     </Link>
   );
-};
+});
 
 // --- Page Component ---
 
@@ -407,7 +407,7 @@ export default function ExploreDestinations() {
       <GlobalLoader isLoading={isLoading} />
 
       {/* Page Background Wrapper */}
-      <div 
+      <div
         style={{
           backgroundImage: 'url(https://tourism.minya.gov.eg/assets/images/categories-background.jpg)',
           backgroundSize: 'cover',
@@ -416,176 +416,176 @@ export default function ExploreDestinations() {
           minHeight: '100vh'
         }}
       >
-      {/* Hero Section */}
-      <section
-        className={styles.heroSection}
-        style={{
-          backgroundImage: 'url(/images/Govern_Panner.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <div className="container">
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
-              Explore Egypt&apos;s Top Destinations
-            </h1>
-            <p className={styles.heroSubtitle}>
-              Discover the timeless wonders and hidden gems of Egypt, from ancient monuments to pristine beaches
-            </p>
+        {/* Hero Section */}
+        <section className={styles.heroSection}>
+          <Image
+            src="/images/Govern_Panner.jpeg"
+            alt="Explore Egypt's Top Destinations"
+            fill
+            priority
+            quality={90}
+            style={{ objectFit: 'cover', zIndex: 0 }}
+          />
+          <div className="container">
+            <div className={styles.heroContent}>
+              <h1 className={styles.heroTitle}>
+                Explore Egypt&apos;s Top Destinations
+              </h1>
+              <p className={styles.heroSubtitle}>
+                Discover the timeless wonders and hidden gems of Egypt, from ancient monuments to pristine beaches
+              </p>
+            </div>
           </div>
+        </section>
+
+        <div className="container my-4 my-md-5">
+          {/* Section 1: Popular Destinations */}
+          <section className={`mb-5 ${styles.section}`}>
+            <div className={styles.governorateHeader}>
+              <h2 className={styles.sectionTitle}>
+                Popular Destinations
+              </h2>
+
+              {/* Compact Search Bar for Destinations */}
+              <div className={styles.searchBarContainer}>
+                <span className={styles.searchIcon}>🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search destinations..."
+                  value={destinationSearchQuery}
+                  onChange={(e) => setDestinationSearchQuery(e.target.value)}
+                  className={styles.searchInput}
+                />
+                {destinationSearchQuery && (
+                  <button
+                    onClick={() => setDestinationSearchQuery('')}
+                    className={styles.clearButton}
+                    aria-label="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {destinationSearchQuery && (
+              <p className={styles.searchResults}>
+                Found {filteredDestinations.length} {filteredDestinations.length === 1 ? 'result' : 'results'}
+              </p>
+            )}
+
+            {!isLoading && (
+              <>
+                {filteredDestinations.length > 0 ? (
+                  <>
+                    <div className="row g-4">
+                      {destinations.map((dest) => (
+                        <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
+                          <DestinationCard {...dest} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Show More Button for Destinations */}
+                    {hasMoreDestinations && (
+                      <div className="text-center mt-4">
+                        <button
+                          onClick={() => setShowAllDestinations(!showAllDestinations)}
+                          className={`btn btn-lg ${styles.seeMoreBtn}`}
+                        >
+                          {showAllDestinations ? 'Show Less' : 'See More Destinations'}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.noResults}>
+                    <div className={styles.noResultsIcon}>🔍</div>
+                    <h3 className={styles.noResultsTitle}>No destinations found</h3>
+                    <p className={styles.noResultsText}>
+                      Try adjusting your search terms or <button onClick={() => setDestinationSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </section>
+
+          {/* Section 2: Explore Governorates */}
+          <section className={`mt-4 pt-md-3 ${styles.section}`}>
+            <div className={styles.governorateHeader}>
+              <h2 className={styles.sectionTitle}>
+                Explore Egyptian Governorates
+              </h2>
+
+              {/* Compact Search Bar */}
+              <div className={styles.searchBarContainer}>
+                <span className={styles.searchIcon}>🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search governorates..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowAllGovernorates(false);
+                  }}
+                  className={styles.searchInput}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className={styles.clearButton}
+                    aria-label="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {searchQuery && (
+              <p className={styles.searchResults}>
+                Found {filteredGovernorates.length} {filteredGovernorates.length === 1 ? 'result' : 'results'}
+              </p>
+            )}
+
+            {!isLoading && (
+              <>
+                {governorates.length > 0 ? (
+                  <>
+                    <div className="row g-4">
+                      {governorates.map((gov) => (
+                        <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
+                          <GovernorateTile {...gov} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Show More Button */}
+                    {hasMoreGovernorates && (
+                      <div className="text-center mt-4">
+                        <button
+                          onClick={() => setShowAllGovernorates(!showAllGovernorates)}
+                          className={`btn btn-lg ${styles.seeMoreBtn}`}
+                        >
+                          {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.noResults}>
+                    <div className={styles.noResultsIcon}>🔍</div>
+                    <h3 className={styles.noResultsTitle}>No governorates found</h3>
+                    <p className={styles.noResultsText}>
+                      Try adjusting your search terms or <button onClick={() => setSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </section>
         </div>
-      </section>
-
-      <div className="container my-4 my-md-5">
-        {/* Section 1: Popular Destinations */}
-        <section className={`mb-5 ${styles.section}`}>
-          <div className={styles.governorateHeader}>
-            <h2 className={styles.sectionTitle}>
-              Popular Destinations
-            </h2>
-
-            {/* Compact Search Bar for Destinations */}
-            <div className={styles.searchBarContainer}>
-              <span className={styles.searchIcon}>🔍</span>
-              <input
-                type="text"
-                placeholder="Search destinations..."
-                value={destinationSearchQuery}
-                onChange={(e) => setDestinationSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
-              {destinationSearchQuery && (
-                <button
-                  onClick={() => setDestinationSearchQuery('')}
-                  className={styles.clearButton}
-                  aria-label="Clear search"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          </div>
-
-          {destinationSearchQuery && (
-            <p className={styles.searchResults}>
-              Found {filteredDestinations.length} {filteredDestinations.length === 1 ? 'result' : 'results'}
-            </p>
-          )}
-
-          {!isLoading && (
-            <>
-              {filteredDestinations.length > 0 ? (
-                <>
-                  <div className="row g-4">
-                    {destinations.map((dest) => (
-                      <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
-                        <DestinationCard {...dest} />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Show More Button for Destinations */}
-                  {hasMoreDestinations && (
-                    <div className="text-center mt-4">
-                      <button
-                        onClick={() => setShowAllDestinations(!showAllDestinations)}
-                        className={`btn btn-lg ${styles.seeMoreBtn}`}
-                      >
-                        {showAllDestinations ? 'Show Less' : 'See More Destinations'}
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className={styles.noResults}>
-                  <div className={styles.noResultsIcon}>🔍</div>
-                  <h3 className={styles.noResultsTitle}>No destinations found</h3>
-                  <p className={styles.noResultsText}>
-                    Try adjusting your search terms or <button onClick={() => setDestinationSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </section>
-
-        {/* Section 2: Explore Governorates */}
-        <section className={`mt-4 pt-md-3 ${styles.section}`}>
-          <div className={styles.governorateHeader}>
-            <h2 className={styles.sectionTitle}>
-              Explore Egyptian Governorates
-            </h2>
-
-            {/* Compact Search Bar */}
-            <div className={styles.searchBarContainer}>
-              <span className={styles.searchIcon}>🔍</span>
-              <input
-                type="text"
-                placeholder="Search governorates..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setShowAllGovernorates(false);
-                }}
-                className={styles.searchInput}
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className={styles.clearButton}
-                  aria-label="Clear search"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          </div>
-
-          {searchQuery && (
-            <p className={styles.searchResults}>
-              Found {filteredGovernorates.length} {filteredGovernorates.length === 1 ? 'result' : 'results'}
-            </p>
-          )}
-
-          {!isLoading && (
-            <>
-              {governorates.length > 0 ? (
-                <>
-                  <div className="row g-4">
-                    {governorates.map((gov) => (
-                      <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
-                        <GovernorateTile {...gov} />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Show More Button */}
-                  {hasMoreGovernorates && (
-                    <div className="text-center mt-4">
-                      <button
-                        onClick={() => setShowAllGovernorates(!showAllGovernorates)}
-                        className={`btn btn-lg ${styles.seeMoreBtn}`}
-                      >
-                        {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className={styles.noResults}>
-                  <div className={styles.noResultsIcon}>🔍</div>
-                  <h3 className={styles.noResultsTitle}>No governorates found</h3>
-                  <p className={styles.noResultsText}>
-                    Try adjusting your search terms or <button onClick={() => setSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </section>
-      </div>
       </div> {/* Close background wrapper */}
     </>
   );
