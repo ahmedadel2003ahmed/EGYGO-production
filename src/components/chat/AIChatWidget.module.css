@@ -1,7 +1,7 @@
 /* Component Container */
 .container {
   position: fixed;
-  bottom: 100px;
+  bottom: 180px;
   right: 30px;
   width: 380px;
   height: 600px;
@@ -215,7 +215,7 @@
 /* Floating Button (positioned relative to screen, handles toggle) */
 .floatingBtnWrapper {
   position: fixed;
-  bottom: 30px;
+  bottom: 110px;
   right: 30px;
   z-index: 10001;
 }

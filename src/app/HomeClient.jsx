@@ -68,7 +68,7 @@ export default function HomeClient() {
                 onClose={() => setIsModalOpen(false)}
                 onSuccess={handleTripCreated}
             />
-            {/* <FloatingTripButton onClick={() => setIsModalOpen(true)} /> */}
+            <FloatingTripButton onClick={() => setIsModalOpen(true)} />
         </>
     );
 }

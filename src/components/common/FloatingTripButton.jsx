@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { FaPlane } from 'react-icons/fa';
 import styles from './FloatingTripButton.module.css';
 
 export default function FloatingTripButton({ onClick }) {
@@ -16,14 +16,7 @@ export default function FloatingTripButton({ onClick }) {
             aria-label="Start your trip"
         >
             <div className={styles.iconContainer}>
-                <Image
-                    src="/images/chatbot_icon.png"
-                    alt="Start Trip"
-                    width={60}
-                    height={60}
-                    className={styles.icon}
-                    priority
-                />
+                <FaPlane size={24} color="#053147" />
             </div>
             <span className={styles.text}>
                 Start your trip
