@@ -6,6 +6,7 @@ import ConditionalNavbar from "@/app/components/ConditionalNavbar";
 import ConditionalMainWrapper from "@/app/components/ConditionalMainWrapper";
 import QueryProvider from "@/app/components/QueryProvider";
 import { AuthProvider } from "@/app/context/AuthContext";
+import SocketInitializer from "@/app/components/SocketInitializer";
 
 import ConditionalFooter from "@/app/components/ConditionalFooter";
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
       <body className={montserrat.className}>
         <BootstrapClient /> {/* Loads Bootstrap JS safely on client */}
         <AuthProvider>
+          <SocketInitializer /> {/* Initialize trip status socket connection */}
           <QueryProvider>
             <ConditionalNavbar />
             <ConditionalMainWrapper>

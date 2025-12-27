@@ -138,6 +138,10 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
           };
         }
 
+        console.log('📤 [TripModal] Sending trip data:', JSON.stringify(tripData, null, 2));
+        console.log('📤 [TripModal] Request URL:', 'http://localhost:5000/api/tourist/trips');
+        console.log('📤 [TripModal] Token present:', !!token);
+
         const response = await axios.post(
           'http://localhost:5000/api/tourist/trips',
           tripData,
@@ -148,6 +152,8 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
             },
           }
         );
+
+        console.log('✅ [TripModal] Response received:', response.data);
 
         if (response.data?.success) {
           const tripId = response.data?.data?.trip?._id || 
@@ -181,7 +187,11 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
           throw new Error(response.data?.message || 'Failed to create trip');
         }
       } catch (err) {
-        console.error('Create trip error:', err);
+        console.error('❌ [TripModal] Create trip error:', err);
+        console.error('❌ [TripModal] Error response:', err.response);
+        console.error('❌ [TripModal] Response data:', err.response?.data);
+        console.error('❌ [TripModal] Response status:', err.response?.status);
+        console.error('❌ [TripModal] Response headers:', err.response?.headers);
         
         if (err.response?.status === 401) {
           setError('Your session has expired. Please login again.');
@@ -193,9 +203,28 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
         }
         
         if (err.response?.status === 422) {
-          const validationError = err.response?.data?.message || 
-                                 err.response?.data?.error ||
-                                 JSON.stringify(err.response?.data);
+          const errorData = err.response?.data;
+          console.error('❌ [TripModal] 422 Validation details:', errorData);
+          console.error('❌ [TripModal] Validation errors array:', errorData?.errors);
+          console.error('❌ [TripModal] Each error:', errorData?.errors?.map((e, i) => ({ index: i, error: e })));
+          
+          // Try to extract meaningful error message
+          let validationError = 'Validation failed. Please check your inputs.';
+          
+          if (errorData?.errors && Array.isArray(errorData.errors)) {
+            // If errors is an array of validation errors
+            validationError = errorData.errors.map(e => e.msg || e.message || e).join(', ');
+          } else if (errorData?.message) {
+            validationError = errorData.message;
+          } else if (errorData?.error) {
+            validationError = errorData.error;
+          } else if (typeof errorData === 'string') {
+            validationError = errorData;
+          } else if (!errorData || Object.keys(errorData).length === 0) {
+            // Empty response body - this is the issue!
+            validationError = 'Server validation failed. Please check: date is in future, meeting address is detailed (10+ chars), and province is selected.';
+          }
+          
           setError(`Validation Error: ${validationError}`);
           return;
         }

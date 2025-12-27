@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './MyTrips.module.css';
 import TripModal from '@/components/trip/TripModal';
 import { useAuth } from '@/app/context/AuthContext';
+import socketTripService from '@/services/socketTripService';
 
 export default function MyTripsPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function MyTripsPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const auth = useAuth();
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
 
   // Governorate lookup map
   const GOVERNORATE_MAP = {
@@ -78,6 +80,81 @@ export default function MyTripsPage() {
     },
   });
 
+  // Monitor socket connection status
+  useEffect(() => {
+    const checkConnection = setInterval(() => {
+      setIsSocketConnected(socketTripService.isConnected());
+    }, 1000);
+
+    return () => clearInterval(checkConnection);
+  }, []);
+
+  // Handle real-time trip status updates for all trips
+  const handleTripStatusUpdate = useCallback((payload) => {
+    console.log('📡 [MyTrips] Received trip status update:', payload);
+
+    // Update the trips list in cache
+    queryClient.setQueryData(['my-trips'], (oldTrips) => {
+      if (!oldTrips || !Array.isArray(oldTrips)) return oldTrips;
+
+      return oldTrips.map((trip) => {
+        if (trip._id === payload.tripId) {
+          console.log(`✅ [MyTrips] Updating trip ${trip._id} status to: ${payload.status}`);
+          return {
+            ...trip,
+            status: payload.status,
+            paymentStatus: payload.paymentStatus || trip.paymentStatus,
+            confirmedAt: payload.confirmedAt || trip.confirmedAt,
+            cancelledAt: payload.cancelledAt || trip.cancelledAt,
+            cancelledBy: payload.cancelledBy || trip.cancelledBy,
+          };
+        }
+        return trip;
+      });
+    });
+  }, [queryClient]);
+
+  // Setup real-time updates for all user trips
+  useEffect(() => {
+    if (!isSocketConnected || !trips || trips.length === 0) {
+      return;
+    }
+
+    console.log('[MyTrips] Setting up real-time updates for trips:', trips.map(t => t._id));
+
+    // Join all trip rooms
+    trips.forEach((trip) => {
+      socketTripService.joinTripRoom(trip._id);
+    });
+
+    // Register status update listener
+    socketTripService.onTripStatusUpdate(handleTripStatusUpdate);
+
+    // Cleanup
+    return () => {
+      console.log('[MyTrips] Cleaning up socket listeners');
+      socketTripService.offTripStatusUpdate(handleTripStatusUpdate);
+      
+      // Leave all trip rooms
+      trips.forEach((trip) => {
+        socketTripService.leaveTripRoom(trip._id);
+      });
+    };
+  }, [trips, isSocketConnected, handleTripStatusUpdate]);
+
+  // WORKAROUND: Poll for status changes (since CORS may block Socket.IO events)
+  // This is a temporary fix until backend adds port 3001 to CORS whitelist
+  useEffect(() => {
+    if (!trips || trips.length === 0) return;
+
+    const pollInterval = setInterval(() => {
+      console.log('[MyTrips] Polling for status changes...');
+      queryClient.invalidateQueries(['my-trips']);
+    }, 3000); // Poll every 3 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [trips?.length, queryClient]);
+
   const filterTrips = (status) => {
     if (status === 'all') return trips;
     if (status === 'upcoming')
@@ -126,6 +203,35 @@ export default function MyTripsPage() {
       />
 
       <div className={styles.pageWrapper}>
+        {/* Real-time Connection Indicator */}
+        {isSocketConnected && (
+          <div style={{
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            zIndex: 1000,
+            background: '#10b981',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            fontSize: '12px',
+            fontWeight: '500',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+          }}>
+            <span style={{ 
+              width: '8px', 
+              height: '8px', 
+              borderRadius: '50%', 
+              background: '#fff',
+              animation: 'pulse 2s infinite'
+            }}></span>
+            Real-time updates active
+          </div>
+        )}
+
         {/* Header */}
         <section className={styles.headerSection}>
           <div className="container">

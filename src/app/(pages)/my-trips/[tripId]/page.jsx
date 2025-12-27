@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './TripDetails.module.css';
 import { useAuth } from '@/app/context/AuthContext';
+import socketTripService from '@/services/socketTripService';
 
 export default function TripDetailsPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function TripDetailsPage() {
     language: '',
   });
   const auth = useAuth();
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
 
   // Debug logging
   useEffect(() => {
@@ -30,6 +32,87 @@ export default function TripDetailsPage() {
       router.push('/');
     }
   }, [auth?.loading, auth?.token, router]);
+
+  // Monitor socket connection status
+  useEffect(() => {
+    const checkConnection = setInterval(() => {
+      setIsSocketConnected(socketTripService.isConnected());
+    }, 1000);
+
+    return () => clearInterval(checkConnection);
+  }, []);
+
+  // Handle real-time trip status updates
+  const handleTripStatusUpdate = useCallback((payload) => {
+    console.log('📡 [TripDetails] Received trip status update:', payload);
+
+    // Only process updates for this trip
+    if (payload.tripId !== tripId) {
+      console.log('[TripDetails] Update is for different trip, ignoring');
+      return;
+    }
+
+    // Update the trip data in cache
+    queryClient.setQueryData(['trip', tripId], (oldData) => {
+      if (!oldData) return oldData;
+
+      const updatedTrip = {
+        ...(oldData.trip || oldData),
+        status: payload.status,
+        paymentStatus: payload.paymentStatus || (oldData.trip || oldData).paymentStatus,
+        confirmedAt: payload.confirmedAt || (oldData.trip || oldData).confirmedAt,
+        cancelledAt: payload.cancelledAt || (oldData.trip || oldData).cancelledAt,
+        cancelledBy: payload.cancelledBy || (oldData.trip || oldData).cancelledBy,
+      };
+
+      // Maintain the same structure as the original data
+      return oldData.trip ? { ...oldData, trip: updatedTrip } : updatedTrip;
+    });
+
+    console.log(`✅ [TripDetails] Trip status updated to: ${payload.status}`);
+  }, [tripId, queryClient]);
+
+  // Setup real-time updates via Socket.IO
+  useEffect(() => {
+    if (!tripId || !isSocketConnected) {
+      return;
+    }
+
+    console.log('[TripDetails] Setting up real-time updates for trip:', tripId);
+
+    // Join the trip room
+    socketTripService.joinTripRoom(tripId);
+
+    // Register status update listener
+    socketTripService.onTripStatusUpdate(handleTripStatusUpdate);
+
+    // Optional: Handle room join confirmation
+    const handleRoomJoined = (data) => {
+      console.log('✅ [TripDetails] Joined trip room:', data);
+    };
+    socketTripService.onTripRoomJoined(handleRoomJoined);
+
+    // Cleanup
+    return () => {
+      console.log('[TripDetails] Cleaning up socket listeners for trip:', tripId);
+      socketTripService.offTripStatusUpdate(handleTripStatusUpdate);
+      socketTripService.offTripRoomJoined(handleRoomJoined);
+      socketTripService.leaveTripRoom(tripId);
+    };
+  }, [tripId, isSocketConnected, handleTripStatusUpdate]);
+
+  // WORKAROUND: Poll for status changes (since CORS may block Socket.IO events)
+  // This is a temporary fix until backend adds port 3001 to CORS whitelist
+  useEffect(() => {
+    if (!tripId) return;
+
+    const pollInterval = setInterval(() => {
+      console.log('[TripDetails] Polling for status changes...');
+      queryClient.invalidateQueries(['trip', tripId]);
+    }, 3000); // Poll every 3 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [tripId, queryClient]);
 
   // Fetch trip details
   const {
@@ -350,6 +433,35 @@ export default function TripDetailsPage() {
 
   return (
     <div className={styles.pageWrapper}>
+      {/* Real-time Connection Indicator */}
+      {isSocketConnected && (
+        <div style={{
+          position: 'fixed',
+          top: '80px',
+          right: '20px',
+          zIndex: 1000,
+          background: '#10b981',
+          color: 'white',
+          padding: '8px 16px',
+          borderRadius: '8px',
+          fontSize: '12px',
+          fontWeight: '500',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        }}>
+          <span style={{ 
+            width: '8px', 
+            height: '8px', 
+            borderRadius: '50%', 
+            background: '#fff',
+            animation: 'pulse 2s infinite'
+          }}></span>
+          Real-time updates active
+        </div>
+      )}
+      
       {/* Header */}
       <section className={styles.headerSection}>
         <div className="container">
@@ -645,7 +757,7 @@ export default function TripDetailsPage() {
                     </button>
                   )}
 
-                  {trip.status === 'awaiting_payment' && trip.negotiatedPrice && (
+                  {(trip.status === 'pending_confirmation' || trip.status === 'awaiting_payment') && trip.negotiatedPrice && (
                     <>
                       <div className={styles.priceInfo}>
                         <span className={styles.priceLabel}>Negotiated Price:</span>
@@ -658,13 +770,39 @@ export default function TripDetailsPage() {
                       >
                         {createCheckoutMutation.isPending ? 'Processing...' : '💳 Pay Now'}
                       </button>
+                      {trip.status === 'pending_confirmation' && (
+                        <p className={styles.paymentNote}>
+                          💡 You can pay now or wait for guide confirmation
+                        </p>
+                      )}
                     </>
                   )}
 
-                  {trip.status === 'pending_confirmation' && (
+                  {trip.status === 'pending_confirmation' && !trip.negotiatedPrice && (
                     <div className={styles.waitingMessage}>
                       <span className={styles.waitingIcon}>⏳</span>
                       <p>Waiting for guide confirmation...</p>
+                    </div>
+                  )}
+
+                  {trip.status === 'confirmed' && trip.paymentStatus === 'paid' && (
+                    <div className={styles.successMessage}>
+                      <div className={styles.successIcon}>✅</div>
+                      <div className={styles.successContent}>
+                        <h4 className={styles.successTitle}>Trip Confirmed!</h4>
+                        <p className={styles.successText}>
+                          Your payment has been processed successfully.
+                        </p>
+                        {trip.negotiatedPrice && (
+                          <div className={styles.priceInfo}>
+                            <span className={styles.priceLabel}>Amount Paid:</span>
+                            <span className={styles.priceValue}>EGP {trip.negotiatedPrice}</span>
+                          </div>
+                        )}
+                        <p className={styles.successNote}>
+                          Your guide will contact you before the trip. Check your email for confirmation.
+                        </p>
+                      </div>
                     </div>
                   )}
 

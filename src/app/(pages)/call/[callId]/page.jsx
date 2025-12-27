@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import axios from 'axios';
 import styles from './CallPage.module.css';
+import socketTripService from '@/services/socketTripService';
 
 export default function CallPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function CallPage() {
 
   // Agora client and tracks
   const clientRef = useRef(null);
+  const localTracksRef = useRef({ audio: null, video: null }); // Live track references
   const [localVideoTrack, setLocalVideoTrack] = useState(null);
   const [localAudioTrack, setLocalAudioTrack] = useState(null);
   const [remoteUsers, setRemoteUsers] = useState([]);
@@ -35,18 +37,41 @@ export default function CallPage() {
   const [tripInfo, setTripInfo] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('connecting');
 
+  // Guards to prevent duplicate joins
+  const isInitializingRef = useRef(false);
+  const hasJoinedRef = useRef(false);
+  const cleanupCalledRef = useRef(false);
+  const statusPollingIntervalRef = useRef(null);
+  const isEndingCallRef = useRef(false);
+
   useEffect(() => {
+    // Prevent duplicate initialization (React StrictMode, hot reload)
+    if (isInitializingRef.current || hasJoinedRef.current) {
+      console.log('[Agora] Skipping duplicate initialization');
+      return;
+    }
+
     initializeCall();
+
     return () => {
       cleanup();
     };
   }, [callId]);
 
   const initializeCall = async () => {
+    // Guard: Prevent duplicate calls
+    if (isInitializingRef.current || hasJoinedRef.current) {
+      console.log('[Agora] Already initializing or joined, skipping...');
+      return;
+    }
+
+    isInitializingRef.current = true;
+
     try {
       setLoading(true);
       setConnectionStatus('connecting');
 
+      console.log('[Agora] Fetching call credentials...');
       // Fetch call credentials from backend
       const response = await axios.get(
         `http://localhost:5000/api/calls/${callId}/join`,
@@ -58,28 +83,65 @@ export default function CallPage() {
       );
 
       const callData = response.data?.data;
+      console.log('[Agora] Call data received:', { 
+        appId: callData.appId, 
+        channelName: callData.channelName,
+        uid: callData.uid,
+        role: callData.role
+      });
+      
       setCallInfo(callData);
       setTripInfo(callData.trip);
 
+      // Guard: Don't create a new client if one exists
+      // Let the cleanup function handle leaving when component unmounts
+      if (clientRef.current) {
+        console.log('[Agora] Client already exists. Connection state:', clientRef.current.connectionState);
+        console.log('[Agora] Skipping re-initialization to avoid conflicts');
+        setLoading(false);
+        return;
+      }
+
       // Initialize Agora client
+      console.log('[Agora] Creating Agora client...');
       const client = AgoraRTC.createClient({
         mode: 'rtc',
         codec: 'vp8',
       });
+      
+      // Store client reference BEFORE setting up listeners or joining
       clientRef.current = client;
+      console.log('[Agora] Client created and stored in ref');
 
       // Setup event listeners
       setupAgoraListeners(client);
 
-      // Join channel
+      // Join channel with unique UID from backend
+      console.log('[Agora] Joining channel...', {
+        channelName: callData.channelName,
+        uid: callData.uid
+      });
+      
       await client.join(
         callData.appId,
         callData.channelName,
         callData.token,
-        callData.uid
+        callData.uid // Use UID from backend (guaranteed unique per session)
       );
 
+      console.log('[Agora] Successfully joined channel');
+      console.log('[Agora] Client connection state:', client.connectionState);
+      hasJoinedRef.current = true;
+
+      // Verify we're actually connected before proceeding
+      if (client.connectionState !== 'CONNECTED' && client.connectionState !== 'CONNECTING') {
+        throw new Error(`Failed to connect to channel. State: ${client.connectionState}`);
+      }
+
       // Create local tracks
+      console.log('[Agora] Creating local tracks...');
+      console.log('[Agora] Connection state before track creation:', client.connectionState);
+      
       const [audioTrack, videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks(
         {
           encoderConfig: { sampleRate: 48000, stereo: true },
@@ -94,51 +156,171 @@ export default function CallPage() {
         }
       );
 
+      console.log('[Agora] Tracks created successfully');
+      console.log('[Agora] Connection state after track creation:', client.connectionState);
+
+      // Store in ref for cleanup access (prevents stale closure issues)
+      localTracksRef.current.audio = audioTrack;
+      localTracksRef.current.video = videoTrack;
+
       setLocalAudioTrack(audioTrack);
       setLocalVideoTrack(videoTrack);
 
       // Play local video
       videoTrack.play('local-player');
 
+      // Wait a moment and check connection state
+      console.log('[Agora] About to publish. Connection state:', client.connectionState);
+      
+      // If we're connecting, wait for connected state
+      if (client.connectionState === 'CONNECTING') {
+        console.log('[Agora] Still connecting, waiting for CONNECTED state...');
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Timeout waiting for connection'));
+          }, 5000);
+          
+          const checkState = () => {
+            console.log('[Agora] Checking state:', client.connectionState);
+            if (client.connectionState === 'CONNECTED') {
+              clearTimeout(timeout);
+              resolve();
+            } else if (client.connectionState === 'DISCONNECTED' || client.connectionState === 'DISCONNECTING') {
+              clearTimeout(timeout);
+              reject(new Error('Connection lost while waiting'));
+            } else {
+              setTimeout(checkState, 100);
+            }
+          };
+          checkState();
+        });
+      }
+      
+      if (client.connectionState !== 'CONNECTED') {
+        console.error('[Agora] Connection state is not CONNECTED:', client.connectionState);
+        throw new Error(`Cannot publish: Connection state is ${client.connectionState}`);
+      }
+
       // Publish tracks
+      console.log('[Agora] Publishing tracks...');
       await client.publish([audioTrack, videoTrack]);
+      console.log('[Agora] Tracks published successfully');
 
       setJoined(true);
       setConnectionStatus('connected');
       setLoading(false);
+      console.log('[Agora] Call initialization complete');
+      
+      // Start status polling to detect remote call end (3-second interval)
+      console.log('[Agora] Starting status polling...');
+      statusPollingIntervalRef.current = setInterval(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/calls/${callId}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+              }
+            }
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.data?.status === 'ended') {
+              console.log('[Agora] Remote call end detected via polling');
+              clearInterval(statusPollingIntervalRef.current);
+              statusPollingIntervalRef.current = null;
+              
+              alert('The call has been ended by the other participant.');
+              
+              // Cleanup and navigate
+              await cleanup();
+              
+              if (callData.trip?._id) {
+                router.push(`/my-trips/${callData.trip._id}`);
+              } else {
+                router.push('/my-trips');
+              }
+            }
+          }
+        } catch (e) {
+          console.error('[Agora] Error checking call status:', e);
+        }
+      }, 3000);
+      
+      // Connect to socket for trip status updates (fallback mechanism)
+      if (callData.trip?._id && localStorage.getItem('access_token')) {
+        const token = localStorage.getItem('access_token');
+        if (!socketTripService.isConnected()) {
+          socketTripService.connect(token);
+        }
+        socketTripService.joinTripRoom(callData.trip._id);
+        console.log('[Socket] Joined trip room:', callData.trip._id);
+      }
     } catch (err) {
-      console.error('Failed to initialize call:', err);
-      setError(err.message || 'Failed to join call. Please check your camera and microphone permissions.');
+      console.error('[Agora] Failed to initialize call:', err);
+      
+      // Extract meaningful error message
+      let errorMessage = 'Failed to join call. Please check your camera and microphone permissions.';
+      if (err.code === 'UID_CONFLICT') {
+        errorMessage = 'Connection conflict detected. Please refresh and try again.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
       setConnectionStatus('failed');
       setLoading(false);
+      
+      // Reset guards on error to allow retry
+      isInitializingRef.current = false;
+      hasJoinedRef.current = false;
     }
   };
 
   const setupAgoraListeners = (client) => {
+    console.log('[Agora] Setting up event listeners...');
+    
     // Remote user published media
     client.on('user-published', async (user, mediaType) => {
-      await client.subscribe(user, mediaType);
-      
-      if (mediaType === 'video') {
-        setRemoteUsers((prev) => {
-          const exists = prev.find(u => u.uid === user.uid);
-          if (exists) return prev;
-          return [...prev, user];
-        });
+      console.log('[Agora] User published:', user.uid, mediaType);
+      try {
+        await client.subscribe(user, mediaType);
+        console.log('[Agora] Subscribed to user:', user.uid, mediaType);
         
-        // Play remote video
-        setTimeout(() => {
-          user.videoTrack?.play(`remote-player-${user.uid}`);
-        }, 100);
-      }
+        if (mediaType === 'video') {
+          setRemoteUsers((prev) => {
+            const exists = prev.find(u => u.uid === user.uid);
+            if (exists) {
+              console.log('[Agora] User already in list:', user.uid);
+              return prev;
+            }
+            console.log('[Agora] Adding user to list:', user.uid);
+            return [...prev, user];
+          });
+          
+          // Play remote video with delay to ensure DOM is ready
+          setTimeout(() => {
+            const element = document.getElementById(`remote-player-${user.uid}`);
+            if (element && user.videoTrack) {
+              user.videoTrack.play(`remote-player-${user.uid}`);
+              console.log('[Agora] Playing remote video for:', user.uid);
+            }
+          }, 100);
+        }
 
-      if (mediaType === 'audio') {
-        user.audioTrack?.play();
+        if (mediaType === 'audio') {
+          user.audioTrack?.play();
+          console.log('[Agora] Playing remote audio for:', user.uid);
+        }
+      } catch (err) {
+        console.error('[Agora] Error subscribing to user:', err);
       }
     });
 
     // Remote user unpublished media
     client.on('user-unpublished', (user, mediaType) => {
+      console.log('[Agora] User unpublished:', user.uid, mediaType);
       if (mediaType === 'video') {
         setRemoteUsers((prev) => prev.filter(u => u.uid !== user.uid));
       }
@@ -146,6 +328,7 @@ export default function CallPage() {
 
     // Remote user left
     client.on('user-left', (user) => {
+      console.log('[Agora] User left:', user.uid);
       setRemoteUsers((prev) => prev.filter(u => u.uid !== user.uid));
     });
 
@@ -157,7 +340,20 @@ export default function CallPage() {
 
     // Handle exceptions
     client.on('exception', (event) => {
-      console.error('Agora exception:', event);
+      // Ignore exceptions during intentional call cleanup
+      if (isEndingCallRef.current) {
+        return;
+      }
+      
+      // Filter out non-critical warnings (audio bitrate, network quality, etc.)
+      const nonCriticalCodes = [2003, 2004, 2005]; // SEND_AUDIO_BITRATE_TOO_LOW, etc.
+      
+      if (event?.code && nonCriticalCodes.includes(event.code)) {
+        console.warn('Agora quality warning:', event.msg || event);
+      } else if (event && Object.keys(event).length > 0) {
+        console.error('Agora exception:', event);
+      }
+      // Ignore empty exception objects
     });
   };
 
@@ -176,19 +372,67 @@ export default function CallPage() {
   };
 
   const handleHangUpClick = () => {
-    setShowEndModal(true);
+    // Show confirmation dialog
+    if (confirm('Are you sure you want to end the call?')) {
+      setShowEndModal(true);
+    }
   };
 
   const submitEndCall = async () => {
-    try {
-      setEndingCall(true);
+    if (!callId) return;
 
-      // End call via backend
+    setEndingCall(true);
+    try {
+      const currentClient = clientRef.current;
+      const audioTrack = localTracksRef.current.audio;
+      const videoTrack = localTracksRef.current.video;
+      
+      console.log('[Call] Starting end call process...');
+      
+      // Step 1: Unpublish tracks from channel
+      if (currentClient && (audioTrack || videoTrack)) {
+        const tracks = [];
+        if (audioTrack) tracks.push(audioTrack);
+        if (videoTrack) tracks.push(videoTrack);
+        
+        if (tracks.length > 0 && currentClient.connectionState !== 'DISCONNECTED') {
+          console.log('[Call] Unpublishing tracks...');
+          await currentClient.unpublish(tracks).catch(err => 
+            console.warn("Error unpublishing:", err)
+          );
+        }
+      }
+      
+      // Step 2: Stop and close tracks (release hardware)
+      if (audioTrack) {
+        console.log('[Call] Stopping audio track...');
+        audioTrack.stop();
+        audioTrack.close();
+      }
+      if (videoTrack) {
+        console.log('[Call] Stopping video track...');
+        videoTrack.stop();
+        videoTrack.close();
+      }
+      
+      // Step 3: Leave channel
+      if (currentClient) {
+        const state = currentClient.connectionState;
+        if (state === 'CONNECTED' || state === 'CONNECTING' || state === 'RECONNECTING') {
+          console.log('[Call] Leaving channel...');
+          await currentClient.leave().catch(err => 
+            console.warn("Error leaving:", err)
+          );
+        }
+      }
+
+      // Step 4: Call backend to end session
+      console.log('[Call] Calling backend to end call...');
       await axios.post(
         `http://localhost:5000/api/calls/${callId}/end`,
         {
           endReason: 'completed',
-          summary: summary,
+          summary: summary.trim() || undefined,
           negotiatedPrice: negotiatedPrice ? parseFloat(negotiatedPrice) : undefined,
         },
         {
@@ -198,8 +442,8 @@ export default function CallPage() {
         }
       );
 
-      // Cleanup Agora
-      await cleanup();
+      // Close modal
+      setShowEndModal(false);
 
       // Navigate back to trip details
       if (tripInfo?._id) {
@@ -207,38 +451,206 @@ export default function CallPage() {
       } else {
         router.push('/my-trips');
       }
-    } catch (err) {
-      console.error('Failed to end call:', err);
-      alert(err.response?.data?.message || 'Failed to end call');
+    } catch (error) {
+      console.error("Error ending call:", error);
+      alert("Failed to submit call details. Please try again.");
       setEndingCall(false);
     }
   };
 
-  const cleanup = async () => {
+  // Quick end call without modal (for emergency exit)
+  const quickEndCall = async () => {
+    if (!callId) return;
+    
+    setEndingCall(true);
     try {
+      const currentClient = clientRef.current;
+      const audioTrack = localTracksRef.current.audio;
+      const videoTrack = localTracksRef.current.video;
+      
+      console.log('[Call] Quick ending call...');
+      
       // Unpublish tracks
-      if (localAudioTrack || localVideoTrack) {
-        const tracks = [localAudioTrack, localVideoTrack].filter(Boolean);
-        if (tracks.length > 0 && clientRef.current) {
-          await clientRef.current.unpublish(tracks);
+      if (currentClient && (audioTrack || videoTrack)) {
+        const tracks = [];
+        if (audioTrack) tracks.push(audioTrack);
+        if (videoTrack) tracks.push(videoTrack);
+        
+        if (tracks.length > 0 && currentClient.connectionState !== 'DISCONNECTED') {
+          await currentClient.unpublish(tracks).catch(err => 
+            console.warn("Error unpublishing:", err)
+          );
+        }
+      }
+      
+      // Stop and close tracks
+      if (audioTrack) {
+        audioTrack.stop();
+        audioTrack.close();
+      }
+      if (videoTrack) {
+        videoTrack.stop();
+        videoTrack.close();
+      }
+      
+      // Leave channel
+      if (currentClient) {
+        const state = currentClient.connectionState;
+        if (state === 'CONNECTED' || state === 'CONNECTING' || state === 'RECONNECTING') {
+          await currentClient.leave().catch(err => 
+            console.warn("Error leaving:", err)
+          );
         }
       }
 
-      // Close tracks
-      localAudioTrack?.close();
-      localVideoTrack?.close();
+      // Call backend
+      await axios.post(
+        `http://localhost:5000/api/calls/${callId}/end`,
+        {
+          endReason: 'completed',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
 
-      // Leave channel
-      if (clientRef.current) {
-        await clientRef.current.leave();
+      // Close modal and navigate
+      setShowEndModal(false);
+
+      if (tripInfo?._id) {
+        router.push(`/my-trips/${tripInfo._id}`);
+      } else {
+        router.push('/my-trips');
+      }
+    } catch (err) {
+      console.error('Failed to end call:', err);
+      alert('Call ended locally. Please refresh to see updates.');
+      router.push('/my-trips');
+    }
+  };
+
+  const cleanup = async () => {
+    // Guard: Prevent duplicate cleanup
+    if (cleanupCalledRef.current) {
+      console.log('[Agora] Cleanup already called, skipping...');
+      return;
+    }
+
+    cleanupCalledRef.current = true;
+    isEndingCallRef.current = true;
+    console.log('[Agora] Starting cleanup...');
+
+    try {
+      // Check if client is still valid and connected
+      const clientState = clientRef.current?.connectionState;
+      const canUnpublish = clientState === 'CONNECTED' || clientState === 'CONNECTING';
+
+      // Get live track instances from ref (not stale state)
+      const audioTrack = localTracksRef.current.audio;
+      const videoTrack = localTracksRef.current.video;
+
+      // Unpublish tracks only if client is still connected
+      if (canUnpublish && (audioTrack || videoTrack)) {
+        const tracks = [audioTrack, videoTrack].filter(Boolean);
+        if (tracks.length > 0 && clientRef.current) {
+          console.log('[Agora] Unpublishing tracks...');
+          try {
+            await Promise.race([
+              clientRef.current.unpublish(tracks),
+              new Promise((_, reject) => setTimeout(() => reject(new Error('Unpublish timeout')), 2000))
+            ]);
+          } catch (e) {
+            console.warn('[Agora] Error unpublishing (ignored):', e.message);
+          }
+        }
       }
 
+      // Stop and close tracks (always safe to do)
+      console.log('[Agora] Stopping and closing tracks...');
+      try {
+        if (audioTrack) {
+          audioTrack.stop();
+          audioTrack.close();
+          console.log('[Agora] Audio track stopped and closed');
+        }
+        if (videoTrack) {
+          videoTrack.stop();
+          videoTrack.close();
+          console.log('[Agora] Video track stopped and closed');
+        }
+      } catch (e) {
+        console.warn('[Agora] Error stopping/closing tracks:', e.message);
+      }
+
+      // Leave channel only if still connected
+      if (clientRef.current) {
+        const currentState = clientRef.current.connectionState;
+        if (currentState === 'CONNECTED' || currentState === 'CONNECTING') {
+          console.log('[Agora] Leaving channel...');
+          try {
+            await Promise.race([
+              clientRef.current.leave(),
+              new Promise((_, reject) => setTimeout(() => reject(new Error('Leave timeout')), 2000))
+            ]);
+          } catch (e) {
+            console.warn('[Agora] Error leaving channel (ignored):', e.message);
+          }
+        } else {
+          console.log('[Agora] Client already disconnected, skipping leave');
+        }
+        
+        // Remove all event listeners to prevent memory leaks
+        console.log('[Agora] Removing event listeners...');
+        clientRef.current.removeAllListeners();
+        clientRef.current = null;
+      }
+
+      // Clear status polling interval
+      if (statusPollingIntervalRef.current) {
+        console.log('[Agora] Clearing status polling interval...');
+        clearInterval(statusPollingIntervalRef.current);
+        statusPollingIntervalRef.current = null;
+      }
+      
+      // Leave socket trip room
+      if (tripInfo?._id) {
+        console.log('[Socket] Leaving trip room:', tripInfo._id);
+        socketTripService.leaveTripRoom(tripInfo._id);
+      }
+
+      // Clear track refs
+      localTracksRef.current.audio = null;
+      localTracksRef.current.video = null;
+
+      // Reset state
       setLocalAudioTrack(null);
       setLocalVideoTrack(null);
       setRemoteUsers([]);
       setJoined(false);
+      
+      // Reset guards
+      isInitializingRef.current = false;
+      hasJoinedRef.current = false;
+      
+      console.log('[Agora] Cleanup complete');
     } catch (err) {
-      console.error('Cleanup error:', err);
+      console.warn('[Agora] Cleanup error (non-critical):', err.message);
+      // Force reset state even if cleanup fails
+      clientRef.current = null;
+      localTracksRef.current.audio = null;
+      localTracksRef.current.video = null;
+      if (statusPollingIntervalRef.current) {
+        clearInterval(statusPollingIntervalRef.current);
+        statusPollingIntervalRef.current = null;
+      }
+      setLocalAudioTrack(null);
+      setLocalVideoTrack(null);
+      setRemoteUsers([]);
+      setJoined(false);
+      isInitializingRef.current = false;
+      hasJoinedRef.current = false;
     }
   };
 
@@ -341,9 +753,13 @@ export default function CallPage() {
       {showEndModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <h3 className={styles.modalTitle}>End Call & Submit Details</h3>
+            <h3 className={styles.modalTitle}>Call Summary (Optional)</h3>
             
             <div className={styles.modalBody}>
+              <p className={styles.infoText}>
+                You can add notes and pricing details, or skip to end immediately.
+              </p>
+
               <div className={styles.formGroup}>
                 <label className={styles.label}>
                   Call Summary
@@ -388,11 +804,19 @@ export default function CallPage() {
                 Cancel
               </button>
               <button
+                onClick={quickEndCall}
+                className={styles.skipButton}
+                disabled={endingCall}
+                title="End call without adding details"
+              >
+                Skip & End
+              </button>
+              <button
                 onClick={submitEndCall}
                 className={styles.submitButton}
                 disabled={endingCall}
               >
-                {endingCall ? 'Ending Call...' : 'End Call & Submit'}
+                {endingCall ? 'Ending...' : 'Save & End'}
               </button>
             </div>
           </div>

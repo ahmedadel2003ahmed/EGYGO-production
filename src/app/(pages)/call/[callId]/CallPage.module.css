@@ -402,6 +402,7 @@
 }
 
 .cancelButton,
+.skipButton,
 .submitButton {
   padding: var(--spacing-sm) var(--spacing-xl);
   border-radius: var(--radius-md);
@@ -421,6 +422,18 @@
   background: var(--color-border);
 }
 
+.skipButton {
+  background: #6c757d;
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.skipButton:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
 .submitButton {
   background: var(--gradient-primary);
   color: white;
@@ -433,6 +446,7 @@
 }
 
 .submitButton:disabled,
+.skipButton:disabled,
 .cancelButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;

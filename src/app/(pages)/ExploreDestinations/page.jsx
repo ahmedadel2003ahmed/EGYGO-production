@@ -257,8 +257,9 @@ const ErrorMessage = ({ message }) => (
 
 /**
  * Renders a single destination card with skeleton loading.
+ * Updated to accept destinationId and link to /place/{id}
  */
-const DestinationCard = ({ title, subtitle, imageUrl, slug }) => {
+const DestinationCard = ({ title, subtitle, imageUrl, slug, destinationId }) => {
   const [imageLoading, setImageLoading] = React.useState(true);
 
   return (
@@ -287,7 +288,7 @@ const DestinationCard = ({ title, subtitle, imageUrl, slug }) => {
         <h5 className={`card-title fw-bold ${styles.cardTitle}`}>{title}</h5>
         <p className={`card-text ${styles.cardText} mb-3`}>{subtitle}</p>
         <Link
-          href={`/destinations/${slug}`}
+          href={`/place/${destinationId || slug}`}
           className={`mt-auto align-self-start ${styles.ctaLink}`}
         >
           More Details

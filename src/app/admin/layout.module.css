@@ -1,0 +1,41 @@
+.adminContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.contentWrapper {
+  flex: 1;
+  margin-left: 260px; /* Sidebar width */
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevent flex overflow */
+}
+
+.mainContent {
+  padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.loadingScreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.loginMain {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contentWrapper {
+    margin-left: 0;
+  }
+}

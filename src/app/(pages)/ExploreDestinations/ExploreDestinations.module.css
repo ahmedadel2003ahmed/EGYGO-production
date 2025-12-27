@@ -485,7 +485,7 @@
 
 /* --- See More Button --- */
 .seeMoreBtn {
-  background: #d19f6a;
+  background: linear-gradient(135deg, #00797C, #0A2342);
   color: white;
   border: none;
   padding: 14px 40px;

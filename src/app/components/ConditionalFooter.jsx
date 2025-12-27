@@ -21,7 +21,8 @@ const ConditionalFooter = () => {
         '/auth/login',
         '/auth/register',
         '/otp',
-        '/auth/otp'
+        '/auth/otp',
+        '/admin'
     ];
 
     // Check if current path should hide footer
