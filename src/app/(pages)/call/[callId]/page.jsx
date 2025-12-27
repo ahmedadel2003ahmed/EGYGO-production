@@ -83,13 +83,13 @@ export default function CallPage() {
       );
 
       const callData = response.data?.data;
-      console.log('[Agora] Call data received:', { 
-        appId: callData.appId, 
+      console.log('[Agora] Call data received:', {
+        appId: callData.appId,
         channelName: callData.channelName,
         uid: callData.uid,
         role: callData.role
       });
-      
+
       setCallInfo(callData);
       setTripInfo(callData.trip);
 
@@ -108,7 +108,7 @@ export default function CallPage() {
         mode: 'rtc',
         codec: 'vp8',
       });
-      
+
       // Store client reference BEFORE setting up listeners or joining
       clientRef.current = client;
       console.log('[Agora] Client created and stored in ref');
@@ -121,7 +121,7 @@ export default function CallPage() {
         channelName: callData.channelName,
         uid: callData.uid
       });
-      
+
       await client.join(
         callData.appId,
         callData.channelName,
@@ -141,7 +141,7 @@ export default function CallPage() {
       // Create local tracks
       console.log('[Agora] Creating local tracks...');
       console.log('[Agora] Connection state before track creation:', client.connectionState);
-      
+
       const [audioTrack, videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks(
         {
           encoderConfig: { sampleRate: 48000, stereo: true },
@@ -171,7 +171,7 @@ export default function CallPage() {
 
       // Wait a moment and check connection state
       console.log('[Agora] About to publish. Connection state:', client.connectionState);
-      
+
       // If we're connecting, wait for connected state
       if (client.connectionState === 'CONNECTING') {
         console.log('[Agora] Still connecting, waiting for CONNECTED state...');
@@ -179,7 +179,7 @@ export default function CallPage() {
           const timeout = setTimeout(() => {
             reject(new Error('Timeout waiting for connection'));
           }, 5000);
-          
+
           const checkState = () => {
             console.log('[Agora] Checking state:', client.connectionState);
             if (client.connectionState === 'CONNECTED') {
@@ -195,7 +195,7 @@ export default function CallPage() {
           checkState();
         });
       }
-      
+
       if (client.connectionState !== 'CONNECTED') {
         console.error('[Agora] Connection state is not CONNECTED:', client.connectionState);
         throw new Error(`Cannot publish: Connection state is ${client.connectionState}`);
@@ -210,7 +210,7 @@ export default function CallPage() {
       setConnectionStatus('connected');
       setLoading(false);
       console.log('[Agora] Call initialization complete');
-      
+
       // Start status polling to detect remote call end (3-second interval)
       console.log('[Agora] Starting status polling...');
       statusPollingIntervalRef.current = setInterval(async () => {
@@ -223,19 +223,19 @@ export default function CallPage() {
               }
             }
           );
-          
+
           if (response.ok) {
             const data = await response.json();
             if (data.data?.status === 'ended') {
               console.log('[Agora] Remote call end detected via polling');
               clearInterval(statusPollingIntervalRef.current);
               statusPollingIntervalRef.current = null;
-              
+
               alert('The call has been ended by the other participant.');
-              
+
               // Cleanup and navigate
               await cleanup();
-              
+
               if (callData.trip?._id) {
                 router.push(`/my-trips/${callData.trip._id}`);
               } else {
@@ -247,7 +247,7 @@ export default function CallPage() {
           console.error('[Agora] Error checking call status:', e);
         }
       }, 3000);
-      
+
       // Connect to socket for trip status updates (fallback mechanism)
       if (callData.trip?._id && localStorage.getItem('access_token')) {
         const token = localStorage.getItem('access_token');
@@ -259,7 +259,7 @@ export default function CallPage() {
       }
     } catch (err) {
       console.error('[Agora] Failed to initialize call:', err);
-      
+
       // Extract meaningful error message
       let errorMessage = 'Failed to join call. Please check your camera and microphone permissions.';
       if (err.code === 'UID_CONFLICT') {
@@ -267,11 +267,11 @@ export default function CallPage() {
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
       setConnectionStatus('failed');
       setLoading(false);
-      
+
       // Reset guards on error to allow retry
       isInitializingRef.current = false;
       hasJoinedRef.current = false;
@@ -280,14 +280,14 @@ export default function CallPage() {
 
   const setupAgoraListeners = (client) => {
     console.log('[Agora] Setting up event listeners...');
-    
+
     // Remote user published media
     client.on('user-published', async (user, mediaType) => {
       console.log('[Agora] User published:', user.uid, mediaType);
       try {
         await client.subscribe(user, mediaType);
         console.log('[Agora] Subscribed to user:', user.uid, mediaType);
-        
+
         if (mediaType === 'video') {
           setRemoteUsers((prev) => {
             const exists = prev.find(u => u.uid === user.uid);
@@ -298,7 +298,7 @@ export default function CallPage() {
             console.log('[Agora] Adding user to list:', user.uid);
             return [...prev, user];
           });
-          
+
           // Play remote video with delay to ensure DOM is ready
           setTimeout(() => {
             const element = document.getElementById(`remote-player-${user.uid}`);
@@ -344,10 +344,10 @@ export default function CallPage() {
       if (isEndingCallRef.current) {
         return;
       }
-      
+
       // Filter out non-critical warnings (audio bitrate, network quality, etc.)
       const nonCriticalCodes = [2003, 2004, 2005]; // SEND_AUDIO_BITRATE_TOO_LOW, etc.
-      
+
       if (event?.code && nonCriticalCodes.includes(event.code)) {
         console.warn('Agora quality warning:', event.msg || event);
       } else if (event && Object.keys(event).length > 0) {
@@ -386,23 +386,23 @@ export default function CallPage() {
       const currentClient = clientRef.current;
       const audioTrack = localTracksRef.current.audio;
       const videoTrack = localTracksRef.current.video;
-      
+
       console.log('[Call] Starting end call process...');
-      
+
       // Step 1: Unpublish tracks from channel
       if (currentClient && (audioTrack || videoTrack)) {
         const tracks = [];
         if (audioTrack) tracks.push(audioTrack);
         if (videoTrack) tracks.push(videoTrack);
-        
+
         if (tracks.length > 0 && currentClient.connectionState !== 'DISCONNECTED') {
           console.log('[Call] Unpublishing tracks...');
-          await currentClient.unpublish(tracks).catch(err => 
+          await currentClient.unpublish(tracks).catch(err =>
             console.warn("Error unpublishing:", err)
           );
         }
       }
-      
+
       // Step 2: Stop and close tracks (release hardware)
       if (audioTrack) {
         console.log('[Call] Stopping audio track...');
@@ -414,13 +414,13 @@ export default function CallPage() {
         videoTrack.stop();
         videoTrack.close();
       }
-      
+
       // Step 3: Leave channel
       if (currentClient) {
         const state = currentClient.connectionState;
         if (state === 'CONNECTED' || state === 'CONNECTING' || state === 'RECONNECTING') {
           console.log('[Call] Leaving channel...');
-          await currentClient.leave().catch(err => 
+          await currentClient.leave().catch(err =>
             console.warn("Error leaving:", err)
           );
         }
@@ -461,28 +461,28 @@ export default function CallPage() {
   // Quick end call without modal (for emergency exit)
   const quickEndCall = async () => {
     if (!callId) return;
-    
+
     setEndingCall(true);
     try {
       const currentClient = clientRef.current;
       const audioTrack = localTracksRef.current.audio;
       const videoTrack = localTracksRef.current.video;
-      
+
       console.log('[Call] Quick ending call...');
-      
+
       // Unpublish tracks
       if (currentClient && (audioTrack || videoTrack)) {
         const tracks = [];
         if (audioTrack) tracks.push(audioTrack);
         if (videoTrack) tracks.push(videoTrack);
-        
+
         if (tracks.length > 0 && currentClient.connectionState !== 'DISCONNECTED') {
-          await currentClient.unpublish(tracks).catch(err => 
+          await currentClient.unpublish(tracks).catch(err =>
             console.warn("Error unpublishing:", err)
           );
         }
       }
-      
+
       // Stop and close tracks
       if (audioTrack) {
         audioTrack.stop();
@@ -492,12 +492,12 @@ export default function CallPage() {
         videoTrack.stop();
         videoTrack.close();
       }
-      
+
       // Leave channel
       if (currentClient) {
         const state = currentClient.connectionState;
         if (state === 'CONNECTED' || state === 'CONNECTING' || state === 'RECONNECTING') {
-          await currentClient.leave().catch(err => 
+          await currentClient.leave().catch(err =>
             console.warn("Error leaving:", err)
           );
         }
@@ -600,7 +600,7 @@ export default function CallPage() {
         } else {
           console.log('[Agora] Client already disconnected, skipping leave');
         }
-        
+
         // Remove all event listeners to prevent memory leaks
         console.log('[Agora] Removing event listeners...');
         clientRef.current.removeAllListeners();
@@ -613,7 +613,7 @@ export default function CallPage() {
         clearInterval(statusPollingIntervalRef.current);
         statusPollingIntervalRef.current = null;
       }
-      
+
       // Leave socket trip room
       if (tripInfo?._id) {
         console.log('[Socket] Leaving trip room:', tripInfo._id);
@@ -629,11 +629,11 @@ export default function CallPage() {
       setLocalVideoTrack(null);
       setRemoteUsers([]);
       setJoined(false);
-      
+
       // Reset guards
       isInitializingRef.current = false;
       hasJoinedRef.current = false;
-      
+
       console.log('[Agora] Cleanup complete');
     } catch (err) {
       console.warn('[Agora] Cleanup error (non-critical):', err.message);
@@ -754,7 +754,7 @@ export default function CallPage() {
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Call Summary (Optional)</h3>
-            
+
             <div className={styles.modalBody}>
               <p className={styles.infoText}>
                 You can add notes and pricing details, or skip to end immediately.
@@ -776,7 +776,7 @@ export default function CallPage() {
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>
-                  Negotiated Price (EGP)
+                  Negotiated Price ($)
                   <span className={styles.optional}>(Optional)</span>
                 </label>
                 <input

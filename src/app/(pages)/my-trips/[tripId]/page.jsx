@@ -180,9 +180,9 @@ export default function TripDetailsPage() {
           },
         }
       );
-      
+
       let guides = guidesResponse.data?.data || [];
-      
+
       // Extract unique provinces from trip itinerary
       const tripProvinces = new Set();
       if (tripData?.itinerary && Array.isArray(tripData.itinerary)) {
@@ -192,7 +192,7 @@ export default function TripDetailsPage() {
           }
         });
       }
-      
+
       // Filter guides by provinces if we have any
       if (tripProvinces.size > 0) {
         guides = guides.filter(guide => {
@@ -206,14 +206,14 @@ export default function TripDetailsPage() {
           return false;
         });
       }
-      
+
       // Apply language filter if selected
       if (guideFilters.language) {
-        guides = guides.filter(guide => 
+        guides = guides.filter(guide =>
           guide.languages?.includes(guideFilters.language)
         );
       }
-      
+
       return guides;
     },
     enabled: !!tripId && !!tripData && !tripGuide,
@@ -309,7 +309,7 @@ export default function TripDetailsPage() {
     onError: (err) => {
       const errorMsg = err.response?.data?.message || 'Failed to start call';
       console.error('Call initiation error:', err.response?.data);
-      
+
       // If trip is already in_call, try to get the existing call
       if (errorMsg.includes('in_call')) {
         alert('This trip already has an active call. Please refresh the page or check your call history.');
@@ -451,17 +451,17 @@ export default function TripDetailsPage() {
           gap: '8px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
         }}>
-          <span style={{ 
-            width: '8px', 
-            height: '8px', 
-            borderRadius: '50%', 
+          <span style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
             background: '#fff',
             animation: 'pulse 2s infinite'
           }}></span>
           Real-time updates active
         </div>
       )}
-      
+
       {/* Header */}
       <section className={styles.headerSection}>
         <div className="container">
@@ -556,7 +556,7 @@ export default function TripDetailsPage() {
               {!tripGuide && !trip.guideId && trip.status !== 'cancelled' && trip.status !== 'completed' && trip.status !== 'awaiting_call' && (
                 <div className={styles.guideSelectionSection}>
                   <h3 className={styles.sectionTitle}>Select a Guide</h3>
-                  
+
                   {/* Filters */}
                   <div className={styles.guideFilters}>
                     <div className={styles.filterGroup}>
@@ -578,7 +578,7 @@ export default function TripDetailsPage() {
                       </select>
                     </div>
                   </div>
-                  
+
                   {/* Province Info */}
                   {tripData?.itinerary && tripData.itinerary.length > 0 && (
                     <div className={styles.provinceInfo}>
@@ -611,8 +611,8 @@ export default function TripDetailsPage() {
                       <div className={styles.emptyIcon}>🔍</div>
                       <h3>No Guides Available</h3>
                       <p>
-                        {guideFilters.language 
-                          ? 'No guides found with the selected language filter. Try selecting "All Languages".' 
+                        {guideFilters.language
+                          ? 'No guides found with the selected language filter. Try selecting "All Languages".'
                           : 'No guides are available in the governorates where your trip destinations are located.'}
                       </p>
                       {tripData?.itinerary && tripData.itinerary.length === 0 && (
@@ -658,7 +658,7 @@ export default function TripDetailsPage() {
                             )}
                             {guide.pricePerHour && (
                               <div className={styles.detailItem}>
-                                <span>💰 EGP {guide.pricePerHour}/hour</span>
+                                <span>💰 $ {guide.pricePerHour}/hour</span>
                               </div>
                             )}
                             {(guide.provinces?.length > 0 || guide.province) && (
@@ -761,7 +761,7 @@ export default function TripDetailsPage() {
                     <>
                       <div className={styles.priceInfo}>
                         <span className={styles.priceLabel}>Negotiated Price:</span>
-                        <span className={styles.priceValue}>EGP {trip.negotiatedPrice}</span>
+                        <span className={styles.priceValue}>$ {trip.negotiatedPrice}</span>
                       </div>
                       <button
                         onClick={handlePayNow}
@@ -796,7 +796,7 @@ export default function TripDetailsPage() {
                         {trip.negotiatedPrice && (
                           <div className={styles.priceInfo}>
                             <span className={styles.priceLabel}>Amount Paid:</span>
-                            <span className={styles.priceValue}>EGP {trip.negotiatedPrice}</span>
+                            <span className={styles.priceValue}>$ {trip.negotiatedPrice}</span>
                           </div>
                         )}
                         <p className={styles.successNote}>
@@ -809,14 +809,14 @@ export default function TripDetailsPage() {
                   {['pending', 'awaiting_call', 'pending_confirmation'].includes(
                     trip.status
                   ) && (
-                    <button
-                      onClick={handleCancelTrip}
-                      disabled={cancelTripMutation.isPending}
-                      className={styles.cancelBtn}
-                    >
-                      {cancelTripMutation.isPending ? 'Cancelling...' : 'Cancel Trip'}
-                    </button>
-                  )}
+                      <button
+                        onClick={handleCancelTrip}
+                        disabled={cancelTripMutation.isPending}
+                        className={styles.cancelBtn}
+                      >
+                        {cancelTripMutation.isPending ? 'Cancelling...' : 'Cancel Trip'}
+                      </button>
+                    )}
 
                   {trip.status === 'completed' && !trip.review && (
                     <button

@@ -12,7 +12,7 @@ export default function PaymentSuccessPage() {
   const [verificationStatus, setVerificationStatus] = useState('verifying'); // 'verifying', 'success', 'failed', 'timeout'
   const [pollAttempts, setPollAttempts] = useState(0);
   const maxPollAttempts = 30; // 30 attempts * 2 seconds = 60 seconds max
-  
+
   const sessionId = searchParams.get('session_id');
   const tripId = searchParams.get('trip_id');
 
@@ -44,11 +44,11 @@ export default function PaymentSuccessPage() {
         console.warn('Max polling attempts reached. Webhook may not be configured.');
         return false;
       }
-      
+
       // Keep refetching if payment is still pending
       const trip = data?.trip || data;
       console.log('Current payment status:', trip?.paymentStatus, 'Trip status:', trip?.status);
-      
+
       if (trip?.paymentStatus === 'pending' || !trip?.paymentStatus) {
         setPollAttempts(prev => prev + 1);
         return 2000; // Poll every 2 seconds
@@ -78,7 +78,7 @@ export default function PaymentSuccessPage() {
         status: trip.status,
         pollAttempts
       });
-      
+
       if (trip.paymentStatus === 'paid' && trip.status === 'confirmed') {
         console.log('Payment verified successfully!');
         setVerificationStatus('success');
@@ -140,7 +140,7 @@ export default function PaymentSuccessPage() {
                 <span>Confirming with our servers... (Attempt {pollAttempts}/{maxPollAttempts})</span>
               </div>
             </div>
-            
+
             {pollAttempts > 15 && (
               <div style={{
                 marginTop: '24px',
@@ -194,10 +194,10 @@ export default function PaymentSuccessPage() {
               <p style={{ margin: '0 0 12px 0' }}>
                 Stripe CLI is working, but the backend endpoint doesn&apos;t exist:
               </p>
-              <code style={{ 
-                display: 'block', 
-                background: '#FFF', 
-                padding: '8px', 
+              <code style={{
+                display: 'block',
+                background: '#FFF',
+                padding: '8px',
                 borderRadius: '4px',
                 marginBottom: '12px',
                 fontSize: '0.85rem'
@@ -226,12 +226,12 @@ export default function PaymentSuccessPage() {
               <button onClick={handleBackToTrips} className={styles.secondaryBtn}>
                 Back to My Trips
               </button>
-              <button 
+              <button
                 onClick={() => {
                   setPollAttempts(0);
                   setVerificationStatus('verifying');
                   refetch();
-                }} 
+                }}
                 className={styles.secondaryBtn}
               >
                 🔄 Try Again
@@ -264,7 +264,7 @@ export default function PaymentSuccessPage() {
             <p className={styles.message}>
               Your trip has been confirmed. Get ready for an amazing experience!
             </p>
-            
+
             {trip && (
               <div className={styles.tripSummary}>
                 <h3 className={styles.summaryTitle}>Trip Details</h3>
@@ -282,7 +282,7 @@ export default function PaymentSuccessPage() {
                 {trip.negotiatedPrice && (
                   <div className={styles.summaryItem}>
                     <span className={styles.summaryLabel}>Amount Paid:</span>
-                    <span className={styles.summaryValue}>EGP {trip.negotiatedPrice}</span>
+                    <span className={styles.summaryValue}>$ {trip.negotiatedPrice}</span>
                   </div>
                 )}
                 {trip.guide?.name && (
@@ -333,8 +333,8 @@ export default function PaymentSuccessPage() {
           </div>
           <h1 className={styles.title}>Payment Verification Failed</h1>
           <p className={styles.message}>
-            {error?.message || 
-             'We couldn&apos;t verify your payment at this time. Please check your trip status or contact support.'}
+            {error?.message ||
+              'We couldn&apos;t verify your payment at this time. Please check your trip status or contact support.'}
           </p>
 
           <div className={styles.actionButtons}>

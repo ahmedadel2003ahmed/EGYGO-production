@@ -9,7 +9,7 @@ import styles from './PaymentCancel.module.css';
 export default function PaymentCancelPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const tripId = searchParams.get('trip_id');
 
   // Fetch trip details
@@ -53,9 +53,9 @@ export default function PaymentCancelPage() {
           <div className={styles.iconWrapper}>
             <span className={styles.cancelIcon}>⚠️</span>
           </div>
-          
+
           <h1 className={styles.title}>Payment Cancelled</h1>
-          
+
           <p className={styles.message}>
             Your payment was cancelled. No charges have been made to your account.
           </p>
@@ -73,7 +73,7 @@ export default function PaymentCancelPage() {
               <p className={styles.tripDescription}>
                 Your trip reservation is still active and waiting for payment.
               </p>
-              
+
               <div className={styles.tripDetails}>
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>📅 Date:</span>
@@ -86,14 +86,14 @@ export default function PaymentCancelPage() {
                     })}
                   </span>
                 </div>
-                
+
                 {trip.negotiatedPrice && (
                   <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>💰 Price:</span>
-                    <span className={styles.detailValue}>EGP {trip.negotiatedPrice}</span>
+                    <span className={styles.detailValue}>$ {trip.negotiatedPrice}</span>
                   </div>
                 )}
-                
+
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>⚡ Status:</span>
                   <span className={`${styles.detailValue} ${styles.statusBadge}`}>

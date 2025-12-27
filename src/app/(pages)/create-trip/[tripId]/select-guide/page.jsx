@@ -29,7 +29,7 @@ export default function SelectGuidePage() {
       router.push('/');
       return;
     }
-    
+
     if (!tripId || tripId === 'undefined') {
       console.error('Invalid tripId:', tripId);
       router.push('/my-trips');
@@ -105,7 +105,7 @@ export default function SelectGuidePage() {
     if (!tripData || !allGuidesData) return [];
 
     const tripProvinceId = tripData.provinceId || tripData.province?._id;
-    
+
     if (!tripProvinceId) {
       console.log('No provinceId found in trip:', tripData);
       return allGuidesData;
@@ -127,13 +127,13 @@ export default function SelectGuidePage() {
     let filtered = filteredByProvince;
 
     if (filters.language) {
-      filtered = filtered.filter(guide => 
+      filtered = filtered.filter(guide =>
         guide.languages?.includes(filters.language)
       );
     }
 
     if (filters.minRating > 0) {
-      filtered = filtered.filter(guide => 
+      filtered = filtered.filter(guide =>
         (guide.rating || 0) >= filters.minRating
       );
     }
@@ -340,102 +340,102 @@ export default function SelectGuidePage() {
                 {guides.map((guide) => {
                   // Check for different possible field names for profile picture
                   const profileImage = guide.profilePicture || guide.profileImage || guide.avatar || guide.image || guide.photo;
-                  
+
                   return (
-                  <div key={guide._id} className={styles.guideCard}>
-                    <div className={styles.guideHeader}>
-                      <div className={styles.guideAvatar}>
-                        {profileImage ? (
-                          <img
-                            src={profileImage}
-                            alt={guide.name}
-                            className={styles.avatarImg}
-                            onError={(e) => {
-                              console.log('Failed to load image:', profileImage);
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'flex';
-                            }}
-                          />
-                        ) : null}
-                        <div 
-                          className={styles.avatarPlaceholder}
-                          style={{ display: profileImage ? 'none' : 'flex' }}
+                    <div key={guide._id} className={styles.guideCard}>
+                      <div className={styles.guideHeader}>
+                        <div className={styles.guideAvatar}>
+                          {profileImage ? (
+                            <img
+                              src={profileImage}
+                              alt={guide.name}
+                              className={styles.avatarImg}
+                              onError={(e) => {
+                                console.log('Failed to load image:', profileImage);
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          <div
+                            className={styles.avatarPlaceholder}
+                            style={{ display: profileImage ? 'none' : 'flex' }}
+                          >
+                            {guide.name?.charAt(0) || '?'}
+                          </div>
+                        </div>
+                        <div className={styles.guideBasicInfo}>
+                          <h3 className={styles.guideName}>{guide.name}</h3>
+                          <div className={styles.guideRating}>
+                            ⭐ {guide.rating?.toFixed(1) || 'N/A'} ({guide.reviewCount || 0} reviews)
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className={styles.guideDetails}>
+                        {guide.distance && (
+                          <div className={styles.detailItem}>
+                            <span className={styles.detailIcon}>📍</span>
+                            <span>{guide.distance.toFixed(1)} km away</span>
+                          </div>
+                        )}
+
+                        {guide.languages && guide.languages.length > 0 && (
+                          <div className={styles.detailItem}>
+                            <span className={styles.detailIcon}>🗣️</span>
+                            <span>{guide.languages.join(', ')}</span>
+                          </div>
+                        )}
+
+                        {guide.experienceYears && (
+                          <div className={styles.detailItem}>
+                            <span className={styles.detailIcon}>🎓</span>
+                            <span>{guide.experienceYears} years experience</span>
+                          </div>
+                        )}
+
+                        {guide.pricePerHour && (
+                          <div className={styles.detailItem}>
+                            <span className={styles.detailIcon}>💰</span>
+                            <span>$ {guide.pricePerHour}/hour</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {guide.bio && (
+                        <p className={styles.guideBio}>{guide.bio}</p>
+                      )}
+
+                      {guide.specializations && guide.specializations.length > 0 && (
+                        <div className={styles.specializations}>
+                          {guide.specializations.map((spec, index) => (
+                            <span key={index} className={styles.specTag}>
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className={styles.cardActions}>
+                        <button
+                          onClick={() =>
+                            router.push(`/guides/${guide._id}`)
+                          }
+                          className={styles.viewProfileBtn}
                         >
-                          {guide.name?.charAt(0) || '?'}
-                        </div>
-                      </div>
-                      <div className={styles.guideBasicInfo}>
-                        <h3 className={styles.guideName}>{guide.name}</h3>
-                        <div className={styles.guideRating}>
-                          ⭐ {guide.rating?.toFixed(1) || 'N/A'} ({guide.reviewCount || 0} reviews)
-                        </div>
+                          View Profile
+                        </button>
+                        <button
+                          onClick={() => handleSelectGuide(guide._id)}
+                          disabled={selectGuideMutation.isPending}
+                          className={styles.selectBtn}
+                        >
+                          {selectGuideMutation.isPending
+                            ? 'Selecting...'
+                            : 'Select Guide'}
+                        </button>
                       </div>
                     </div>
-
-                    <div className={styles.guideDetails}>
-                      {guide.distance && (
-                        <div className={styles.detailItem}>
-                          <span className={styles.detailIcon}>📍</span>
-                          <span>{guide.distance.toFixed(1)} km away</span>
-                        </div>
-                      )}
-
-                      {guide.languages && guide.languages.length > 0 && (
-                        <div className={styles.detailItem}>
-                          <span className={styles.detailIcon}>🗣️</span>
-                          <span>{guide.languages.join(', ')}</span>
-                        </div>
-                      )}
-
-                      {guide.experienceYears && (
-                        <div className={styles.detailItem}>
-                          <span className={styles.detailIcon}>🎓</span>
-                          <span>{guide.experienceYears} years experience</span>
-                        </div>
-                      )}
-
-                      {guide.pricePerHour && (
-                        <div className={styles.detailItem}>
-                          <span className={styles.detailIcon}>💰</span>
-                          <span>EGP {guide.pricePerHour}/hour</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {guide.bio && (
-                      <p className={styles.guideBio}>{guide.bio}</p>
-                    )}
-
-                    {guide.specializations && guide.specializations.length > 0 && (
-                      <div className={styles.specializations}>
-                        {guide.specializations.map((spec, index) => (
-                          <span key={index} className={styles.specTag}>
-                            {spec}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className={styles.cardActions}>
-                      <button
-                        onClick={() =>
-                          router.push(`/guides/${guide._id}`)
-                        }
-                        className={styles.viewProfileBtn}
-                      >
-                        View Profile
-                      </button>
-                      <button
-                        onClick={() => handleSelectGuide(guide._id)}
-                        disabled={selectGuideMutation.isPending}
-                        className={styles.selectBtn}
-                      >
-                        {selectGuideMutation.isPending
-                          ? 'Selecting...'
-                          : 'Select Guide'}
-                      </button>
-                    </div>
-                  </div>
                   );
                 })}
               </div>

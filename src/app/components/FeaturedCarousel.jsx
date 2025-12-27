@@ -45,7 +45,7 @@ const FeaturedCarousel = () => {
                     image: Array.isArray(item.images) ? item.images[0] : (item.image || '/images/destination/placeholder.jpg'),
                     rating: item.rating || 4.5,
                     tag: 'Archaeological Site',
-                    price: item.ticketPrice ? `${item.ticketPrice} EGP` : 'Free'
+                    price: item.ticketPrice ? `${item.ticketPrice} $` : 'Free'
                 }));
 
                 setAttractions(topSites);

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import adminService from '@/services/adminService';
 import styles from './page.module.css';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaStar, FaGlobe, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaStar, FaGlobe, FaCheck, FaTimes, FaArrowLeft } from 'react-icons/fa';
 
 export default function GuideDetailsPage() {
     const params = useParams();
@@ -102,6 +102,12 @@ export default function GuideDetailsPage() {
         <div className={styles.container}>
             {/* Header */}
             <div className={styles.header}>
+                <button
+                    className="btn btn-link text-decoration-none p-0 mb-2 d-flex align-items-center text-muted"
+                    onClick={() => router.push('/admin/guides')}
+                >
+                    <FaArrowLeft className="me-2" /> Back to Guides
+                </button>
                 <h1 className={styles.title}>Guide Details</h1>
                 <div className={styles.breadcrumb}>
                     Guide Management / Pending Guides / {guideName}
@@ -192,7 +198,7 @@ export default function GuideDetailsPage() {
                                 <div className={styles.detailGroup}>
                                     <span className={styles.detailLabel}>Experience & Pricing:</span>
                                     <p className={styles.detailValue}>
-                                        Price per hour: {guide.pricePerHour ? `${guide.pricePerHour} EGP` : 'Not set'}
+                                        Price per hour: {guide.pricePerHour ? `${guide.pricePerHour} $` : 'Not set'}
                                     </p>
                                 </div>
 
@@ -228,29 +234,33 @@ export default function GuideDetailsPage() {
                                                 )}
                                             </div>
                                             <div className={styles.documentActions}>
-                                                {doc.status === 'pending' && (
+                                                {/* Only show actions if status is pending (or null/undefined) */}
+                                                {(!doc.status || doc.status === 'pending') && (
                                                     <>
                                                         <button
                                                             className="btn btn-sm btn-success me-2"
-                                                            onClick={() => handleVerifyDocument(doc._id, 'approved')}
+                                                            onClick={() => handleVerifyDocument(doc._id, 'approved', 'All documents are valid and verified. Approved for guide services.')}
                                                             disabled={verifyLoading}
+                                                            title="Approve"
                                                         >
-                                                            Approve
+                                                            <FaCheck />
                                                         </button>
                                                         <button
                                                             className="btn btn-sm btn-danger"
                                                             onClick={() => openRejectModal(doc._id)}
                                                             disabled={verifyLoading}
+                                                            title="Reject"
                                                         >
-                                                            Reject
+                                                            <FaTimes />
                                                         </button>
                                                     </>
                                                 )}
+
                                                 {doc.status === 'approved' && (
-                                                    <span className="text-success small">Approved</span>
+                                                    <span className="text-success small fw-bold">Approved</span>
                                                 )}
                                                 {doc.status === 'rejected' && (
-                                                    <span className="text-danger small">Rejected</span>
+                                                    <span className="text-danger small fw-bold">Rejected</span>
                                                 )}
                                             </div>
                                         </div>

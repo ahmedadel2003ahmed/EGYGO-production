@@ -204,7 +204,7 @@ export default function PlaceDetailPage() {
                       <div className={styles.fact}>
                         <span className={styles.factLabel}>🎫 Admission</span>
                         <span className={styles.factValue}>
-                          {place.ticketPrice ? `${place.ticketPrice} ${place.currency || 'EGP'}` : 'Free'}
+                          {place.ticketPrice ? `${place.ticketPrice} ${place.currency || '$'}` : 'Free'}
                         </span>
                       </div>
                       <div className={styles.fact}>
@@ -253,7 +253,7 @@ export default function PlaceDetailPage() {
                       <div className={styles.detailRow}>
                         <span className={styles.detailLabel}>Ticket Price</span>
                         <span className={styles.detailValue}>
-                          {place.ticketPrice} {place.currency || 'EGP'}
+                          {place.ticketPrice} {place.currency || '$'}
                         </span>
                       </div>
                     )}

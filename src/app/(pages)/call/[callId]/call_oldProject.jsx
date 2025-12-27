@@ -13,16 +13,16 @@ AgoraRTC.disableLogUpload();
 AgoraRTC.setLogLevel(3); // Only show errors
 
 export const CallPage = () => {
-    const { callId: paramCallId, tripId: paramTripId } = useParams<{ callId?: string; tripId?: string }>();
+    const { callId: paramCallId, tripId: paramTripId } = useParams < { callId?: string; tripId?: string } > ();
     const navigate = useNavigate();
     const location = useLocation();
 
     // State for call logic
-    const [activeCallId, setActiveCallId] = useState<string | null>(paramCallId || null);
+    const [activeCallId, setActiveCallId] = useState < string | null > (paramCallId || null);
     const [joined, setJoined] = useState(false);
-    const [localVideoTrack, setLocalVideoTrack] = useState<ICameraVideoTrack | null>(null);
-    const [localAudioTrack, setLocalAudioTrack] = useState<IMicrophoneAudioTrack | null>(null);
-    const [remoteUsers, setRemoteUsers] = useState<any[]>([]);
+    const [localVideoTrack, setLocalVideoTrack] = useState < ICameraVideoTrack | null > (null);
+    const [localAudioTrack, setLocalAudioTrack] = useState < IMicrophoneAudioTrack | null > (null);
+    const [remoteUsers, setRemoteUsers] = useState < any[] > ([]);
     const [micOn, setMicOn] = useState(true);
     const [cameraOn, setCameraOn] = useState(true);
     const [isInitiating, setIsInitiating] = useState(false);
@@ -35,11 +35,11 @@ export const CallPage = () => {
 
     // State for Chat
     const [showChat, setShowChat] = useState(false);
-    const [trip, setTrip] = useState<Trip | null>(null);
+    const [trip, setTrip] = useState < Trip | null > (null);
     const [chatAvailable, setChatAvailable] = useState(false);
 
-    const client = useRef<IAgoraRTCClient | null>(null);
-    const localTracksRef = useRef<{ audio: IMicrophoneAudioTrack | null; video: ICameraVideoTrack | null }>({ audio: null, video: null });
+    const client = useRef < IAgoraRTCClient | null > (null);
+    const localTracksRef = useRef < { audio: IMicrophoneAudioTrack | null; video: ICameraVideoTrack | null } > ({ audio: null, video: null });
     const hasJoinedRef = useRef(false);
 
     // Effect to fetch trip data and check chat availability
@@ -50,7 +50,7 @@ export const CallPage = () => {
                     const tripResponse = await tripService.getTrip(paramTripId);
                     if (tripResponse.success && tripResponse.data) {
                         setTrip(tripResponse.data);
-                        
+
                         // Check if chat should be available
                         const chatAllowedStates = [
                             'awaiting_call', 'in_call', 'pending_confirmation',
@@ -59,7 +59,7 @@ export const CallPage = () => {
                         const hasGuideSelected = !!(tripResponse.data.selectedGuide);
                         const statusAllowsChat = chatAllowedStates.includes(tripResponse.data.status);
                         const chatAvail = hasGuideSelected && statusAllowsChat;
-                        
+
                         console.log('[CallPage] Chat availability check:', {
                             tripId: tripResponse.data._id,
                             status: tripResponse.data.status,
@@ -67,7 +67,7 @@ export const CallPage = () => {
                             statusAllowsChat,
                             chatAvailable: chatAvail
                         });
-                        
+
                         setChatAvailable(chatAvail);
                     }
                 } catch (error) {
@@ -87,22 +87,22 @@ export const CallPage = () => {
                     console.log("CallPage: Initiating call for trip:", paramTripId);
                     const response = await tripService.initiateCall(paramTripId);
                     console.log("CallPage: Call initiated:", response);
-                    
+
                     setActiveCallId(response.callId);
                     // Update URL without reloading
                     window.history.replaceState(null, '', `/calls/${response.callId}?tripId=${paramTripId}`);
                 } catch (error: any) {
                     console.error("CallPage: Failed to initiate call:", error);
                     console.error("CallPage: Error response:", error?.response);
-                    
+
                     let errorMessage = "Failed to initiate call. Please try again.";
-                    
+
                     if (error?.response?.data?.message) {
                         errorMessage = error.response.data.message;
                     } else if (error?.message) {
                         errorMessage = error.message;
                     }
-                    
+
                     // Add specific error messages for common issues
                     if (error?.response?.status === 401) {
                         errorMessage = "Your session has expired. Please log in again.";
@@ -111,7 +111,7 @@ export const CallPage = () => {
                     } else if (error?.response?.status === 400) {
                         errorMessage = error?.response?.data?.message || "Cannot initiate call. Please check trip status.";
                     }
-                    
+
                     alert(errorMessage);
                     navigate(`/trips/${paramTripId}`);
                 } finally {
@@ -139,20 +139,20 @@ export const CallPage = () => {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     if (data.data?.status === 'ended' && mounted) {
                         console.log('Call has been ended, navigating away...');
                         if (statusCheckInterval) clearInterval(statusCheckInterval);
-                        
+
                         alert('The call has been ended by the other participant.');
-                        
+
                         // Cleanup
                         if (client.current) {
-                            await client.current.leave().catch(() => {});
+                            await client.current.leave().catch(() => { });
                         }
-                        
+
                         const tripId = paramTripId || new URLSearchParams(location.search).get('tripId');
                         if (tripId) navigate(`/trips/${tripId}`);
                         else navigate('/trips');
@@ -169,9 +169,9 @@ export const CallPage = () => {
                 console.log('[CallPage] Requesting join data for callId:', activeCallId);
                 const joinData = await callService.joinCall(activeCallId);
                 console.log('[CallPage] Received join data:', joinData);
-                
+
                 const { appId, channelName, uid, token } = (joinData as any).data || joinData;
-                
+
                 console.log('[CallPage] Extracted credentials:', {
                     appId: appId ? `${appId.substring(0, 8)}...` : 'missing',
                     channelName,
@@ -221,7 +221,7 @@ export const CallPage = () => {
                 // Handle connection state changes and errors
                 client.current.on('connection-state-change', (curState, prevState) => {
                     console.log(`Connection state changed from ${prevState} to ${curState}`);
-                    
+
                     if (curState === 'DISCONNECTED') {
                         console.warn('Connection disconnected');
                     } else if (curState === 'RECONNECTING') {
@@ -253,11 +253,11 @@ export const CallPage = () => {
                     const devices = await AgoraRTC.getDevices();
                     const hasMicrophone = devices.some(device => device.kind === 'audioinput');
                     const hasCamera = devices.some(device => device.kind === 'videoinput');
-                    
+
                     if (!hasMicrophone || !hasCamera) {
                         throw new Error(`Missing devices: ${!hasMicrophone ? 'microphone' : ''} ${!hasCamera ? 'camera' : ''}`);
                     }
-                    
+
                     const [audioTrack, videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks(
                         {
                             encoderConfig: {
@@ -285,7 +285,7 @@ export const CallPage = () => {
                         console.log('[CallPage] Publishing local audio and video tracks...');
                         await client.current.publish([audioTrack, videoTrack]);
                         console.log('[CallPage] Local tracks published successfully!');
-                        
+
                         // Start periodic status checking to detect if call was ended by other party
                         statusCheckInterval = setInterval(checkCallStatus, 3000); // Check every 3 seconds
                     } else {
@@ -294,33 +294,33 @@ export const CallPage = () => {
                     }
                 } catch (mediaError: any) {
                     console.error("Media device error:", mediaError);
-                    
+
                     // Specific error messages for device issues
                     let errorMessage = "Failed to access camera/microphone. ";
-                    
-                    if (mediaError.message?.includes("NotReadableError") || 
+
+                    if (mediaError.message?.includes("NotReadableError") ||
                         mediaError.message?.includes("Device in use")) {
                         errorMessage += "Your camera or microphone is already in use by another application or browser tab. Please:\n" +
-                                       "1. Close other applications using your camera/microphone\n" +
-                                       "2. Close other browser tabs that might be using the camera/microphone\n" +
-                                       "3. Refresh this page and try again";
-                    } else if (mediaError.message?.includes("NotAllowedError") || 
-                               mediaError.message?.includes("Permission denied")) {
+                            "1. Close other applications using your camera/microphone\n" +
+                            "2. Close other browser tabs that might be using the camera/microphone\n" +
+                            "3. Refresh this page and try again";
+                    } else if (mediaError.message?.includes("NotAllowedError") ||
+                        mediaError.message?.includes("Permission denied")) {
                         errorMessage += "Please allow camera and microphone permissions in your browser settings and refresh the page.";
-                    } else if (mediaError.message?.includes("NotFoundError") || 
-                               mediaError.message?.includes("Missing devices")) {
+                    } else if (mediaError.message?.includes("NotFoundError") ||
+                        mediaError.message?.includes("Missing devices")) {
                         errorMessage += "No camera or microphone found. Please connect a camera and microphone to your device.";
                     } else {
                         errorMessage += mediaError.message || "Unknown error occurred.";
                     }
-                    
+
                     alert(errorMessage);
-                    
+
                     // Leave the channel if already joined
                     if (client.current) {
                         await client.current.leave();
                     }
-                    
+
                     const tripId = paramTripId || new URLSearchParams(location.search).get('tripId');
                     if (tripId) navigate(`/trips/${tripId}`);
                     else navigate('/trips');
@@ -330,12 +330,12 @@ export const CallPage = () => {
             } catch (error: any) {
                 isJoining = false;
                 console.error("Error joining call:", error);
-                
+
                 // Don't show error if component was unmounted
                 if (!mounted) return;
-                
+
                 let errorMessage = "Error joining call. ";
-                
+
                 // Handle specific Agora errors
                 if (error.code === 'INVALID_PARAMS') {
                     errorMessage += "Invalid call parameters. Please try again.";
@@ -350,9 +350,9 @@ export const CallPage = () => {
                 } else {
                     errorMessage += "Please try again.";
                 }
-                
+
                 alert(errorMessage);
-                
+
                 // Try to go back to trip details if possible
                 const tripId = paramTripId || new URLSearchParams(location.search).get('tripId');
                 if (tripId) navigate(`/trips/${tripId}`);
@@ -364,13 +364,13 @@ export const CallPage = () => {
 
         return () => {
             mounted = false;
-            
+
             // Clear status check interval
             if (statusCheckInterval) {
                 clearInterval(statusCheckInterval);
                 statusCheckInterval = null;
             }
-            
+
             // Cleanup function to be called asynchronously
             const cleanup = async () => {
                 try {
@@ -379,24 +379,24 @@ export const CallPage = () => {
                         console.log("Waiting for join to complete before cleanup...");
                         await new Promise(resolve => setTimeout(resolve, 500));
                     }
-                    
+
                     const currentClient = client.current;
                     const audioTrack = localTracksRef.current.audio;
                     const videoTrack = localTracksRef.current.video;
-                    
+
                     // First, unpublish tracks if they exist
                     if (currentClient && (audioTrack || videoTrack)) {
                         const tracks = [];
                         if (audioTrack) tracks.push(audioTrack);
                         if (videoTrack) tracks.push(videoTrack);
-                        
+
                         if (tracks.length > 0 && currentClient.connectionState !== 'DISCONNECTED') {
-                            await currentClient.unpublish(tracks).catch(err => 
+                            await currentClient.unpublish(tracks).catch(err =>
                                 console.warn("Error unpublishing tracks:", err)
                             );
                         }
                     }
-                    
+
                     // Stop and close media tracks
                     if (audioTrack) {
                         audioTrack.stop();
@@ -406,7 +406,7 @@ export const CallPage = () => {
                         videoTrack.stop();
                         videoTrack.close();
                     }
-                    
+
                     // Leave the channel if connected - but only if we actually joined
                     if (currentClient && hasJoinedRef.current) {
                         const state = currentClient.connectionState;
@@ -418,12 +418,12 @@ export const CallPage = () => {
                                 }
                             });
                         }
-                        
+
                         // Remove all listeners and cleanup client
                         currentClient.removeAllListeners();
                         client.current = null;
                     }
-                    
+
                     // Clear refs
                     localTracksRef.current = { audio: null, video: null };
                     hasJoinedRef.current = false;
@@ -434,7 +434,7 @@ export const CallPage = () => {
                     }
                 }
             };
-            
+
             cleanup();
         };
     }, [activeCallId, paramTripId, navigate, location.search]);
@@ -483,20 +483,20 @@ export const CallPage = () => {
             const currentClient = client.current;
             const audioTrack = localTracksRef.current.audio;
             const videoTrack = localTracksRef.current.video;
-            
+
             // Properly cleanup: unpublish, close tracks, then leave
             if (currentClient && (audioTrack || videoTrack)) {
                 const tracks = [];
                 if (audioTrack) tracks.push(audioTrack);
                 if (videoTrack) tracks.push(videoTrack);
-                
+
                 if (tracks.length > 0 && currentClient.connectionState !== 'DISCONNECTED') {
-                    await currentClient.unpublish(tracks).catch(err => 
+                    await currentClient.unpublish(tracks).catch(err =>
                         console.warn("Error unpublishing:", err)
                     );
                 }
             }
-            
+
             // Stop and close tracks
             if (audioTrack) {
                 audioTrack.stop();
@@ -506,12 +506,12 @@ export const CallPage = () => {
                 videoTrack.stop();
                 videoTrack.close();
             }
-            
+
             // Leave channel if still connected
             if (currentClient) {
                 const state = currentClient.connectionState;
                 if (state === 'CONNECTED' || state === 'CONNECTING' || state === 'RECONNECTING') {
-                    await currentClient.leave().catch(err => 
+                    await currentClient.leave().catch(err =>
                         console.warn("Error leaving:", err)
                     );
                 }
@@ -557,7 +557,7 @@ export const CallPage = () => {
                     <div><strong>Remote Users:</strong> {remoteUsers.length}</div>
                 </div>
             )}
-            
+
             <div className="flex-1 relative">
                 {/* Remote Videos Grid */}
                 <div className="absolute inset-0 flex flex-wrap items-center justify-center p-4 gap-4">
@@ -590,8 +590,8 @@ export const CallPage = () => {
                     {cameraOn ? <Video /> : <VideoOff />}
                 </button>
                 {chatAvailable && (
-                    <button 
-                        onClick={() => setShowChat(true)} 
+                    <button
+                        onClick={() => setShowChat(true)}
                         className="p-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white transition-colors"
                         title="Open Chat"
                     >
@@ -602,10 +602,10 @@ export const CallPage = () => {
 
             {/* Trip Chat */}
             {chatAvailable && trip && (
-                <TripChat 
-                    trip={trip} 
-                    isOpen={showChat} 
-                    onClose={() => setShowChat(false)} 
+                <TripChat
+                    trip={trip}
+                    isOpen={showChat}
+                    onClose={() => setShowChat(false)}
                 />
             )}
 
@@ -634,7 +634,7 @@ export const CallPage = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Agreed Price (EGP)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Agreed Price ($)</label>
                                 <input
                                     type="number"
                                     value={negotiatedPrice}

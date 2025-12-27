@@ -131,7 +131,7 @@ export default function GovernorateDetailsPage() {
                       {item.ticketPrice && (
                         <div className={styles.placeDetail}>
                           <span className={styles.detailIcon}>💰</span>
-                          <span className={styles.detailText}>{item.ticketPrice} EGP</span>
+                          <span className={styles.detailText}>{item.ticketPrice} $</span>
                         </div>
                       )}
                     </div>

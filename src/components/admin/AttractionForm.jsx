@@ -21,7 +21,7 @@ export default function AttractionForm({ initialValues, onSubmit, isEditing }) {
             entryFee: {
                 adult: 0,
                 child: 0,
-                currency: 'EGP'
+                currency: 'USD'
             }
         },
         validationSchema: Yup.object({
