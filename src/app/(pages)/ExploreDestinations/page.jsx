@@ -2,11 +2,10 @@
 "use client";
 
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import axios from 'axios'; // Using axios as requested
 import Link from 'next/link';
 import Image from 'next/image';
-import GlobalLoader from '@/components/common/GlobalLoader';
 import styles from './ExploreDestinations.module.css';
 
 // --- MOCK DATA ---
@@ -121,8 +120,10 @@ const normalizeImagePath = (img = "") => {
 // fetchDestinations implementation
 //
 const fetchDestinations = async () => {
+  console.time("fetchDestinations");
   try {
     const response = await axios.get('/api/provinces/giza/places?type=archaeological');
+    console.timeEnd("fetchDestinations");
 
     if (response.data?.success && Array.isArray(response.data?.data?.places)) {
       // Transform the API data to match the component's expected format
@@ -139,6 +140,7 @@ const fetchDestinations = async () => {
 
     return MOCK_DESTINATIONS;
   } catch (err) {
+    console.timeEnd("fetchDestinations");
     console.warn("Could not load places from API — using fallback MOCK.", err.message || err);
     return MOCK_DESTINATIONS;
   }
@@ -192,8 +194,10 @@ const getPlaceholderImage = (name = '') => {
 
 const fetchGovernorates = async () => {
   const endpoint = '/api/provinces';
+  console.time("fetchGovernorates");
   try {
     const response = await axios.get(endpoint);
+    console.timeEnd("fetchGovernorates");
 
     if (response.data?.success && Array.isArray(response.data?.data)) {
       // Transform the API data to match the component's expected format
@@ -211,6 +215,7 @@ const fetchGovernorates = async () => {
 
     return MOCK_GOVERNORATES;
   } catch (error) {
+    console.timeEnd("fetchGovernorates");
     console.warn("API endpoint not available, using mock data:", error.message);
     return MOCK_GOVERNORATES;
   }
@@ -245,15 +250,6 @@ const getProvinceColorClass = (name) => {
 };
 
 // --- Helper Components ---
-
-/**
- * A simple error message.
- */
-const ErrorMessage = ({ message }) => (
-  <div className="alert alert-danger" role="alert">
-    {message || 'An error occurred while fetching data.'}
-  </div>
-);
 
 /**
  * Renders a single destination card with skeleton loading.
@@ -342,22 +338,19 @@ export default function ExploreDestinations() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [destinationSearchQuery, setDestinationSearchQuery] = React.useState('');
 
-  const {
-    data: destinationsData,
-    isLoading: isLoadingDestinations,
-    isError: isErrorDestinations,
-  } = useQuery({
+  // Use Suspense Query to ensure loading state triggers 'loading.tsx' in Next.js
+  const { data: destinationsData } = useSuspenseQuery({
     queryKey: ['destinations'],
     queryFn: fetchDestinations,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 
-  const {
-    data: governoratesData,
-    isLoading: isLoadingGovernorates,
-    isError: isErrorGovernorates,
-  } = useQuery({
+  const { data: governoratesData } = useSuspenseQuery({
     queryKey: ['governorates'],
     queryFn: fetchGovernorates,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 
   // Since fetch functions now handle fallbacks internally,
@@ -397,14 +390,12 @@ export default function ExploreDestinations() {
     ? filteredGovernorates
     : filteredGovernorates.slice(0, 6);
 
-  const isLoading = isLoadingDestinations || isLoadingGovernorates;
   const hasMoreGovernorates = filteredGovernorates.length > 6;
   const hasMoreDestinations = filteredDestinations.length > 6;
 
   return (
     <>
-      {/* Professional Global Loader */}
-      <GlobalLoader isLoading={isLoading} />
+      {/* Visual Loader is now handled by Next.js Suspense boundary (loading.tsx) */}
 
       {/* Page Background Wrapper */}
       <div
@@ -474,40 +465,36 @@ export default function ExploreDestinations() {
               </p>
             )}
 
-            {!isLoading && (
+            {filteredDestinations.length > 0 ? (
               <>
-                {filteredDestinations.length > 0 ? (
-                  <>
-                    <div className="row g-4">
-                      {destinations.map((dest) => (
-                        <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
-                          <DestinationCard {...dest} />
-                        </div>
-                      ))}
+                <div className="row g-4">
+                  {destinations.map((dest) => (
+                    <div className="col-lg-4 col-md-6 mb-4" key={dest.slug}>
+                      <DestinationCard {...dest} />
                     </div>
+                  ))}
+                </div>
 
-                    {/* Show More Button for Destinations */}
-                    {hasMoreDestinations && (
-                      <div className="text-center mt-4">
-                        <button
-                          onClick={() => setShowAllDestinations(!showAllDestinations)}
-                          className={`btn btn-lg ${styles.seeMoreBtn}`}
-                        >
-                          {showAllDestinations ? 'Show Less' : 'See More Destinations'}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className={styles.noResults}>
-                    <div className={styles.noResultsIcon}>🔍</div>
-                    <h3 className={styles.noResultsTitle}>No destinations found</h3>
-                    <p className={styles.noResultsText}>
-                      Try adjusting your search terms or <button onClick={() => setDestinationSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
-                    </p>
+                {/* Show More Button for Destinations */}
+                {hasMoreDestinations && (
+                  <div className="text-center mt-4">
+                    <button
+                      onClick={() => setShowAllDestinations(!showAllDestinations)}
+                      className={`btn btn-lg ${styles.seeMoreBtn}`}
+                    >
+                      {showAllDestinations ? 'Show Less' : 'See More Destinations'}
+                    </button>
                   </div>
                 )}
               </>
+            ) : (
+              <div className={styles.noResults}>
+                <div className={styles.noResultsIcon}>🔍</div>
+                <h3 className={styles.noResultsTitle}>No destinations found</h3>
+                <p className={styles.noResultsText}>
+                  Try adjusting your search terms or <button onClick={() => setDestinationSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
+                </p>
+              </div>
             )}
           </section>
 
@@ -549,40 +536,36 @@ export default function ExploreDestinations() {
               </p>
             )}
 
-            {!isLoading && (
+            {governorates.length > 0 ? (
               <>
-                {governorates.length > 0 ? (
-                  <>
-                    <div className="row g-4">
-                      {governorates.map((gov) => (
-                        <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
-                          <GovernorateTile {...gov} />
-                        </div>
-                      ))}
+                <div className="row g-4">
+                  {governorates.map((gov) => (
+                    <div className="col-lg-4 col-md-6 mb-4" key={gov.name}>
+                      <GovernorateTile {...gov} />
                     </div>
+                  ))}
+                </div>
 
-                    {/* Show More Button */}
-                    {hasMoreGovernorates && (
-                      <div className="text-center mt-4">
-                        <button
-                          onClick={() => setShowAllGovernorates(!showAllGovernorates)}
-                          className={`btn btn-lg ${styles.seeMoreBtn}`}
-                        >
-                          {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className={styles.noResults}>
-                    <div className={styles.noResultsIcon}>🔍</div>
-                    <h3 className={styles.noResultsTitle}>No governorates found</h3>
-                    <p className={styles.noResultsText}>
-                      Try adjusting your search terms or <button onClick={() => setSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
-                    </p>
+                {/* Show More Button */}
+                {hasMoreGovernorates && (
+                  <div className="text-center mt-4">
+                    <button
+                      onClick={() => setShowAllGovernorates(!showAllGovernorates)}
+                      className={`btn btn-lg ${styles.seeMoreBtn}`}
+                    >
+                      {showAllGovernorates ? 'Show Less' : 'See More Governorates'}
+                    </button>
                   </div>
                 )}
               </>
+            ) : (
+              <div className={styles.noResults}>
+                <div className={styles.noResultsIcon}>🔍</div>
+                <h3 className={styles.noResultsTitle}>No governorates found</h3>
+                <p className={styles.noResultsText}>
+                  Try adjusting your search terms or <button onClick={() => setSearchQuery('')} className={styles.clearSearchLink}>clear search</button>
+                </p>
+              </div>
             )}
           </section>
         </div>
@@ -590,19 +573,3 @@ export default function ExploreDestinations() {
     </>
   );
 }
-
-/*
- * COPILOT CHANGES SUMMARY:
- * - Modified fetchDestinations() to read from /data/destinations.json
- * - Added makeSlug() helper for URL-friendly slug generation
- * - Added normalizeImagePath() helper for image path handling
- * - Updated Link href from /guides/ to /destinations/
- * - Removed queryKeyHash properties from useQuery calls
- * - Added data source comment at top of file
- *
- * MANUAL VERIFICATION CHECKLIST:
- * □ Page loads without console errors
- * □ Cards render with image, title, subtitle
- * □ Clicking a card navigates to /destinations/{slug}
- * □ If JSON missing or invalid, MOCK_DESTINATIONS renders
- */

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import styles from './MyTrips.module.css';
 import TripModal from '@/components/trip/TripModal';
@@ -41,19 +41,17 @@ export default function MyTripsPage() {
   };
 
   // Fetch user's trips (only if authenticated)
-  const {
-    data: trips = [],
-    isLoading,
-    error,
-  } = useQuery({
+  // Replaced useQuery with useSuspenseQuery to trigger Global Loading State
+  const { data: trips } = useSuspenseQuery({
     queryKey: ['my-trips'],
     queryFn: async () => {
+      console.time('fetchMyTrips');
       const token = localStorage.getItem('access_token');
       if (!token) {
-        // Return empty array if not authenticated instead of redirecting
+        console.timeEnd('fetchMyTrips');
         return [];
       }
-      
+
       try {
         const response = await axios.get(
           '/api/tourist/trips',
@@ -65,19 +63,16 @@ export default function MyTripsPage() {
         );
         const tripsData = response.data?.data || [];
         console.log('Trips data:', tripsData);
-        if (tripsData.length > 0) {
-          console.log('First trip province data:', {
-            province: tripsData[0].province,
-            provinceId: tripsData[0].provinceId,
-            provinces: tripsData[0].provinces
-          });
-        }
+        console.timeEnd('fetchMyTrips');
         return tripsData;
       } catch (error) {
+        console.timeEnd('fetchMyTrips');
         console.error('Failed to fetch trips:', error);
-        return [];
+        throw error; // Throw error to trigger error boundary
       }
     },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   // Monitor socket connection status
@@ -134,7 +129,7 @@ export default function MyTripsPage() {
     return () => {
       console.log('[MyTrips] Cleaning up socket listeners');
       socketTripService.offTripStatusUpdate(handleTripStatusUpdate);
-      
+
       // Leave all trip rooms
       trips.forEach((trip) => {
         socketTripService.leaveTripRoom(trip._id);
@@ -221,10 +216,10 @@ export default function MyTripsPage() {
             gap: '8px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
           }}>
-            <span style={{ 
-              width: '8px', 
-              height: '8px', 
-              borderRadius: '50%', 
+            <span style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
               background: '#fff',
               animation: 'pulse 2s infinite'
             }}></span>
@@ -279,21 +274,9 @@ export default function MyTripsPage() {
         {/* Content */}
         <section className={styles.contentSection}>
           <div className="container">
-            {isLoading && (
-              <div className={styles.loadingState}>
-                <div className={styles.spinner}></div>
-                <p>Loading your trips...</p>
-              </div>
-            )}
+            {/* Suspense handles loading state now, so we remove the explicit isLoading check */}
 
-            {error && (
-              <div className={styles.errorState}>
-                <div className={styles.errorIcon}>⚠️</div>
-                <p>Failed to load trips. Please try again.</p>
-              </div>
-            )}
-
-            {!isLoading && !error && filteredTrips.length === 0 && (
+            {filteredTrips.length === 0 && (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIcon}>
                   {activeTab === 'all' ? '✈️' : '🔍'}
@@ -325,7 +308,7 @@ export default function MyTripsPage() {
               </div>
             )}
 
-            {!isLoading && !error && filteredTrips.length > 0 && (
+            {filteredTrips.length > 0 && (
               <div className={styles.tripsGrid}>
                 {filteredTrips.map((trip) => (
                   <div key={trip._id} className={styles.tripCard}>

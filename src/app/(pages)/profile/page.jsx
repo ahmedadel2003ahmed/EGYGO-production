@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 import styles from './Profile.module.css';
@@ -19,47 +19,62 @@ export default function ProfilePage() {
   const auth = useAuth();
 
   // Fetch user profile (only if authenticated)
-  const {
-    data: userData,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
+  // Switched to useSuspenseQuery for immediate loading feedback via global loading.tsx
+  const { data: userData, refetch } = useSuspenseQuery({
     queryKey: ['user-profile'],
     queryFn: async () => {
+      console.time('fetchUserProfile');
+      if (typeof window === 'undefined') {
+        console.timeEnd('fetchUserProfile');
+        return null; // SSR safety
+      }
+
       const token = localStorage.getItem('access_token');
       if (!token) {
+        console.timeEnd('fetchUserProfile');
         return null;
       }
-      const response = await axios.get(
-        'http://localhost:5000/api/auth/me',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data?.data;
-    },
-    onSuccess: (data) => {
-      if (data) {
-        setEditedData({
-          name: data?.name || '',
-          phone: data?.phone || '',
-        });
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/api/auth/me',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.timeEnd('fetchUserProfile');
+        return response.data?.data;
+      } catch (err) {
+        console.timeEnd('fetchUserProfile');
+        console.error('Failed to fetch profile:', err);
+        return null; // Return null on error to trigger safe fallback UI
       }
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
   });
+
+  // Sync editedData with fetched userData
+  useEffect(() => {
+    if (userData) {
+      setEditedData({
+        name: userData.name || '',
+        phone: userData.phone || '',
+      });
+    }
+  }, [userData]);
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       auth?.logout?.();
-      router.push('/'); // Redirect to home page, not login
+      router.push('/'); // Redirect to home page
     }
   };
 
   const handleEditToggle = () => {
     if (isEditing) {
+      // Revert changes if cancelling
       setEditedData({
         name: userData?.name || '',
         phone: userData?.phone || '',
@@ -91,6 +106,7 @@ export default function ProfilePage() {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -110,23 +126,14 @@ export default function ProfilePage() {
       .slice(0, 2);
   };
 
-  if (isLoading) {
-    return (
-      <div className={styles.loadingWrapper}>
-        <div className={styles.spinner}></div>
-        <p>Loading profile...</p>
-      </div>
-    );
-  }
-
   if (!auth?.token || !userData) {
     return (
       <div className={styles.errorWrapper}>
         <div className={styles.errorIcon}>🔒</div>
         <h2>Authentication Required</h2>
         <p>Please log in to view your profile</p>
-        <button 
-          onClick={() => auth?.requireAuth?.(() => {})} 
+        <button
+          onClick={() => auth?.requireAuth?.(() => { })}
           className={styles.backBtn}
         >
           Login
@@ -209,9 +216,10 @@ export default function ProfilePage() {
                     <span className={styles.statValue}>
                       {userData?.lastLogin
                         ? new Date(userData.lastLogin).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                          })
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })
                         : 'N/A'}
                     </span>
                   </div>
@@ -348,7 +356,7 @@ export default function ProfilePage() {
                   <span className={styles.actionDesc}>View all your trips</span>
                 </div>
               </button>
-              <button 
+              <button
                 className={styles.actionBtn}
                 onClick={() => setIsChangePasswordOpen(true)}
               >

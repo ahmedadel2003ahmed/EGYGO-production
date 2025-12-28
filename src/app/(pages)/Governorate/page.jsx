@@ -13,11 +13,12 @@ export default async function Governorate() {
   // ✅ SSR: Fetch guides from API
   let guides = [];
 
+  console.time('fetchGovernorateGuides');
   try {
     const response = await fetch('http://localhost:5000/api/tourist/guides', {
       cache: 'no-store', // Always fetch fresh data
     });
-    
+
     if (response.ok) {
       const data = await response.json();
       guides = data.data || [];
@@ -28,6 +29,7 @@ export default async function Governorate() {
     console.error("❌ Error fetching guides:", err);
     guides = [];
   }
+  console.timeEnd('fetchGovernorateGuides');
 
   return (
     <div className={styles.pageContainer}>

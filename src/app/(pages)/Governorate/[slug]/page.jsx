@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
-import GlobalLoader from '@/components/common/GlobalLoader';
 import styles from './GovernorateDetails.module.css';
 
 // Category types
@@ -43,8 +42,16 @@ const CATEGORIES = [
 
 // Fetch governorate data from API
 const fetchGovernorateData = async (slug) => {
-  const response = await axios.get(`/api/provinces/${slug}`);
-  return response.data;
+  console.time(`fetchGovernorate:${slug}`);
+  try {
+    const response = await axios.get(`/api/provinces/${slug}`);
+    console.timeEnd(`fetchGovernorate:${slug}`);
+    return response.data;
+  } catch (error) {
+    console.timeEnd(`fetchGovernorate:${slug}`);
+    console.error("Fetch error:", error);
+    throw error;
+  }
 };
 
 export default function GovernorateDetailsPage() {
@@ -52,11 +59,12 @@ export default function GovernorateDetailsPage() {
   const slug = params?.slug;
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Fetch data using React Query
-  const { data, isLoading, isError, error } = useQuery({
+  // Fetch data using React Query - useSuspenseQuery to trigger GlobalLoader via suspense
+  const { data } = useSuspenseQuery({
     queryKey: ['governorate', slug],
     queryFn: () => fetchGovernorateData(slug),
-    enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   const province = data?.data?.province;
@@ -171,24 +179,6 @@ export default function GovernorateDetailsPage() {
     );
   };
 
-  if (isLoading) {
-    return <GlobalLoader isLoading={true} />;
-  }
-
-  if (isError) {
-    return (
-      <div className={styles.errorContainer}>
-        <div className="container text-center">
-          <h2>❌ Error Loading Data</h2>
-          <p>{error?.message || 'Failed to load governorate data'}</p>
-          <Link href="/ExploreDestinations" className={styles.backButton}>
-            ← Back to All Governorates
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   if (!province) {
     return (
       <div className={styles.errorContainer}>
@@ -204,7 +194,7 @@ export default function GovernorateDetailsPage() {
 
   return (
     <div className={styles.pageWrapper}>
-      <GlobalLoader isLoading={isLoading} />
+      {/* Visual Loader is now handled by Next.js Suspense boundary (loading.tsx) */}
 
       {/* Hero Section with province cover image */}
       <section

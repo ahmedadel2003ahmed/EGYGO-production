@@ -7,7 +7,9 @@ export default function AboutUs() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    console.time('AboutUs:Render');
     setIsVisible(true);
+    console.timeEnd('AboutUs:Render');
   }, []);
 
   const teamMembers = [

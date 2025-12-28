@@ -226,12 +226,12 @@ export default function AIChatWidget() {
                             <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     ) : (
-                        <div style={{ width: '35px', height: '35px', position: 'relative' }}>
+                        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                             <Image
                                 src="/images/chatbot_icon.png"
                                 alt="Chat"
                                 fill
-                                style={{ objectFit: 'contain' }}
+                                style={{ objectFit: 'cover' }}
                             />
                         </div>
                     )}

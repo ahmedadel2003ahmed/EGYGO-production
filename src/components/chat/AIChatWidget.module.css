@@ -1,10 +1,10 @@
 /* Component Container */
 .container {
   position: fixed;
-  bottom: 180px;
+  bottom: 160px;
   right: 30px;
   width: 380px;
-  height: 600px;
+  height: 490px;
   z-index: 10000;
   display: flex;
   flex-direction: column;
@@ -215,14 +215,14 @@
 /* Floating Button (positioned relative to screen, handles toggle) */
 .floatingBtnWrapper {
   position: fixed;
-  bottom: 110px;
+  bottom: 100px;
   right: 30px;
   z-index: 10001;
 }
 
 .floatingBtn {
-  width: 65px;
-  height: 65px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: #ef4444; /* Red close button when open? No, prompt says 'click circle floating btn' */
   /* Using red if open to match screenshot X button style if that's what it is. */
