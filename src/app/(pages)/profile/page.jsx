@@ -36,7 +36,7 @@ export default function ProfilePage() {
       }
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/auth/me',
+          '/api/auth/me',
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -87,7 +87,7 @@ export default function ProfilePage() {
     try {
       const token = localStorage.getItem('access_token');
       await axios.put(
-        'http://localhost:5000/api/auth/me',
+        '/api/auth/me',
         editedData,
         {
           headers: {

@@ -53,7 +53,7 @@ export default function SelectGuidePage() {
     queryKey: ['trip', tripId],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/api/tourist/trips/${tripId}`,
+        `/api/tourist/trips/${tripId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -74,7 +74,7 @@ export default function SelectGuidePage() {
     queryKey: ['all-guides'],
     queryFn: async () => {
       const response = await axios.get(
-        'http://localhost:5000/api/tourist/guides',
+        '/api/tourist/guides',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -155,7 +155,7 @@ export default function SelectGuidePage() {
   const selectGuideMutation = useMutation({
     mutationFn: async (guideId) => {
       const response = await axios.post(
-        `http://localhost:5000/api/tourist/trips/${tripId}/select-guide`,
+        `/api/tourist/trips/${tripId}/select-guide`,
         { guideId },
         {
           headers: {

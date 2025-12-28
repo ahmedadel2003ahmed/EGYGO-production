@@ -15,7 +15,8 @@ export default async function Governorate() {
 
   console.time('fetchGovernorateGuides');
   try {
-    const response = await fetch('http://localhost:5000/api/tourist/guides', {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
+    const response = await fetch(`${baseUrl}/api/tourist/guides`, {
       cache: 'no-store', // Always fetch fresh data
     });
 

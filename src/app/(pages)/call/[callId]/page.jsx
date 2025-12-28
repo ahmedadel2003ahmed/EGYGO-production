@@ -74,7 +74,7 @@ export default function CallPage() {
       console.log('[Agora] Fetching call credentials...');
       // Fetch call credentials from backend
       const response = await axios.get(
-        `http://localhost:5000/api/calls/${callId}/join`,
+        `/api/calls/${callId}/join`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -216,7 +216,7 @@ export default function CallPage() {
       statusPollingIntervalRef.current = setInterval(async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/calls/${callId}`,
+            `/api/calls/${callId}`,
             {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -429,7 +429,7 @@ export default function CallPage() {
       // Step 4: Call backend to end session
       console.log('[Call] Calling backend to end call...');
       await axios.post(
-        `http://localhost:5000/api/calls/${callId}/end`,
+        `/api/calls/${callId}/end`,
         {
           endReason: 'completed',
           summary: summary.trim() || undefined,
@@ -505,7 +505,7 @@ export default function CallPage() {
 
       // Call backend
       await axios.post(
-        `http://localhost:5000/api/calls/${callId}/end`,
+        `/api/calls/${callId}/end`,
         {
           endReason: 'completed',
         },

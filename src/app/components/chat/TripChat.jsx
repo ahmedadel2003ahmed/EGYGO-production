@@ -64,7 +64,7 @@ export default function TripChat({ tripId, guideName, onClose, isOpen, embedded 
         }
 
         if (!socketChatService.isConnected()) {
-          setError("Chat server is not available. Please ensure the backend Socket.IO server is running on port 5000.");
+          setError("Chat server is not available. Please ensure the backend connection.");
           setLoading(false);
           return;
         }

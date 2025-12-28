@@ -8,8 +8,8 @@
  */
 import { io } from "socket.io-client";
 
-// Backend runs on port 5000 for both REST API and Socket.IO
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+// Backend runs on production URL
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "https://egygo-backend-production.up.railway.app";
 
 class SocketTripService {
   constructor() {
@@ -62,7 +62,7 @@ class SocketTripService {
       console.log("✅ [SocketTrip] Connected:", this.socket.id);
       console.log("[SocketTrip] Socket URL:", SOCKET_URL);
       console.log("[SocketTrip] Transport:", this.socket.io.engine.transport.name);
-      
+
       // Rejoin all previously joined rooms on reconnect
       this.joinedRooms.forEach((tripId) => {
         console.log(`[SocketTrip] Rejoining trip room: ${tripId}`);
@@ -83,7 +83,7 @@ class SocketTripService {
         context: error.context,
         url: SOCKET_URL,
       });
-      
+
       // Don't throw error, just log it - socket will retry automatically
       if (error.message === "websocket error") {
         console.warn("[SocketTrip] WebSocket connection failed, will try polling...");

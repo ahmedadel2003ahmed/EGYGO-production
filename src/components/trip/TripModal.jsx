@@ -49,7 +49,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
   React.useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/provinces');
+        const response = await axios.get('/api/provinces');
         if (response.data?.success && response.data?.data?.provinces) {
           setProvinces(response.data.data.provinces);
         } else {
@@ -139,11 +139,11 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
         }
 
         console.log('📤 [TripModal] Sending trip data:', JSON.stringify(tripData, null, 2));
-        console.log('📤 [TripModal] Request URL:', 'http://localhost:5000/api/tourist/trips');
+        console.log('📤 [TripModal] Request URL:', '/api/tourist/trips');
         console.log('📤 [TripModal] Token present:', !!token);
 
         const response = await axios.post(
-          'http://localhost:5000/api/tourist/trips',
+          '/api/tourist/trips',
           tripData,
           {
             headers: {

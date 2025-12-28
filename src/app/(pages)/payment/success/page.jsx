@@ -27,7 +27,7 @@ export default function PaymentSuccessPage() {
     queryFn: async () => {
       console.log(`Polling attempt ${pollAttempts + 1}/${maxPollAttempts} for trip status...`);
       const response = await axios.get(
-        `http://localhost:5000/api/trips/${tripId}`,
+        `/api/trips/${tripId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,

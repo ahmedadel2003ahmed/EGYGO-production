@@ -22,7 +22,7 @@ const FeaturedCarousel = () => {
             try {
                 // Use the proxied API route or direct backend URL
                 // The user originally tried localhost:3000/Governorate/giza which failed (HTML).
-                // The correct data endpoint is /api/provinces/giza (proxied to localhost:5000)
+                // The correct data endpoint is /api/provinces/giza (proxied to production backend)
                 const response = await fetch('/api/provinces/giza');
 
                 // Check content type to avoid parsing HTML as JSON

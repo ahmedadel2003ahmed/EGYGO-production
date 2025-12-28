@@ -31,8 +31,8 @@ export default function GuideProfileClient() {
           headers.Authorization = `Bearer ${token}`;
         }
 
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-        const res = await fetch(`${API_URL}/api/tourist/guides/${slug}`, {
+        // Use Next.js API proxy to avoid CORS issues
+        const res = await fetch(`/api/tourist/guides/${slug}`, {
           headers
         });
 
@@ -81,10 +81,9 @@ export default function GuideProfileClient() {
         return;
       }
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
+      // Use Next.js API proxy to avoid CORS issues
       // Check if there's an active trip with this guide
-      const tripsRes = await fetch(`${API_URL}/api/trips`, {
+      const tripsRes = await fetch(`/api/trips`, {
         headers: {
           Authorization: `Bearer ${token}`
         },

@@ -3,7 +3,7 @@
  */
 import { io } from "socket.io-client";
 
-const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "https://egygo-backend-production.up.railway.app";
 
 class SocketChatService {
   constructor() {
@@ -21,10 +21,12 @@ class SocketChatService {
 
     this.socket = io(SOCKET_URL, {
       auth: { token },
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"], // Try polling first, then upgrade to websocket
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionAttempts: 5,
+      timeout: 20000,
+      forceNew: true,
     });
 
     this.setupListeners();

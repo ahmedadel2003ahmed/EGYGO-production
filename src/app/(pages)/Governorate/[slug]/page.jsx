@@ -44,7 +44,8 @@ const CATEGORIES = [
 const fetchGovernorateData = async (slug) => {
   console.time(`fetchGovernorate:${slug}`);
   try {
-    const response = await axios.get(`/api/provinces/${slug}`);
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
+    const response = await axios.get(`${baseUrl}/api/provinces/${slug}`);
     console.timeEnd(`fetchGovernorate:${slug}`);
     return response.data;
   } catch (error) {

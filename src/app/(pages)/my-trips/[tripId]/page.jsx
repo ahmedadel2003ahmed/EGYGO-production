@@ -124,7 +124,7 @@ export default function TripDetailsPage() {
     queryKey: ['trip', tripId],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/api/tourist/trips/${tripId}`,
+        `/api/tourist/trips/${tripId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -150,7 +150,7 @@ export default function TripDetailsPage() {
     queryFn: async () => {
       if (!trip?.guideId) return null;
       const response = await axios.get(
-        `http://localhost:5000/api/tourist/guides/${trip.guideId}`,
+        `/api/tourist/guides/${trip.guideId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -174,7 +174,7 @@ export default function TripDetailsPage() {
     queryFn: async () => {
       // First, get all guides
       const guidesResponse = await axios.get(
-        'http://localhost:5000/api/tourist/guides',
+        '/api/tourist/guides',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -224,7 +224,7 @@ export default function TripDetailsPage() {
   const cancelTripMutation = useMutation({
     mutationFn: async () => {
       const response = await axios.post(
-        `http://localhost:5000/api/tourist/trips/${tripId}/cancel`,
+        `/api/tourist/trips/${tripId}/cancel`,
         {},
         {
           headers: {
@@ -244,7 +244,7 @@ export default function TripDetailsPage() {
   const submitReviewMutation = useMutation({
     mutationFn: async ({ rating, comment }) => {
       const response = await axios.post(
-        `http://localhost:5000/api/tourist/trips/${tripId}/review`,
+        `/api/tourist/trips/${tripId}/review`,
         { rating, comment },
         {
           headers: {
@@ -264,7 +264,7 @@ export default function TripDetailsPage() {
   const selectGuideMutation = useMutation({
     mutationFn: async (guideId) => {
       const response = await axios.post(
-        `http://localhost:5000/api/tourist/trips/${tripId}/select-guide`,
+        `/api/tourist/trips/${tripId}/select-guide`,
         { guideId },
         {
           headers: {
@@ -293,7 +293,7 @@ export default function TripDetailsPage() {
   const initiateCallMutation = useMutation({
     mutationFn: async () => {
       const response = await axios.post(
-        `http://localhost:5000/api/trips/${tripId}/calls/initiate`,
+        `/api/trips/${tripId}/calls/initiate`,
         {},
         {
           headers: {
@@ -324,7 +324,7 @@ export default function TripDetailsPage() {
   const createCheckoutMutation = useMutation({
     mutationFn: async () => {
       const response = await axios.post(
-        `http://localhost:5000/api/tourist/trips/${tripId}/create-checkout-session`,
+        `/api/tourist/trips/${tripId}/create-checkout-session`,
         {},
         {
           headers: {
