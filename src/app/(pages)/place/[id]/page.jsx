@@ -18,6 +18,7 @@ export default function PlaceDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     const fetchPlace = async () => {
@@ -183,6 +184,12 @@ export default function PlaceDetailPage() {
               >
                 Reviews
               </button>
+              <button
+                className={`${styles.tabButton} ${activeTab === 'gallery' ? styles.tabActive : ''}`}
+                onClick={() => setActiveTab('gallery')}
+              >
+                Gallery
+              </button>
             </div>
 
             {/* Tab Content */}
@@ -334,6 +341,37 @@ export default function PlaceDetailPage() {
                   )}
                 </div>
               )}
+
+              {/* Gallery Tab */}
+              {activeTab === 'gallery' && (
+                <div className={styles.gallery}>
+                  <h2 className={styles.sectionTitle}>Photo Gallery</h2>
+                  <p className={styles.description}>
+                    Explore the beauty of {place.name} through our curated image collection.
+                  </p>
+
+                  <div className={styles.galleryGrid}>
+                    {images.map((img, idx) => (
+                      <div
+                        key={idx}
+                        className={styles.galleryItem}
+                        onClick={() => setLightboxImage(img)}
+                      >
+                        <img
+                          src={img}
+                          alt={`${place.name} view ${idx + 1}`}
+                          className={styles.galleryImage}
+                          loading="lazy"
+                        />
+                        <div className={styles.galleryOverlay}>
+                          <span className={styles.zoomIcon}>🔍</span>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Fallback pattern if only 1 image exists, repeat it to show grid effect (Optional, removed for now to stay authentic) */}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -389,6 +427,18 @@ export default function PlaceDetailPage() {
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Lightbox Modal */}
+      {
+        lightboxImage && (
+          <div className={styles.lightboxOverlay} onClick={() => setLightboxImage(null)}>
+            <button className={styles.closeLightbox} aria-label="Close gallery">×</button>
+            <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+              <img src={lightboxImage} alt="Full screen view" className={styles.lightboxImage} />
+            </div>
+          </div>
+        )
+      }
+    </div >
   );
 }

@@ -402,7 +402,128 @@
   }
 }
 
-/* Responsive */
+/* Gallery Tab */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.galleryItem {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1; /* Square aspect ratio for grid uniformity */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.galleryItem:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  z-index: 2;
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.galleryItem:hover .galleryImage {
+  transform: scale(1.1);
+}
+
+.galleryOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.galleryItem:hover .galleryOverlay {
+  opacity: 1;
+}
+
+.zoomIcon {
+  color: white;
+  font-size: 2rem;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.galleryItem:hover .zoomIcon {
+  transform: scale(1);
+}
+
+/* Modal/Lightbox for Gallery */
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+.lightboxContent {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.lightboxImage {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  display: block;
+}
+
+.closeLightbox {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.closeLightbox:hover {
+  background: rgba(255,255,255,0.25);
+  transform: rotate(90deg);
+}
+
+@media (min-width: 768px) {
+  .galleryGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* Make the first item span 2 rows and 2 columns for a feature effect if convenient, 
+     but standard grid is safer for dynamic images */
+}
+
 @media (max-width: 1024px) {
   .contentGrid {
     grid-template-columns: 1fr;
@@ -430,6 +551,10 @@
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 5px;
+  }
+  
+  .galleryGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
