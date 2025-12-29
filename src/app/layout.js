@@ -9,7 +9,7 @@ import { AuthProvider } from "@/app/context/AuthContext";
 import SocketInitializer from "@/app/components/SocketInitializer";
 
 import ConditionalFooter from "@/app/components/ConditionalFooter";
-import AIChatWidget from "@/components/chat/AIChatWidget";
+import LazyChatWidget from "@/components/chat/LazyChatWidget";
 
 // Montserrat font with optimized subsets and weights
 const montserrat = Montserrat({
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
               {children}
             </ConditionalMainWrapper>
             <ConditionalFooter />
-            <AIChatWidget />
+            <LazyChatWidget />
           </QueryProvider>
         </AuthProvider>
       </body>

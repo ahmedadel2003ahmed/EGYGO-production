@@ -73,7 +73,7 @@ export default function PlaceDetailPage() {
 
   const images = Array.isArray(place.images) && place.images.length > 0
     ? place.images
-    : ['https://via.placeholder.com/1920x1080?text=No+Image+Available'];
+    : ['data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"%3E%3Crect width="1920" height="1080" fill="%23ddd"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="64" fill="%23555"%3ENo Image Available%3C/text%3E%3C/svg%3E'];
 
   const renderStars = (rating) => {
     return '⭐'.repeat(Math.round(rating));
@@ -139,26 +139,33 @@ export default function PlaceDetailPage() {
                   style={{ objectFit: 'cover' }}
                   priority={idx === 0}
                 />
-                <div className={styles.heroOverlay}>
-                  <div className={styles.heroText}>
-                    {place.type && (
-                      <span className={styles.typeBadge}>{place.type}</span>
-                    )}
-                    <h1 className={styles.title}>{place.name}</h1>
-                    <div className={styles.metadata}>
-                      <span className={styles.rating}>
-                        ⭐ {place.rating || 'N/A'} ({place.reviewsCount || 0} reviews)
-                      </span>
-                      {place.address && (
-                        <span className={styles.address}>📍 {place.address}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <div className={styles.heroOverlay}></div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
+        
+        {/* Hero Content - Moved Text/Overlay outside Swiper to prevent duplication and glitches */}
+        <div className={styles.heroOverlayContent}>
+          <div className={styles.heroText}>
+            {place.type && (
+              <span className={styles.typeBadge}>{place.type}</span>
+            )}
+            <h1 className={styles.title}>{place.name}</h1>
+            <div className={styles.metadata}>
+              <span className={styles.rating}>
+                {place.reviewsCount > 0 ? (
+                  <>⭐ {place.rating} ({place.reviewsCount} reviews)</>
+                ) : (
+                  <span className={styles.newBadge}>⭐ New Destination</span>
+                )}
+              </span>
+              {place.address && (
+                <span className={styles.address}>📍 {place.address}</span>
+              )}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Main Content */}
@@ -392,7 +399,7 @@ export default function PlaceDetailPage() {
                     className={styles.mapImage}
                     onError={(e) => {
                       // Fallback if Mapbox token is missing or fails
-                      e.target.src = 'https://via.placeholder.com/400x300?text=Map+View';
+                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%23888"%3EMap View%3C/text%3E%3C/svg%3E';
                     }}
                   />
                   <div className={styles.mapAddress}>

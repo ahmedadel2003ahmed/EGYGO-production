@@ -10,8 +10,13 @@ import GlobalLoader from "@/components/common/GlobalLoader";
 
 // Fetch function for React Query
 const fetchGuides = async () => {
-  const response = await axios.get("/api/tourist/guides");
-  return response.data?.data || [];
+  try {
+    const response = await axios.get("/api/tourist/guides");
+    return response.data?.data || [];
+  } catch (error) {
+    console.warn("⚠️ Failed to fetch guides (client-side):", error.message || error);
+    return [];
+  }
 };
 
 export default function GovernorateClient({ initialGuides = [] }) {

@@ -2,6 +2,7 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app',
   },
   images: {
     domains: ['localhost'],
@@ -22,7 +23,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://egygo-backend-production.up.railway.app/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app'}/api/:path*`,
       },
     ];
   },

@@ -51,44 +51,44 @@ const MOCK_DESTINATIONS = [
   },
 ];
 
-// const MOCK_GOVERNORATES = [
-//   {
-//     name: 'Giza',
-//     shortDesc: 'Home of the Great Pyramids and Sphinx.',
-//     icon: '⛰️',
-//     colorClass: 'tileGiza',
-//   },
-//   {
-//     name: 'Cairo',
-//     shortDesc: 'Egypt\'s vibrant capital and largest city.',
-//     icon: '🕌',
-//     colorClass: 'tileCairo',
-//   },
-//   {
-//     name: 'Alexandria',
-//     shortDesc: 'The historic Pearl of the Mediterranean.',
-//     icon: '⚓',
-//     colorClass: 'tileAlexandria',
-//   },
-//   {
-//     name: 'Luxor',
-//     shortDesc: 'Ancient city known as the "World\'s Greatest Open-Air Museum."',
-//     icon: '☀️',
-//     colorClass: 'tileLuxor',
-//   },
-//   {
-//     name: 'Aswan',
-//     shortDesc: 'Scenic southern city on the Nile River, famous for its temples.',
-//     icon: '📍',
-//     colorClass: 'tileAswan',
-//   },
-//   {
-//     name: 'Sharm El Sheikh',
-//     shortDesc: 'Popular Red Sea resort city known for diving and beaches.',
-//     icon: '🌴',
-//     colorClass: 'tileSharm',
-//   },
-// ];
+const MOCK_GOVERNORATES = [
+  {
+    name: 'Giza',
+    shortDesc: 'Home of the Great Pyramids and Sphinx.',
+    icon: '⛰️',
+    colorClass: 'tileGiza',
+  },
+  {
+    name: 'Cairo',
+    shortDesc: 'Egypt\'s vibrant capital and largest city.',
+    icon: '🕌',
+    colorClass: 'tileCairo',
+  },
+  {
+    name: 'Alexandria',
+    shortDesc: 'The historic Pearl of the Mediterranean.',
+    icon: '⚓',
+    colorClass: 'tileAlexandria',
+  },
+  {
+    name: 'Luxor',
+    shortDesc: 'Ancient city known as the "World\'s Greatest Open-Air Museum."',
+    icon: '☀️',
+    colorClass: 'tileLuxor',
+  },
+  {
+    name: 'Aswan',
+    shortDesc: 'Scenic southern city on the Nile River, famous for its temples.',
+    icon: '📍',
+    colorClass: 'tileAswan',
+  },
+  {
+    name: 'Sharm El Sheikh',
+    shortDesc: 'Popular Red Sea resort city known for diving and beaches.',
+    icon: '🌴',
+    colorClass: 'tileSharm',
+  },
+];
 
 // --- API Fetchers ---
 
@@ -122,8 +122,8 @@ const normalizeImagePath = (img = "") => {
 const fetchDestinations = async () => {
   console.time("fetchDestinations");
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
-    const response = await axios.get(`${baseUrl}/api/provinces/giza/places?type=archaeological`);
+    const { default: apiClient } = await import('@/services/apiClient');
+    const response = await apiClient.get('/api/provinces/giza/places?type=archaeological');
     console.timeEnd("fetchDestinations");
 
     if (response.data?.success && Array.isArray(response.data?.data?.places)) {
@@ -150,56 +150,14 @@ const fetchDestinations = async () => {
 //TODO: remove this function
 // Helper function to get placeholder images based on place name/type
 // const getPlaceholderImage = (name = '') => {
-//   const nameLower = name.toLowerCase();
-
-//   // Match specific types of places with relevant Unsplash images
-//   if (nameLower.includes('pyramid') || nameLower.includes('giza')) {
-//     return 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=1200&h=800&fit=crop'; // Pyramids
-//   }
-//   if (nameLower.includes('temple') || nameLower.includes('luxor') || nameLower.includes('karnak')) {
-//     return 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=1200&h=800&fit=crop'; // Ancient temple
-//   }
-//   if (nameLower.includes('sphinx')) {
-//     return 'https://images.unsplash.com/photo-1539768942893-daf53e448371?w=1200&h=800&fit=crop'; // Sphinx
-//   }
-//   if (nameLower.includes('museum')) {
-//     return 'https://images.unsplash.com/photo-1566127444979-b3d2b3dba5d3?w=1200&h=800&fit=crop'; // Museum
-//   }
-//   if (nameLower.includes('nile') || nameLower.includes('cruise') || nameLower.includes('river')) {
-//     return 'https://images.unsplash.com/photo-1572252821143-035a024857ac?w=1200&h=800&fit=crop'; // Nile
-//   }
-//   if (nameLower.includes('beach') || nameLower.includes('red sea') || nameLower.includes('dahab') || nameLower.includes('sharm')) {
-//     return 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&h=800&fit=crop'; // Red Sea beach
-//   }
-//   if (nameLower.includes('market') || nameLower.includes('bazaar') || nameLower.includes('khan')) {
-//     return 'https://images.unsplash.com/photo-1578408967898-bfb1f6f41e73?w=1200&h=800&fit=crop'; // Market
-//   }
-//   if (nameLower.includes('alexandria') || nameLower.includes('library')) {
-//     return 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200&h=800&fit=crop'; // Library/Alexandria
-//   }
-//   if (nameLower.includes('desert') || nameLower.includes('safari')) {
-//     return 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1200&h=800&fit=crop'; // Desert
-//   }
-//   if (nameLower.includes('hotel') || nameLower.includes('resort')) {
-//     return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop'; // Hotel
-//   }
-//   if (nameLower.includes('mosque') || nameLower.includes('masjid')) {
-//     return 'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=1200&h=800&fit=crop'; // Mosque
-//   }
-//   if (nameLower.includes('park') || nameLower.includes('garden')) {
-//     return 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200&h=800&fit=crop'; // Park
-//   }
-
-//   // Default Egypt tourism image
-//   return 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop';
+// ... (placeholder implementation commented out)
 // };
 
 const fetchGovernorates = async () => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
-  const endpoint = `${baseUrl}/api/provinces`;
   console.time("fetchGovernorates");
   try {
-    const response = await axios.get(endpoint);
+    const { default: apiClient } = await import('@/services/apiClient');
+    const response = await apiClient.get('/api/provinces');
     console.timeEnd("fetchGovernorates");
 
     if (response.data?.success && Array.isArray(response.data?.data)) {

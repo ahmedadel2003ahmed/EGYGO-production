@@ -35,7 +35,8 @@ export default function ProfilePage() {
         return null;
       }
       try {
-        const response = await axios.get(
+        const { default: apiClient } = await import('@/services/apiClient');
+        const response = await apiClient.get(
           '/api/auth/me',
           {
             headers: {

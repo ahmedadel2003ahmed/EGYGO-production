@@ -47,25 +47,26 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
 
   // Fetch provinces
   React.useEffect(() => {
+    if (!isOpen) return; // Only fetch when modal is open
+
     const fetchProvinces = async () => {
       try {
-        const response = await axios.get('/api/provinces');
+        const { default: apiClient } = await import('@/services/apiClient');
+        const response = await apiClient.get('/api/provinces');
         if (response.data?.success && response.data?.data?.provinces) {
           setProvinces(response.data.data.provinces);
         } else {
-          // Use fallback if API doesn't return data
           setProvinces(FALLBACK_GOVERNORATES);
         }
       } catch (err) {
         console.error('Failed to fetch provinces:', err);
-        // Use fallback governorates if API fails
         setProvinces(FALLBACK_GOVERNORATES);
       } finally {
         setLoadingProvinces(false);
       }
     };
     fetchProvinces();
-  }, []);
+  }, [isOpen]);
 
   const validationSchema = Yup.object({
     startAt: Yup.date()

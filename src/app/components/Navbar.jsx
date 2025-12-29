@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaUser } from 'react-icons/fa';
 import styles from './Navbar.module.css';
-import LoginModal from './LoginModal';
-import RegisterModal from './RegisterModal';
 import { useAuth } from '@/app/context/AuthContext';
+
+const LoginModal = lazy(() => import('./LoginModal'));
+const RegisterModal = lazy(() => import('./RegisterModal'));
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,10 +18,17 @@ const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const auth = useAuth();
+  const [modalsMounted, setModalsMounted] = useState(false);
 
   const isAuthenticated = !!auth?.token;
   const isLoginModalOpen = auth?.showLoginModal || false;
   const isRegisterModalOpen = auth?.showRegisterModal || false;
+
+  useEffect(() => {
+    // Delay mounting modals to prioritize LCP
+    const timer = setTimeout(() => setModalsMounted(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Scroll behavior logic
   useEffect(() => {
@@ -183,17 +191,19 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Login Modal */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => auth?.closeLoginModal?.()}
-      />
-
-      {/* Register Modal */}
-      <RegisterModal
-        isOpen={isRegisterModalOpen}
-        onClose={() => auth?.closeRegisterModal?.()}
-      />
+      {/* Modals - Lazy Loaded & Suspended */}
+      {(modalsMounted || isLoginModalOpen || isRegisterModalOpen) && (
+        <Suspense fallback={null}>
+          <LoginModal
+            isOpen={isLoginModalOpen}
+            onClose={() => auth?.closeLoginModal?.()}
+          />
+          <RegisterModal
+            isOpen={isRegisterModalOpen}
+            onClose={() => auth?.closeRegisterModal?.()}
+          />
+        </Suspense>
+      )}
     </>
   );
 };

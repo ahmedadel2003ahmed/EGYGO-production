@@ -1,19 +1,25 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useRef, useState, lazy, Suspense } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
-import TripModal from '@/components/trip/TripModal';
-import FloatingTripButton from '@/components/common/FloatingTripButton';
 
-import TourGuides from './components/TourGuides';
-import StatsSection from './components/StatsSection';
-import GallerySection from './components/GallerySection';
+// Lazy load non-critical components
+const TripModal = lazy(() => import('@/components/trip/TripModal'));
+const FloatingTripButton = lazy(() => import('@/components/common/FloatingTripButton'));
+const TourGuides = lazy(() => import('./components/TourGuides'));
+const StatsSection = lazy(() => import('./components/StatsSection'));
+const GallerySection = lazy(() => import('./components/GallerySection'));
+const FeaturedCarousel = lazy(() => import('./components/FeaturedCarousel'));
+
+// Keep Hero and CategoryCards eager for LCP
 import HeroCarousel from './components/HeroCarousel';
 import CategoryCards from './components/CategoryCards';
-import FeaturedCarousel from './components/FeaturedCarousel';
 import RevealOnScroll from './components/RevealOnScroll';
+
+// Simple fallback for lazy components
+const SectionLoader = () => <div className="py-10 text-center text-gray-400">Loading section...</div>;
 
 export default function HomeClient() {
     const router = useRouter();
@@ -41,34 +47,44 @@ export default function HomeClient() {
 
             {/* ===== FEATURED CAROUSEL ===== */}
             <RevealOnScroll delay={100}>
-                <FeaturedCarousel />
+                <Suspense fallback={<SectionLoader />}>
+                    <FeaturedCarousel />
+                </Suspense>
             </RevealOnScroll>
 
             {/* ===== STATS SECTION ===== */}
             <RevealOnScroll delay={100}>
-                <StatsSection />
+                <Suspense fallback={<SectionLoader />}>
+                    <StatsSection />
+                </Suspense>
             </RevealOnScroll>
 
             {/* ===== GALLERY SECTION ===== */}
             <RevealOnScroll delay={100}>
-                <GallerySection />
+                <Suspense fallback={<SectionLoader />}>
+                    <GallerySection />
+                </Suspense>
             </RevealOnScroll>
 
             {/* ===== TOUR GUIDES SECTION ===== */}
             <RevealOnScroll delay={100}>
-                <TourGuides />
+                <Suspense fallback={<SectionLoader />}>
+                    <TourGuides />
+                </Suspense>
             </RevealOnScroll>
 
             {/* ===== FOOTER ANCHOR ===== */}
             <div ref={footerRef}></div>
 
             {/* ===== FLOATING ACTION BUTTON & MODAL ===== */}
-            <TripModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSuccess={handleTripCreated}
-            />
-            <FloatingTripButton onClick={() => setIsModalOpen(true)} />
+            <Suspense fallback={null}>
+                <TripModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSuccess={handleTripCreated}
+                />
+                <FloatingTripButton onClick={() => setIsModalOpen(true)} />
+            </Suspense>
         </>
     );
 }

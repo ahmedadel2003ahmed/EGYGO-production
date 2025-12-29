@@ -6,7 +6,7 @@ import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaStar, FaHeart } from 'react-icons/fa';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -14,36 +14,57 @@ import 'swiper/css/effect-coverflow';
 import styles from './FeaturedCarousel.module.css';
 
 const FeaturedCarousel = () => {
-    // Suspense Query triggers the nearest Suspense boundary (loading.jsx)
-    const { data: attractions } = useSuspenseQuery({
+    const { data: attractions, isLoading, isError } = useQuery({
         queryKey: ['featured-attractions'],
         queryFn: async () => {
-            // Use absolute URL for server-side fetching compatibility
+            // Use cached API client
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
-            const response = await fetch(`${baseUrl}/api/provinces/giza`);
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error('Failed to fetch data or invalid response format');
+            try {
+                // We use our caching client
+                // Note: apiClient already handles base URL if configured, but here we can pass the path or full URL.
+                // Our apiClient has base URL, but let's be safe and use the relative path if it matches the base.
+                // Or just import apiClient.
+                const { default: apiClient } = await import('@/services/apiClient');
+                
+                const response = await apiClient.get('/api/provinces/giza');
+                
+                const result = response.data;
+                const sites = result.data?.sections?.archaeological || [];
+
+                // Take the first 5 items
+                return sites.slice(0, 5).map(item => ({
+                    id: item._id,
+                    title: item.name || item.title || 'Unknown Site',
+                    description: item.shortDescription || item.description || 'No description available.',
+                    image: Array.isArray(item.images) ? item.images[0] : (item.image || '/images/destination/placeholder.jpg'),
+                    rating: item.rating || 4.5,
+                    tag: 'Archaeological Site',
+                    price: item.ticketPrice ? `${item.ticketPrice} $` : 'Free'
+                }));
+            } catch (err) {
+                console.error("FeaturedCarousel fetch error:", err);
+                return []; // Return empty array on error to avoid crash
             }
-
-            const result = await response.json();
-            const sites = result.data?.sections?.archaeological || [];
-
-            // Take the first 5 items
-            return sites.slice(0, 5).map(item => ({
-                id: item._id,
-                title: item.name || item.title || 'Unknown Site',
-                description: item.shortDescription || item.description || 'No description available.',
-                image: Array.isArray(item.images) ? item.images[0] : (item.image || '/images/destination/placeholder.jpg'),
-                rating: item.rating || 4.5,
-                tag: 'Archaeological Site',
-                price: item.ticketPrice ? `${item.ticketPrice} $` : 'Free'
-            }));
         },
         // Inherits global cache settings (Infinity)
     });
 
-    if (!attractions || attractions.length === 0) {
+    if (isLoading) {
+        return (
+            <section className={styles.section} id="featured">
+                <div className="container">
+                    <h2 className={styles.title}>Featured Attractions</h2>
+                    <div className={styles.swiperContainer} style={{ height: '400px', backgroundColor: '#f0f0f0', borderRadius: '12px', animate: 'pulse' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#999' }}>
+                            Loading attractions...
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (isError || !attractions || attractions.length === 0) {
         return null;
     }
 

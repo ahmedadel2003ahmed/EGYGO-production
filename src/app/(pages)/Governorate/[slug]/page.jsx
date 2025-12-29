@@ -44,8 +44,11 @@ const CATEGORIES = [
 const fetchGovernorateData = async (slug) => {
   console.time(`fetchGovernorate:${slug}`);
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
-    const response = await axios.get(`${baseUrl}/api/provinces/${slug}`);
+    const { default: apiClient } = await import('@/services/apiClient');
+    // We can use the cached client here. 
+    // The apiClient default export is the axios instance.
+    // The relative path in the get() call will use the baseURL from apiClient settings.
+    const response = await apiClient.get(`/api/provinces/${slug}`);
     console.timeEnd(`fetchGovernorate:${slug}`);
     return response.data;
   } catch (error) {

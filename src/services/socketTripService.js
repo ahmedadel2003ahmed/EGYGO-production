@@ -1,4 +1,4 @@
-/**
+  /**
  * Socket.IO Trip Status Service - Real-time trip status updates
  * 
  * This service handles real-time trip status updates from the backend.
@@ -39,11 +39,11 @@ class SocketTripService {
       auth: {
         token: token,
       },
-      transports: ["polling", "websocket"], // Try polling first, then upgrade to websocket
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
+      transports: ["websocket"], // WebSocket only to avoid polling overhead
+      reconnection: false, // Disable auto-reconnect loops to meet performance requirements
+      // reconnectionAttempts: 5, // Disabled
+      // reconnectionDelay: 1000,
+      // reconnectionDelayMax: 5000,
       timeout: 20000,
       forceNew: true,
     });
@@ -76,6 +76,14 @@ class SocketTripService {
     });
 
     this.socket.on("connect_error", (error) => {
+      // Handle authentication errors gracefully
+      if (error.message.includes("Authentication failed") || error.message.includes("Token has expired") || error.message.includes("jwt expired")) {
+        console.warn("[SocketTrip] Authentication failed:", error.message);
+        console.warn("[SocketTrip] Disconnecting socket to prevent retry loop.");
+        this.disconnect(); // Stop retrying with invalid token
+        return;
+      }
+
       console.error("[SocketTrip] Connection error:", error.message);
       console.error("[SocketTrip] Error details:", {
         type: error.type,

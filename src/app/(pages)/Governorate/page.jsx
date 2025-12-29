@@ -24,10 +24,11 @@ export default async function Governorate() {
       const data = await response.json();
       guides = data.data || [];
     } else {
-      console.error("❌ Failed to fetch guides from API", response.status);
+      console.warn("⚠️ Failed to fetch guides from API (server-side):", response.status);
+      guides = [];
     }
   } catch (err) {
-    console.error("❌ Error fetching guides:", err);
+    console.warn("⚠️ Error fetching guides (server-side):", err.message || err);
     guides = [];
   }
   console.timeEnd('fetchGovernorateGuides');

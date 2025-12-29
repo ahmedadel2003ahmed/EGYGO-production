@@ -17,23 +17,6 @@ const RegisterModal = ({ isOpen, onClose }) => {
     const [serverError, setServerError] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
 
-    // Reset form when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            setServerError(null);
-            formik.resetForm();
-        }
-    }, [isOpen, formik]);
-
-    // Close on Esc
-    useEffect(() => {
-        const handleEsc = (e) => {
-            if (e.key === 'Escape') onClose();
-        };
-        if (isOpen) window.addEventListener('keydown', handleEsc);
-        return () => window.removeEventListener('keydown', handleEsc);
-    }, [isOpen, onClose]);
-
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -98,6 +81,23 @@ const RegisterModal = ({ isOpen, onClose }) => {
             }
         },
     });
+
+    // Reset form when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setServerError(null);
+            formik.resetForm();
+        }
+    }, [isOpen, formik]);
+
+    // Close on Esc
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        if (isOpen) window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 

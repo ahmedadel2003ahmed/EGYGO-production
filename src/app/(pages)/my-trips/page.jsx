@@ -69,8 +69,16 @@ export default function MyTripsPage() {
         return tripsData;
       } catch (error) {
         console.timeEnd('fetchMyTrips');
+        
+        // Handle 401 Unauthorized gracefully
+        if (error.response && error.response.status === 401) {
+          console.warn('⚠️ Unauthorized access (401). Token might be expired.');
+          localStorage.removeItem('access_token'); // Clear invalid token
+          return []; // Return empty list to prevent crash
+        }
+
         console.error('Failed to fetch trips:', error);
-        throw error; // Throw error to trigger error boundary
+        throw error; // Throw other errors to trigger error boundary
       }
     },
   });
