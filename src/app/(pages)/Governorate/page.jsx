@@ -17,7 +17,7 @@ export default async function Governorate() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
     const response = await fetch(`${baseUrl}/api/tourist/guides`, {
-      cache: 'no-store', // Always fetch fresh data
+      cache: 'force-cache', // Cache this data for static generation
     });
 
     if (response.ok) {
@@ -40,7 +40,7 @@ export default async function Governorate() {
           <div className={styles.headerContent}>
             <h1 className={styles.pageTitle}>Explore Governorates</h1>
             <p className={styles.pageSubtitle}>
-              Discover local guides across Egypt's regions
+              Discover local guides across Egypt&apos;s regions
             </p>
           </div>
         </div>

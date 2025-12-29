@@ -51,8 +51,6 @@ export default function ProfilePage() {
         return null; // Return null on error to trigger safe fallback UI
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnWindowFocus: false,
   });
 
   // Sync editedData with fetched userData

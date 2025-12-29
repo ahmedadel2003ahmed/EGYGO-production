@@ -19,11 +19,12 @@ export default function PaymentCancelPage() {
   } = useQuery({
     queryKey: ['trip-cancel', tripId],
     queryFn: async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
       const response = await axios.get(
         `/api/trips/${tripId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

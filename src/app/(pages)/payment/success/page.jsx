@@ -26,11 +26,12 @@ export default function PaymentSuccessPage() {
     queryKey: ['trip-payment-status', tripId],
     queryFn: async () => {
       console.log(`Polling attempt ${pollAttempts + 1}/${maxPollAttempts} for trip status...`);
+      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
       const response = await axios.get(
         `/api/trips/${tripId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

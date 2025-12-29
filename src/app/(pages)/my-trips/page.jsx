@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import Image from 'next/image';
 import styles from './MyTrips.module.css';
 import TripModal from '@/components/trip/TripModal';
 import { useAuth } from '@/app/context/AuthContext';
@@ -45,6 +46,7 @@ export default function MyTripsPage() {
   const { data: trips } = useSuspenseQuery({
     queryKey: ['my-trips'],
     queryFn: async () => {
+      if (typeof window === 'undefined') return [];
       console.time('fetchMyTrips');
       const token = localStorage.getItem('access_token');
       if (!token) {
@@ -71,8 +73,6 @@ export default function MyTripsPage() {
         throw error; // Throw error to trigger error boundary
       }
     },
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
   });
 
   // Monitor socket connection status
@@ -145,10 +145,10 @@ export default function MyTripsPage() {
     const pollInterval = setInterval(() => {
       console.log('[MyTrips] Polling for status changes...');
       queryClient.invalidateQueries(['my-trips']);
-    }, 3000); // Poll every 3 seconds
+    }, 15000); // Poll every 15 seconds to reduce network load
 
     return () => clearInterval(pollInterval);
-  }, [trips?.length, queryClient]);
+  }, [trips, queryClient]);
 
   const filterTrips = (status) => {
     if (status === 'all') return trips;
@@ -420,10 +420,13 @@ export default function MyTripsPage() {
                         >
                           <div className={styles.guideAvatar}>
                             {(trip.guide.photo?.url || trip.guide.profilePicture) ? (
-                              <img
+                              <Image
                                 src={trip.guide.photo?.url || trip.guide.profilePicture}
                                 alt={trip.guide.name}
                                 className={styles.avatarImg}
+                                width={50}
+                                height={50}
+                                style={{ objectFit: 'cover' }}
                               />
                             ) : (
                               <div className={styles.avatarPlaceholder}>

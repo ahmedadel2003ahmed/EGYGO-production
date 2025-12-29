@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaStar, FaHeart } from 'react-icons/fa';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -13,66 +14,37 @@ import 'swiper/css/effect-coverflow';
 import styles from './FeaturedCarousel.module.css';
 
 const FeaturedCarousel = () => {
-    const [attractions, setAttractions] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Use the proxied API route or direct backend URL
-                // The user originally tried localhost:3000/Governorate/giza which failed (HTML).
-                // The correct data endpoint is /api/provinces/giza (proxied to production backend)
-                const response = await fetch('/api/provinces/giza');
-
-                // Check content type to avoid parsing HTML as JSON
-                const contentType = response.headers.get("content-type");
-                if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                    throw new Error('Failed to fetch data or invalid response format');
-                }
-
-                const result = await response.json();
-
-                // Navigate the JSON structure: { success: true, data: { sections: { archaeological: [...] } } }
-                const sites = result.data?.sections?.archaeological || [];
-
-                // Take the first 5 items
-                const topSites = sites.slice(0, 5).map(item => ({
-                    id: item._id,
-                    title: item.name || item.title || 'Unknown Site',
-                    description: item.shortDescription || item.description || 'No description available.',
-                    // Check if image is an array or string, handle accordingly
-                    image: Array.isArray(item.images) ? item.images[0] : (item.image || '/images/destination/placeholder.jpg'),
-                    rating: item.rating || 4.5,
-                    tag: 'Archaeological Site',
-                    price: item.ticketPrice ? `${item.ticketPrice} $` : 'Free'
-                }));
-
-                setAttractions(topSites);
-                setLoading(false);
-            } catch (err) {
-                console.error("Error fetching featured attractions:", err);
-                setError(err.message);
-                setLoading(false);
+    // Suspense Query triggers the nearest Suspense boundary (loading.jsx)
+    const { data: attractions } = useSuspenseQuery({
+        queryKey: ['featured-attractions'],
+        queryFn: async () => {
+            // Use absolute URL for server-side fetching compatibility
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app';
+            const response = await fetch(`${baseUrl}/api/provinces/giza`);
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || !contentType || !contentType.includes("application/json")) {
+                throw new Error('Failed to fetch data or invalid response format');
             }
-        };
 
-        fetchData();
-    }, []);
+            const result = await response.json();
+            const sites = result.data?.sections?.archaeological || [];
 
-    if (loading) {
-        return (
-            <section className={styles.section} id="featured">
-                <div className="container">
-                    <h2 className={styles.title}>Featured Attractions</h2>
-                    <div className={styles.loading}>Loading featured places...</div>
-                </div>
-            </section>
-        );
-    }
+            // Take the first 5 items
+            return sites.slice(0, 5).map(item => ({
+                id: item._id,
+                title: item.name || item.title || 'Unknown Site',
+                description: item.shortDescription || item.description || 'No description available.',
+                image: Array.isArray(item.images) ? item.images[0] : (item.image || '/images/destination/placeholder.jpg'),
+                rating: item.rating || 4.5,
+                tag: 'Archaeological Site',
+                price: item.ticketPrice ? `${item.ticketPrice} $` : 'Free'
+            }));
+        },
+        // Inherits global cache settings (Infinity)
+    });
 
-    if (error || attractions.length === 0) {
-        return null; // Or render a fallback/error message
+    if (!attractions || attractions.length === 0) {
+        return null;
     }
 
     return (

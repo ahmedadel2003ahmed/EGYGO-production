@@ -20,10 +20,6 @@ export default function GovernorateClient({ initialGuides = [] }) {
     queryKey: ["guides"],
     queryFn: fetchGuides,
     initialData: initialGuides.length > 0 ? initialGuides : undefined,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000,   // 10 minutes
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,    // Prevent refetch if data is fresh from initialData or cache
   });
 
   // 🏙️ Optimized: Extract unique governorates and calculate counts in a SINGLE pass O(N)

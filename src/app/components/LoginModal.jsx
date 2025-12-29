@@ -24,7 +24,7 @@ const LoginModal = ({ isOpen, onClose }) => {
             setServerError(null);
             formik.resetForm();
         }
-    }, [isOpen]);
+    }, [isOpen, formik]);
 
     // Close on Escape key
     useEffect(() => {
@@ -190,7 +190,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                         </div>
 
                         <p className={styles.registerLink}>
-                            Don't have an account?
+                            Don&apos;t have an account?
                             <button type="button" onClick={() => auth.switchToRegister()}>Sign up for free</button>
                         </p>
 

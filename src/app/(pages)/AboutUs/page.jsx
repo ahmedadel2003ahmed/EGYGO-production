@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import styles from './AboutUs.module.css';
 
 export default function AboutUs() {
@@ -103,7 +104,7 @@ export default function AboutUs() {
             </h1>
             <p className={styles.heroSubtitle}>
               A passionate group of developers and designers crafting EgyGo -
-              Your gateway to exploring Egypts wonders
+              Your gateway to exploring Egypt&apos;s wonders
             </p>
             <div className={styles.heroDecoration}>✨ EGYGO ✨</div>
           </div>
@@ -131,15 +132,20 @@ export default function AboutUs() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className={styles.cardImageWrapper}>
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className={styles.memberImage}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextElementSibling.style.display = 'flex';
-                    }}
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className={styles.memberImage}
+                      style={{ objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, 300px"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                  </div>
                   <div className={styles.memberIconFallback} style={{ background: member.gradient }}>
                     <span>{member.icon}</span>
                   </div>
@@ -196,7 +202,7 @@ export default function AboutUs() {
             </p>
             <p className={styles.storyText}>
               From the bustling streets of Cairo to the serene shores of the Red Sea,
-              our platform brings Egypts magic to your fingertips. Were not just building
+              our platform brings Egypt&apos;s magic to your fingertips. Were not just building
               an app – were crafting experiences and creating memories.
             </p>
           </div>
@@ -236,7 +242,7 @@ export default function AboutUs() {
               to authentic Egyptian experiences.
             </p>
             <div className={styles.missionQuote}>
-              Making Egypts wonders accessible to the world, one journey at a time
+              Making Egypt&apos;s wonders accessible to the world, one journey at a time
             </div>
           </div>
         </div>

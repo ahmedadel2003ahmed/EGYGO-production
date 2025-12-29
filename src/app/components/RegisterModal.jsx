@@ -23,7 +23,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
             setServerError(null);
             formik.resetForm();
         }
-    }, [isOpen]);
+    }, [isOpen, formik]);
 
     // Close on Esc
     useEffect(() => {
@@ -114,7 +114,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
                     <div className={styles.imageContent}>
                         <Image src="/images/logo.ico" alt="EgyGo Logo" width={120} height={120} />
                         <p>
-Explore the beauty of Egypt, plan your trip with ease.
+                            Explore the beauty of Egypt, plan your trip with ease.
 
                         </p>
                     </div>

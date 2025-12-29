@@ -64,8 +64,6 @@ export default function GovernorateDetailsPage() {
   const { data } = useSuspenseQuery({
     queryKey: ['governorate', slug],
     queryFn: () => fetchGovernorateData(slug),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
   });
 
   const province = data?.data?.province;

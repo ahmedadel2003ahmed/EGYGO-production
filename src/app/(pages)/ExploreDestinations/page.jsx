@@ -296,6 +296,7 @@ const DestinationCard = React.memo(({ title, subtitle, imageUrl, slug, destinati
     </div>
   );
 });
+DestinationCard.displayName = 'DestinationCard';
 
 /**
  * Renders a single governorate tile with cover image.
@@ -328,6 +329,7 @@ const GovernorateTile = React.memo(({ name, shortDesc, icon, colorClass, slug, c
     </Link>
   );
 });
+GovernorateTile.displayName = 'GovernorateTile';
 
 // --- Page Component ---
 
@@ -345,15 +347,11 @@ export default function ExploreDestinations() {
   const { data: destinationsData } = useSuspenseQuery({
     queryKey: ['destinations'],
     queryFn: fetchDestinations,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnWindowFocus: false,
   });
 
   const { data: governoratesData } = useSuspenseQuery({
     queryKey: ['governorates'],
     queryFn: fetchGovernorates,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnWindowFocus: false,
   });
 
   // Since fetch functions now handle fallbacks internally,
