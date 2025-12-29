@@ -56,6 +56,7 @@ export default function CallPage() {
     return () => {
       cleanup();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callId]);
 
   const initializeCall = async () => {

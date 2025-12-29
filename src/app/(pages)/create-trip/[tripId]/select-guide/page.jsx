@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import Image from 'next/image';
 import styles from './SelectGuide.module.css';
 import { useAuth } from '@/app/context/AuthContext';
 
@@ -35,7 +36,7 @@ export default function SelectGuidePage() {
       router.push('/my-trips');
       return;
     }
-  }, [router, tripId]);
+  }, [router, tripId, auth?.loading, auth?.token]);
 
   const [filters, setFilters] = useState({
     language: '',
@@ -346,10 +347,13 @@ export default function SelectGuidePage() {
                       <div className={styles.guideHeader}>
                         <div className={styles.guideAvatar}>
                           {profileImage ? (
-                            <img
+                            <Image
                               src={profileImage}
                               alt={guide.name}
                               className={styles.avatarImg}
+                              width={60}
+                              height={60}
+                              style={{ objectFit: 'cover' }}
                               onError={(e) => {
                                 console.log('Failed to load image:', profileImage);
                                 e.target.style.display = 'none';

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import adminService from '@/services/adminService';
 import styles from './page.module.css';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaStar, FaGlobe, FaCheck, FaTimes, FaArrowLeft } from 'react-icons/fa';
@@ -119,11 +120,13 @@ export default function GuideDetailsPage() {
                 <div className={`${styles.card} ${styles.profileCard}`}>
                     <div className={styles.avatarWrapper}>
                         {/* Use simple img tag for external cloudinary URLs or next/image with config */}
-                        <img
+                        <Image
                             src={guidePhoto}
                             alt={guideName}
                             className={styles.avatar}
-                            onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}
+                            width={150}
+                            height={150}
+                            style={{ objectFit: 'cover' }}
                         />
                     </div>
 

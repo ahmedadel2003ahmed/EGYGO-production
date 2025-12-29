@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
@@ -130,12 +131,13 @@ export default function PlaceDetailPage() {
           {images.map((img, idx) => (
             <SwiperSlide key={idx}>
               <div className={styles.slideContent}>
-                <img
+                <Image
                   src={img}
                   alt={place.name}
                   className={styles.heroImage}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/1920x1080?text=Image+Load+Error'; }}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority={idx === 0}
                 />
                 <div className={styles.heroOverlay}>
                   <div className={styles.heroText}>
