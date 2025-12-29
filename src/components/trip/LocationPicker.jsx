@@ -95,7 +95,7 @@ export default function LocationPicker({ onLocationSelect, selectedLocation }) {
         leafletMapRef.current = null;
       }
     };
-  }, [showMap]);
+  }, [showMap, selectedLocation]);
 
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -110,15 +110,15 @@ export default function LocationPicker({ onLocationSelect, selectedLocation }) {
           lng: position.coords.longitude,
         };
         setTempLocation(location);
-        
+
         // Update map view and marker
         if (leafletMapRef.current && window.L) {
           leafletMapRef.current.setView([location.lat, location.lng], 15);
-          
+
           if (markerRef.current) {
             leafletMapRef.current.removeLayer(markerRef.current);
           }
-          
+
           markerRef.current = window.L.marker([location.lat, location.lng], {
             draggable: true,
           }).addTo(leafletMapRef.current);
@@ -166,15 +166,15 @@ export default function LocationPicker({ onLocationSelect, selectedLocation }) {
 
   const handleQuickSelect = (location) => {
     setTempLocation({ lat: location.lat, lng: location.lng });
-    
+
     // Update map view and marker
     if (leafletMapRef.current && window.L) {
       leafletMapRef.current.setView([location.lat, location.lng], 13);
-      
+
       if (markerRef.current) {
         leafletMapRef.current.removeLayer(markerRef.current);
       }
-      
+
       markerRef.current = window.L.marker([location.lat, location.lng], {
         draggable: true,
       }).addTo(leafletMapRef.current);

@@ -1,11 +1,4 @@
-npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
-npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
-npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-added 442 packages in 14s
+
 Failed to compile.
 ./src/app/(pages)/AboutUs/page.jsx
 134:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
@@ -16,45 +9,8 @@ Failed to compile.
 43:49  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 ./src/app/(pages)/call/[callId]/call_oldProject.jsx
 4:12  Error: Parsing error: Unexpected token, expected "from" (4:12)
-
-./src/app/(pages)/ExploreDestinations/page.jsx
-261:25  Error: Component definition is missing display name  react/display-name
-303:25  Error: Component definition is missing display name  react/display-name
-./src/app/(pages)/Governorate/page.jsx
-43:49  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
-./src/app/(pages)/call/[callId]/call_oldProject.jsx
-4:12  Error: Parsing error: Unexpected token, expected "from" (4:12)
-./src/app/(pages)/call/[callId]/page.jsx
-59:6  Warning: React Hook useEffect has missing dependencies: 'cleanup' and 'initializeCall'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-./src/app/(pages)/create-trip/[tripId]/select-guide/page.jsx
-38:6  Warning: React Hook useEffect has missing dependencies: 'auth?.loading' and 'auth?.token'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-349:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-
-38:6  Warning: React Hook useEffect has missing dependencies: 'auth?.loading' and 'auth?.token'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-349:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-./src/app/(pages)/create-trip/page.jsx
-75:6  Warning: React Hook useEffect has a missing dependency: 'FALLBACK_GOVERNORATES'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-./src/app/(pages)/my-trips/page.jsx
-151:6  Warning: React Hook useEffect has a missing dependency: 'trips'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-423:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-./src/app/(pages)/place/[id]/page.jsx
-133:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-321:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-360:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-387:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-437:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-
-/src/app/admin/guides/[id]/page.jsx
-122:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-220:49  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
 ./src/app/components/LoginModal.jsx
 27:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-193:32  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
-./src/app/components/RegisterModal.jsx
-26:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-./src/app/components/RevealOnScroll.jsx
-30:21  Warning: The ref value 'ref.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'ref.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
-
 193:32  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 ./src/app/components/RegisterModal.jsx
 26:8  Warning: React Hook useEffect has a missing dependency: 'formik'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps

@@ -12,6 +12,29 @@ import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
 import LocationPicker from '@/components/trip/LocationPicker';
 import { useAuth } from '@/app/context/AuthContext';
 
+// Fallback governorate list (with actual MongoDB IDs from API)
+const FALLBACK_GOVERNORATES = [
+  { _id: '6935efa247a0b161dbdeee4e', name: 'Alexandria', slug: 'alexandria' },
+  { _id: '6935efa347a0b161dbdeee50', name: 'Aswan', slug: 'aswan' },
+  { _id: '6935efa747a0b161dbdeee59', name: 'Beheira', slug: 'beheira' },
+  { _id: '6935efaa47a0b161dbdeee62', name: 'Beni Suef', slug: 'beni-suef' },
+  { _id: '6935efa247a0b161dbdeee4c', name: 'Cairo', slug: 'cairo' },
+  { _id: '6935efa847a0b161dbdeee5d', name: 'Damietta', slug: 'damietta' },
+  { _id: '6935efaa47a0b161dbdeee63', name: 'Fayoum', slug: 'fayoum' },
+  { _id: '6935efa847a0b161dbdeee5b', name: 'Gharbia', slug: 'gharbia' },
+  { _id: '6935efa247a0b161dbdeee4d', name: 'Giza', slug: 'giza' },
+  { _id: '6935efa747a0b161dbdeee58', name: 'Ismailia', slug: 'ismailia' },
+  { _id: '6935efa847a0b161dbdeee5a', name: 'Kafr El Sheikh', slug: 'kafr-el-sheikh' },
+  { _id: '6935efa347a0b161dbdeee4f', name: 'Luxor', slug: 'luxor' },
+  { _id: '6935efaa47a0b161dbdeee64', name: 'Matrouh', slug: 'matrouh' },
+  { _id: '6935efaa47a0b161dbdeee65', name: 'North Sinai', slug: 'north-sinai' },
+  { _id: '6935efa647a0b161dbdeee55', name: 'Qalyubia', slug: 'qalyubia' },
+  { _id: '6935efa947a0b161dbdeee61', name: 'Qena', slug: 'qena' },
+  { _id: '6935efa447a0b161dbdeee51', name: 'Red Sea', slug: 'red-sea' },
+  { _id: '6935efa547a0b161dbdeee54', name: 'Sharqia', slug: 'sharqia' },
+  { _id: '6935efa747a0b161dbdeee57', name: 'Suez', slug: 'suez' },
+];
+
 export default function TripModal({ isOpen, onClose, onSuccess }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -21,29 +44,6 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
   const [provinces, setProvinces] = useState([]);
   const [loadingProvinces, setLoadingProvinces] = useState(true);
   const auth = useAuth();
-
-  // Fallback governorate list (with actual MongoDB IDs from API)
-  const FALLBACK_GOVERNORATES = [
-    { _id: '6935efa247a0b161dbdeee4e', name: 'Alexandria', slug: 'alexandria' },
-    { _id: '6935efa347a0b161dbdeee50', name: 'Aswan', slug: 'aswan' },
-    { _id: '6935efa747a0b161dbdeee59', name: 'Beheira', slug: 'beheira' },
-    { _id: '6935efaa47a0b161dbdeee62', name: 'Beni Suef', slug: 'beni-suef' },
-    { _id: '6935efa247a0b161dbdeee4c', name: 'Cairo', slug: 'cairo' },
-    { _id: '6935efa847a0b161dbdeee5d', name: 'Damietta', slug: 'damietta' },
-    { _id: '6935efaa47a0b161dbdeee63', name: 'Fayoum', slug: 'fayoum' },
-    { _id: '6935efa847a0b161dbdeee5b', name: 'Gharbia', slug: 'gharbia' },
-    { _id: '6935efa247a0b161dbdeee4d', name: 'Giza', slug: 'giza' },
-    { _id: '6935efa747a0b161dbdeee58', name: 'Ismailia', slug: 'ismailia' },
-    { _id: '6935efa847a0b161dbdeee5a', name: 'Kafr El Sheikh', slug: 'kafr-el-sheikh' },
-    { _id: '6935efa347a0b161dbdeee4f', name: 'Luxor', slug: 'luxor' },
-    { _id: '6935efaa47a0b161dbdeee64', name: 'Matrouh', slug: 'matrouh' },
-    { _id: '6935efaa47a0b161dbdeee65', name: 'North Sinai', slug: 'north-sinai' },
-    { _id: '6935efa647a0b161dbdeee55', name: 'Qalyubia', slug: 'qalyubia' },
-    { _id: '6935efa947a0b161dbdeee61', name: 'Qena', slug: 'qena' },
-    { _id: '6935efa447a0b161dbdeee51', name: 'Red Sea', slug: 'red-sea' },
-    { _id: '6935efa547a0b161dbdeee54', name: 'Sharqia', slug: 'sharqia' },
-    { _id: '6935efa747a0b161dbdeee57', name: 'Suez', slug: 'suez' },
-  ];
 
   // Fetch provinces
   React.useEffect(() => {
@@ -126,7 +126,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
             notes: item.notes || '',
             ticketRequired: item.ticketRequired || false,
           }));
-          
+
           // Use createdFromPlaceId if itinerary exists
           tripData.createdFromPlaceId = itinerary[0].placeId;
         }
@@ -156,31 +156,31 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
         console.log('✅ [TripModal] Response received:', response.data);
 
         if (response.data?.success) {
-          const tripId = response.data?.data?.trip?._id || 
-                        response.data?.data?._id || 
-                        response.data?.trip?._id ||
-                        response.data?._id;
-          
+          const tripId = response.data?.data?.trip?._id ||
+            response.data?.data?._id ||
+            response.data?.trip?._id ||
+            response.data?._id;
+
           console.log('Extracted tripId:', tripId);
           console.log('Response data structure:', response.data?.data);
-          
+
           if (!tripId) {
             throw new Error('Trip created but no ID returned');
           }
-          
+
           // Reset form
           formik.resetForm();
           setItinerary([]);
           setSelectedLocation(null);
-          
+
           // Close modal
           onClose();
-          
+
           // Notify parent
           if (onSuccess) {
             onSuccess();
           }
-          
+
           // Redirect to guide selection
           router.push(`/create-trip/${tripId}/select-guide`);
         } else {
@@ -192,7 +192,7 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
         console.error('❌ [TripModal] Response data:', err.response?.data);
         console.error('❌ [TripModal] Response status:', err.response?.status);
         console.error('❌ [TripModal] Response headers:', err.response?.headers);
-        
+
         if (err.response?.status === 401) {
           setError('Your session has expired. Please login again.');
           onClose();
@@ -201,16 +201,16 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
           });
           return;
         }
-        
+
         if (err.response?.status === 422) {
           const errorData = err.response?.data;
           console.error('❌ [TripModal] 422 Validation details:', errorData);
           console.error('❌ [TripModal] Validation errors array:', errorData?.errors);
           console.error('❌ [TripModal] Each error:', errorData?.errors?.map((e, i) => ({ index: i, error: e })));
-          
+
           // Try to extract meaningful error message
           let validationError = 'Validation failed. Please check your inputs.';
-          
+
           if (errorData?.errors && Array.isArray(errorData.errors)) {
             // If errors is an array of validation errors
             validationError = errorData.errors.map(e => e.msg || e.message || e).join(', ');
@@ -224,15 +224,15 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
             // Empty response body - this is the issue!
             validationError = 'Server validation failed. Please check: date is in future, meeting address is detailed (10+ chars), and province is selected.';
           }
-          
+
           setError(`Validation Error: ${validationError}`);
           return;
         }
-        
+
         setError(
           err.response?.data?.message ||
-            err.message ||
-            'Failed to create trip. Please try again.'
+          err.message ||
+          'Failed to create trip. Please try again.'
         );
       } finally {
         setLoading(false);
@@ -300,11 +300,10 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
                 value={formik.values.provinceId}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`${styles.select} ${
-                  formik.touched.provinceId && formik.errors.provinceId
-                    ? styles.inputError
-                    : ''
-                }`}
+                className={`${styles.select} ${formik.touched.provinceId && formik.errors.provinceId
+                  ? styles.inputError
+                  : ''
+                  }`}
                 disabled={loadingProvinces}
               >
                 <option value="">Select a governorate...</option>
@@ -332,11 +331,10 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
                 minDate={new Date()}
                 dateFormat="MMMM d, yyyy h:mm aa"
                 placeholderText="Select date and time"
-                className={`${styles.input} ${
-                  formik.touched.startAt && formik.errors.startAt
-                    ? styles.inputError
-                    : ''
-                }`}
+                className={`${styles.input} ${formik.touched.startAt && formik.errors.startAt
+                  ? styles.inputError
+                  : ''
+                  }`}
               />
               {formik.touched.startAt && formik.errors.startAt && (
                 <div className={styles.errorText}>{formik.errors.startAt}</div>
@@ -354,11 +352,10 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
                     key={hours}
                     type="button"
                     onClick={() => handleDurationChange(hours)}
-                    className={`${styles.durationBtn} ${
-                      formik.values.totalDurationMinutes === hours * 60
-                        ? styles.durationBtnActive
-                        : ''
-                    }`}
+                    className={`${styles.durationBtn} ${formik.values.totalDurationMinutes === hours * 60
+                      ? styles.durationBtnActive
+                      : ''
+                      }`}
                   >
                     {hours} Hours
                   </button>
@@ -393,11 +390,10 @@ export default function TripModal({ isOpen, onClose, onSuccess }) {
                 onBlur={formik.handleBlur}
                 placeholder="Enter detailed meeting address (e.g., Giza Pyramids Main Entrance, Cairo)"
                 rows={3}
-                className={`${styles.textarea} ${
-                  formik.touched.meetingAddress && formik.errors.meetingAddress
-                    ? styles.inputError
-                    : ''
-                }`}
+                className={`${styles.textarea} ${formik.touched.meetingAddress && formik.errors.meetingAddress
+                  ? styles.inputError
+                  : ''
+                  }`}
               />
               {formik.touched.meetingAddress && formik.errors.meetingAddress && (
                 <div className={styles.errorText}>
