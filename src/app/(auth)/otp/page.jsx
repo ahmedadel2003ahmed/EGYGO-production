@@ -1,43 +1,48 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // ✅ استيراد router من App Router
+import { useRouter } from "next/navigation";
 import styles from "./otp.module.css";
 import Image from "next/image";
 
 export default function Otp() {
-  const router = useRouter(); // ✅ تهيئة الـ router
+  const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
 
-  // 📩 قراءة الإيميل من localStorage عند تحميل الصفحة
+  // Load email from localStorage
   useEffect(() => {
     const storedEmail = localStorage.getItem("registerEmail");
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
-      setEmail("ebrahimmamdoh3@gmail.com"); // fallback مؤقت
+      // Keep fallback just in case, or redirect to register?
+      // user might have refreshed.
+      setEmail("user@example.com"); 
     }
   }, []);
 
-  // 🧩 التحكم في حقول OTP
+  // OTP Input Control
   const handleChange = (index, value) => {
     if (!/^[0-9]?$/.test(value)) return;
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
+    
+    // Auto-focus next input
     if (value && index < 3) {
-      document.getElementById(`otp-${index + 1}`).focus();
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      if (nextInput) nextInput.focus();
     }
   };
 
-  // 🧠 عند الضغط على زر التحقق
+  // Handle Submit
   const handleSubmit = async () => {
     const code = otp.join("");
     if (code.length < 4) {
-      setError("الرجاء إدخال رمز مكون من 4 أرقام");
+      setError("Please enter the complete 4-digit code.");
       return;
     }
 
@@ -55,147 +60,120 @@ export default function Otp() {
 
       const data = await res.json();
 
-      // ⚠️ فحص النتيجة
       if (!res.ok || !data.success) {
-        setError(
-          data?.message?.ar ||
-          "فشل التحقق من الرمز، تأكد من صحته أو أعد المحاولة لاحقًا."
-        );
+        setError(data?.message || "Verification failed. Check the code and try again.");
         return;
       }
 
-      // ✅ نجاح التحقق
+      // Success
       setVerified(true);
       setError("");
 
-      // 🔐 Check if backend returned token (auto-login after verification)
+      // Auto-login logic
       if (data.data?.accessToken && data.data?.user) {
         localStorage.setItem("access_token", data.data.accessToken);
-        localStorage.setItem("laqtaha_user", JSON.stringify(data.data.user));
+        localStorage.setItem("laqtaha_user", JSON.stringify(data.data.user)); // Keeping legacy key just in case
         console.log("✅ Auto-logged in after OTP verification");
       }
 
       localStorage.removeItem("registerEmail");
       localStorage.removeItem("pendingUserId");
+
     } catch (err) {
       console.error("Verification error:", err);
-      setError("حدث خطأ أثناء الاتصال بالخادم، حاول مجددًا.");
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
-
-    // ✅ منطق مؤقت لعرض شاشة النجاح مباشرة (بدون تحقق)
-    setTimeout(() => {
-      setVerified(true);
-      setLoading(false);
-    }, 600);
   };
 
-  // ✅ منطق الانتقال بعد التحقق بنجاح
+  // Navigate after success
   const handleNext = () => {
-    // تنظيف البيانات المؤقتة
     localStorage.removeItem("pendingUserId");
     localStorage.removeItem("registerEmail");
 
-    // Check if user is logged in (has token)
     const token = localStorage.getItem("access_token");
-
     if (token) {
-      // User is logged in, go to home
-      router.replace("/home");
+      router.replace("/home"); // Or dashboard
     } else {
-      // No token, redirect to login
-      console.log("⚠️ No token found, redirecting to login");
-      router.replace("/login");
+      router.replace("/login"); // Should ideally not happen if auto-login worked
     }
   };
 
   return (
-    <>
-      <div className={styles.registerWrapper}>
-        <div className="row align-items-center min-vh-100 g-3 g-md-4">
-          {/* Left visual */}
-          <div className="col-12 col-md-6 d-flex justify-content-center order-1 order-md-1">
-            <div className={styles.leftCard}>
-              <div className={styles.imageText}>
-                <Image
-                  src="/images/logo.ico"
-                  alt="Logo"
-                  width={140}
-                  height={100}
-                  className={styles.logoImage}
-                />
-                <h2>مرحبا بكم في لقطها</h2>
-                <p>اطلب مني اللي تريده وخليني ألقطها عشانك</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right form */}
-          <div className={`${styles.formCard}col-12 col-md-6 d-flex flex-column justify-content-center  order-2 order-md-2 text-center`}>
-            {!verified ? (
-              <>
-                <h2 className={`${styles.heading}`}>
-                  قد قمنا بإرسال رمز التحقق إليك، المرجو التحقق منه في بريدك الإلكتروني
-                </h2>
-
-                <div className={styles.otpInputs}>
-                  {otp.map((v, i) => (
-                    <input
-                      key={i}
-                      id={`otp-${i}`}
-                      maxLength="1"
-                      value={v}
-                      onChange={(e) => handleChange(i, e.target.value)}
-                      className={styles.otpBox}
-                    />
-                  ))}
-                </div>
-
-                {error && <p className={styles.errorText}>{error}</p>}
-
-                <p className={styles.resendText}>لم يصلك الرمز؟</p>
-                <button className={styles.resendLink} onClick={() => alert("سيتم إرسال الكود مجددًا")}
-                >
-                  إعادة إرسال رمز التحقق
-                </button>
-
-                <button
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className={`${styles.primaryBtn}  mx-auto`}
-                >
-                  {loading ? "جارٍ التحقق..." : "التالي"}
-                </button>
-              </>
-            ) : (
-              <>
-                <div className={styles.sccessWrapper}>
-                  <h2 className={styles.heading}>
-                    تم التحقق من البريد الإلكتروني بنجاح!!
-                    <br />
-                    لنقم بإعداد التطبيق من أجلك
-                  </h2>
-
-                  <div className={styles.successIcon}>
-                    <Image
-                      src="/images/success.png"
-                      alt="Success"
-                      width={300}
-                      height={300}
-                    />
-                  </div>
-
-                  {/* ✅ تم استبدال الـ alert بالتوجيه */}
-                  <button onClick={handleNext} className={styles.primaryBtn}>
-                    التالي
-                  </button>
-                </div>
-              </>
-            )}
+    <div className={styles.pageWrapper}>
+      <div className={styles.pageOverlay}></div>
+      
+      <div className={styles.container}>
+        {/* Left Section (Image) */}
+        <div className={styles.imageSection}>
+          <div className={styles.imageOverlay}></div>
+          <div className={styles.imageContent}>
+            <Image src="/images/logo.ico" alt="Logo" width={100} height={100} style={{ marginBottom: 20 }} />
+            <h2>Welcome to EgyGo</h2>
+            <p>Verify your email to continue exploring the beauty of Egypt.</p>
           </div>
         </div>
+
+        {/* Right Section (Form) */}
+        <div className={styles.formSection}>
+          {!verified ? (
+            <>
+              <h2 className={styles.heading}>Verify Your Email</h2>
+              <p className={styles.subHeading}>
+                We've sent a 4-digit verification code to <br/> <strong>{email}</strong>
+              </p>
+
+              <div className={styles.otpInputs}>
+                {otp.map((v, i) => (
+                  <input
+                    key={i}
+                    id={`otp-${i}`}
+                    maxLength="1"
+                    value={v}
+                    onChange={(e) => handleChange(i, e.target.value)}
+                    className={styles.otpBox}
+                    autoFocus={i === 0}
+                  />
+                ))}
+              </div>
+
+              {error && <div className={styles.errorText}>{error}</div>}
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className={styles.submitBtn}
+              >
+                {loading ? "Verifying..." : "Verify Code"}
+              </button>
+
+              <button 
+                className={styles.resendLink} 
+                onClick={() => alert("Resend code functionality to be implemented")}
+              >
+                Didn't receive the code? Resend
+              </button>
+            </>
+          ) : (
+            <div className={styles.successWrapper}>
+              <h2 className={styles.heading} style={{ color: '#10B981' }}>Verified Successfully!</h2>
+              <Image
+                src="/images/success.png"
+                alt="Success"
+                width={150}
+                height={150}
+                className={styles.successIcon}
+              />
+              <p className={styles.subHeading}>Your account has been verified. You can now access all features.</p>
+              
+              <button onClick={handleNext} className={styles.submitBtn}>
+                Continue to Dashboard
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,312 +1,193 @@
-/* إعادة استخدام نفس الأسماء والألوان لتطابق Register */
-.registerWrapper {
+/* Otp.module.css - Adapted from RegisterModal.module.css */
+
+.pageWrapper {
   min-height: 100vh;
-  background: linear-gradient(-90.426deg, #E85F25 0%, rgba(248, 123, 69, 34%) 81%, rgba(252, 87, 16, 0%) 100%);
-  color: #fff;
-  padding: 20px;
-}
-
-/* card */
-.leftCard {
   width: 100%;
-  max-width: 540px;
-  height: 50vh; /* موبايل: نص الشاشة */
-  border-radius: 16px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url("/images/3.svg") center/cover no-repeat; /* Use same background or similar */
   position: relative;
-  background: url("/images/3.svg") center/cover no-repeat;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 60px rgba(0,0,0,0.4);
 }
 
-/* .leftCard img {
-  width: 180px;
-  height: 60px;
-  object-fit: contain;
-} */
- 
-.logoImage {
-  width: 140px !important;   
-  height: 100px !important;  
-  object-fit: contain;     
-}
-/* النصوص اللي فوق الصورة */
-.imageText {
+.pageOverlay {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  text-align: right;
-  color: #fff;
-  padding: 15px;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1;
 }
 
-.imageText h1 {
-  font-size: 20px;
-  font-weight: bold;
+.container {
   display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.imageText h2 {
-  font-size: 20px;
-  margin-top: 4px;
-}
-
-.imageText p {
-  font-size: 14px;
-  margin-top: 2px;
-}
-
-@media (min-width: 768px) {
-  .leftCard {
-    height: 620px; /* ديسكتوب */
-  }
-}
-
-/* فورم كارد داخلي للتباعد البسيط */
-.formCard {
   width: 100%;
-  max-width: 480px;
-  border-radius: 14px;
-  padding: 16px 24px; /* أقل padding خارجياً، الفورم نفسه له padding داخلي */
+  max-width: 900px;
+  height: auto;
+  min-height: 500px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+  margin: 20px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Left Section (Image) */
+.imageSection {
+  flex: 1;
+  background: url("/images/3.svg") center/cover no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  color: white;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%);
+  z-index: 1;
+}
+
+.imageContent {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.imageContent h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.imageContent p {
+  font-size: 15px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Right Section (Form) */
+.formSection {
+  flex: 1;
+  background: #fff;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-.formCard {
-   width: 100%;
-  max-width: 540px;
-  min-height: 620px;  
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
-  padding: 16px 24px; /* أقل padding خارجياً، الفورم نفسه له padding داخلي */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-/* form */
-.form {
-  width: 100%;
-  max-width: 480px;
-  border-radius: 14px;
-  padding: 0; /* نترك padding للفورم كارد الخارجي */
-}
-
-/* inputs */
-.input {
-  width: 100% !important; /* override bootstrap */
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid #fff; /* الإطار أبيض */
-  color: #fff;
-  outline: none;
-  font-size: 14px;
-  transition: box-shadow .15s ease, border-color .15s ease;
-  direction: rtl;
-  text-align: right;
-}
-
-.input:focus {
-  border-color: #fff; /* أبيض عند التركيز */
-  box-shadow: 0 4px 18px rgba(255,255,255,0.25);
-}
-
-.invalid {
-  border-color: #ff6b6b !important;
-}
-
-.err {
-  color: #ff9aa2;
-  font-size: 12px;
-  margin-top: 6px;
-  text-align: right;
-}
-
-/* primary / secondary buttons (مطابقة للتسجيل) */
-.primaryBtn {
-  width: 60%;
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  color: white;
-  background: var(--color-secondary);
-  box-shadow: 0 8px 20px rgba(255,47,207,0.14);
-  
-}
-.primaryBtn :hover {
-  background: var(--color-primary);
-}
-
-/* social buttons row */
-.socialRow {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-  flex-direction: column; /* stacked on small screens */
-}
-.socialRow button {
-width: 100%;
-}
-@media (min-width: 576px) {
-  .socialRow {
-    flex-direction: row; /* side-by-side on larger screens */
-  }
-}
-
-/* common social btn */
-.socialBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  cursor: pointer;
-  font-weight: 700;
-  color: #111;
-  background: #fff; /* default white for google */
-}
-
-/* Google style (white) */
-.socialBtn.google img {
-  display: inline-block;
-}
-
-/* Facebook style — blue */
-.socialBtn.facebook {
-  background: linear-gradient(90deg, #2563eb 0%, #4f8cff 100%);
-  color: #fff;
-  border: none;
-}
-
-/* small link-like button (register link) */
-.linkBtn {
-  background: transparent;
-  border: none;
-  color: #00c4cc;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-}
-
-/* buttons spacing */
-.secondaryBtn {
-  margin-top: 10px;
-  margin-bottom: 0;
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  color: white;
-  background: linear-gradient(90deg, #2563eb 0%, #4f8cff 100%);
-}
-
-.resendLink{
-    background-color: transparent;
-    color: white;
-    border: none;
-}
-/* النصوص */
-.heading,
-.hint,
-.terms {
+  align-items: center; /* Center content for OTP */
   text-align: center;
 }
-.heading{
-      padding: 30px 60px;
+
+.heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
 }
 
-
-.hint,
-.terms {
-  color: #8A8A8A;
+.subHeading {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
 }
-
-.terms {
-  margin-top: 14px;
-}
-
-/* highlight links inside terms */
-.highlight{
-  color: #00c4cc;  /* اللون المختلف */
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.sccessWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 70px;
-  padding: 30px;
-}
-/* iput feild  */
-/* =========================
-   OTP Input Styles
-   ========================= */
 
 .otpInputs {
   display: flex;
+  gap: 12px;
   justify-content: center;
-  gap: 18px; /* المسافة بين الخانات */
-  margin: 25px 0;
+  margin-bottom: 20px;
 }
 
 .otpBox {
-  width: 65px;
-  height: 65px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(255, 255, 255, 0.05);
+  width: 50px;
+  height: 60px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  background: #fdfdfd;
+  font-size: 24px;
+  font-weight: 700;
   text-align: center;
-  font-size: 28px;
-  font-weight: 500;
-  color: #ffffff;
+  transition: all 0.2s ease;
   outline: none;
-  caret-color: var(--color-primary);
-  transition: border-color 0.2s ease-in-out;
+  color: #333;
 }
 
-/* في حالة وجود نص داخل الخانة */
-.otpBox:not(:placeholder-shown) {
-  border-color: rgba(255, 255, 255, 0.35);
+.otpBox:focus {
+  border-color: #E85F25;
+  box-shadow: 0 0 0 4px rgba(232, 95, 37, 0.1);
+  background: #fff;
 }
 
-/* إزالة أسهم الإدخال من النوع number (لو استخدم لاحقاً) */
-.otpBox::-webkit-inner-spin-button,
-.otpBox::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.submitBtn {
+  background-color: #d2a16e;
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  width: 100%;
+  margin-top: 10px;
 }
 
+.submitBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.resendLink {
+  background: none;
+  border: none;
+  color: #7C3AED;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+  text-decoration: underline;
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 10px;
+  background: #fef2f2;
+  padding: 8px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.successWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.successIcon {
+  margin: 20px 0;
+}
 
 @media (max-width: 768px) {
-  /* .cardWrap {
+  .container {
     flex-direction: column;
-    gap: 18px;
-  } */
-
-  /* image card moves on top and gets fixed height 200px as requested */
-  .leftCard {
-    width: 100%;
-    max-width: 100%;
-    min-height: 200px;
-    height: 200px;
-    border-radius: 12px;
+    height: auto;
+    max-height: 90vh;
   }
-  .heading{
-      padding: 0px;
-}
 
+  .imageSection {
+    display: none; /* Hide image on mobile like modal */
+  }
 }
