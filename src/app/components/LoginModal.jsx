@@ -79,7 +79,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       setServerError(null);
       formik.resetForm();
     }
-  }, [isOpen, formik]);
+  }, [isOpen]);
 
   // Close on Escape key
   useEffect(() => {

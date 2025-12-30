@@ -216,29 +216,51 @@ export default function SelectGuidePage() {
       {/* Header */}
       <section className={styles.headerSection}>
         <div className="container">
-          <button onClick={() => router.back()} className={styles.backBtn}>
-            ← Back
+          <button onClick={() => router.push('/my-trips')} className={styles.backBtn}>
+            ← Back to Trips
           </button>
-          <h1 className={styles.pageTitle}>Select Your Guide</h1>
-          {trip && (
-            <div className={styles.tripInfo}>
-              <span>📅 {new Date(trip.startAt).toLocaleDateString()}</span>
-              <span>⏱️ {trip.totalDurationMinutes} min</span>
-              <span>📍 {trip.meetingAddress}</span>
-              {trip.province && (
-                <span>🗺️ {trip.province.name || 'Province not set'}</span>
-              )}
-            </div>
-          )}
+          <div className={styles.headerContent}>
+            <h1 className={styles.pageTitle}>Select Your Perfect Guide</h1>
+            <p className={styles.pageSubtitle}>Browse and choose from our top-rated local experts for your trip.</p>
+            
+            {trip && (
+              <div className={styles.tripSummaryCard}>
+                <div className={styles.summaryItem}>
+                  <span className={styles.summaryIcon}>📅</span>
+                  <div className={styles.summaryText}>
+                    <span className={styles.summaryLabel}>Date</span>
+                    <span className={styles.summaryValue}>{new Date(trip.startAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div className={styles.summaryItem}>
+                  <span className={styles.summaryIcon}>⏱️</span>
+                  <div className={styles.summaryText}>
+                    <span className={styles.summaryLabel}>Duration</span>
+                    <span className={styles.summaryValue}>{trip.totalDurationMinutes} min</span>
+                  </div>
+                </div>
+                {trip.province && (
+                  <div className={styles.summaryItem}>
+                    <span className={styles.summaryIcon}>🗺️</span>
+                    <div className={styles.summaryText}>
+                      <span className={styles.summaryLabel}>Location</span>
+                      <span className={styles.summaryValue}>{trip.province.name || 'Egypt'}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Filters */}
       <section className={styles.filtersSection}>
         <div className="container">
-          <div className={styles.filtersCard}>
+          <div className={styles.filtersBar}>
+            <div className={styles.filterTitle}>Filter Guides By:</div>
+            
             <div className={styles.filterGroup}>
-              <label>Language</label>
               <select
                 value={filters.language}
                 onChange={(e) =>
@@ -246,34 +268,17 @@ export default function SelectGuidePage() {
                 }
                 className={styles.filterSelect}
               >
-                <option value="">All Languages</option>
+                <option value="">🌐 All Languages</option>
                 <option value="English">English</option>
                 <option value="Arabic">Arabic</option>
                 <option value="French">French</option>
-                <option value="Spanish">Spanish</option>
                 <option value="German">German</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Italian">Italian</option>
               </select>
             </div>
 
             <div className={styles.filterGroup}>
-              <label>Max Distance (km)</label>
-              <select
-                value={filters.maxDistance}
-                onChange={(e) =>
-                  setFilters({ ...filters, maxDistance: e.target.value })
-                }
-                className={styles.filterSelect}
-              >
-                <option value="">Any Distance</option>
-                <option value="5">Within 5 km</option>
-                <option value="10">Within 10 km</option>
-                <option value="20">Within 20 km</option>
-                <option value="50">Within 50 km</option>
-              </select>
-            </div>
-
-            <div className={styles.filterGroup}>
-              <label>Min Rating</label>
               <select
                 value={filters.minRating}
                 onChange={(e) =>
@@ -281,15 +286,14 @@ export default function SelectGuidePage() {
                 }
                 className={styles.filterSelect}
               >
-                <option value="0">Any Rating</option>
-                <option value="3">3+ Stars</option>
-                <option value="4">4+ Stars</option>
-                <option value="4.5">4.5+ Stars</option>
+                <option value="0">⭐ Any Rating</option>
+                <option value="4">⭐ 4+ Stars</option>
+                <option value="4.5">⭐ 4.5+ Stars</option>
+                <option value="5">⭐ 5 Stars</option>
               </select>
             </div>
 
             <div className={styles.filterGroup}>
-              <label>Sort By</label>
               <select
                 value={filters.sortBy}
                 onChange={(e) =>
@@ -297,9 +301,9 @@ export default function SelectGuidePage() {
                 }
                 className={styles.filterSelect}
               >
-                <option value="distance">Distance</option>
-                <option value="rating">Rating</option>
-                <option value="price">Price</option>
+                <option value="distance">📍 Nearest First</option>
+                <option value="rating">⭐ Highest Rated</option>
+                <option value="price">💰 Price: Low to High</option>
               </select>
             </div>
           </div>
@@ -327,117 +331,125 @@ export default function SelectGuidePage() {
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>🔍</div>
               <h3>No Guides Found</h3>
-              <p>Try adjusting your filters to see more results</p>
+              <p>We couldn't find any guides matching your criteria in this area.</p>
+              <button 
+                onClick={() => setFilters({ language: '', maxDistance: '', minRating: 0, sortBy: 'distance' })}
+                className={styles.resetBtn}
+              >
+                Clear Filters
+              </button>
             </div>
           )}
 
           {!isLoading && !error && guides.length > 0 && (
             <>
-              <div className={styles.resultCount}>
-                Found {guides.length} compatible guide{guides.length !== 1 ? 's' : ''}
+              <div className={styles.resultsHeader}>
+                <h2>Available Guides</h2>
+                <span className={styles.resultBadge}>{guides.length} found</span>
               </div>
 
               <div className={styles.guidesGrid}>
                 {guides.map((guide) => {
-                  // Check for different possible field names for profile picture
-                  const profileImage = guide.profilePicture || guide.profileImage || guide.avatar || guide.image || guide.photo;
+                  // ROBUST IMAGE RESOLUTION
+                  // Prioritize url field if photo is an object, otherwise treat as string
+                  const resolveImage = (src) => {
+                    if (!src) return null;
+                    if (typeof src === 'object' && src.url) return src.url;
+                    if (typeof src === 'string' && src.trim().length > 0) return src;
+                    return null;
+                  };
+
+                  const profileImage = 
+                    resolveImage(guide.profilePicture) || 
+                    resolveImage(guide.profileImage) || 
+                    resolveImage(guide.avatar) || 
+                    resolveImage(guide.image) || 
+                    resolveImage(guide.photo);
 
                   return (
                     <div key={guide._id} className={styles.guideCard}>
-                      <div className={styles.guideHeader}>
-                        <div className={styles.guideAvatar}>
-                          {profileImage ? (
-                            <Image
-                              src={profileImage}
-                              alt={guide.name}
-                              className={styles.avatarImg}
-                              width={60}
-                              height={60}
-                              style={{ objectFit: 'cover' }}
-                              onError={(e) => {
-                                console.log('Failed to load image:', profileImage);
-                                e.target.style.display = 'none';
-                                e.target.nextSibling.style.display = 'flex';
-                              }}
-                            />
-                          ) : null}
-                          <div
-                            className={styles.avatarPlaceholder}
-                            style={{ display: profileImage ? 'none' : 'flex' }}
+                      <div className={styles.guideCardContent}>
+                        <div className={styles.guideHeader}>
+                          <div className={styles.guideAvatarWrapper}>
+                            {profileImage ? (
+                              <Image
+                                src={profileImage}
+                                alt={guide.name}
+                                className={styles.avatarImg}
+                                width={80}
+                                height={80}
+                                style={{ objectFit: 'cover' }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  // Show placeholder sibling
+                                  if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <div
+                              className={styles.avatarPlaceholder}
+                              style={{ display: profileImage ? 'none' : 'flex' }}
+                            >
+                              {guide.name?.charAt(0) || '?'}
+                            </div>
+                            <div className={styles.verifiedBadge} title="Verified Guide">✓</div>
+                          </div>
+                          
+                          <div className={styles.guideInfoMain}>
+                            <h3 className={styles.guideName}>{guide.name}</h3>
+                            <div className={styles.ratingRow}>
+                              <span className={styles.starIcon}>⭐</span>
+                              <span className={styles.ratingValue}>{guide.rating?.toFixed(1) || 'New'}</span>
+                              <span className={styles.reviewCount}>({guide.reviewCount || 0} reviews)</span>
+                            </div>
+                            <div className={styles.priceTag}>
+                              ${guide.pricePerHour}<span className={styles.priceUnit}>/hr</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={styles.guideBioSection}>
+                          <p className={styles.guideBio}>{guide.bio || 'No bio available.'}</p>
+                        </div>
+
+                        <div className={styles.guideTagsWrapper}>
+                           {guide.languages && guide.languages.length > 0 && (
+                              <div className={styles.tagGroup}>
+                                <span className={styles.tagIcon}>🗣️</span>
+                                {guide.languages.slice(0, 3).map(lang => (
+                                  <span key={lang} className={styles.langTag}>{lang}</span>
+                                ))}
+                                {guide.languages.length > 3 && <span className={styles.moreTag}>+{guide.languages.length - 3}</span>}
+                              </div>
+                           )}
+                        </div>
+
+                        <div className={styles.cardFooter}>
+                           <div className={styles.footerDetail}>
+                             <span className={styles.footerIcon}>📍</span>
+                             <span>{guide.distance ? `${guide.distance.toFixed(1)} km away` : (guide.province?.name || 'Local')}</span>
+                           </div>
+                           <div className={styles.footerDetail}>
+                             <span className={styles.footerIcon}>🎓</span>
+                             <span>{guide.experienceYears ? `${guide.experienceYears}y exp` : 'Experienced'}</span>
+                           </div>
+                        </div>
+
+                        <div className={styles.cardActions}>
+                          <button
+                            onClick={() => router.push(`/guides/${guide._id}`)}
+                            className={styles.viewProfileBtn}
                           >
-                            {guide.name?.charAt(0) || '?'}
-                          </div>
+                            View Profile
+                          </button>
+                          <button
+                            onClick={() => handleSelectGuide(guide._id)}
+                            disabled={selectGuideMutation.isPending}
+                            className={styles.selectBtn}
+                          >
+                            {selectGuideMutation.isPending ? 'Selecting...' : 'Select Guide'}
+                          </button>
                         </div>
-                        <div className={styles.guideBasicInfo}>
-                          <h3 className={styles.guideName}>{guide.name}</h3>
-                          <div className={styles.guideRating}>
-                            ⭐ {guide.rating?.toFixed(1) || 'N/A'} ({guide.reviewCount || 0} reviews)
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className={styles.guideDetails}>
-                        {guide.distance && (
-                          <div className={styles.detailItem}>
-                            <span className={styles.detailIcon}>📍</span>
-                            <span>{guide.distance.toFixed(1)} km away</span>
-                          </div>
-                        )}
-
-                        {guide.languages && guide.languages.length > 0 && (
-                          <div className={styles.detailItem}>
-                            <span className={styles.detailIcon}>🗣️</span>
-                            <span>{guide.languages.join(', ')}</span>
-                          </div>
-                        )}
-
-                        {guide.experienceYears && (
-                          <div className={styles.detailItem}>
-                            <span className={styles.detailIcon}>🎓</span>
-                            <span>{guide.experienceYears} years experience</span>
-                          </div>
-                        )}
-
-                        {guide.pricePerHour && (
-                          <div className={styles.detailItem}>
-                            <span className={styles.detailIcon}>💰</span>
-                            <span>$ {guide.pricePerHour}/hour</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {guide.bio && (
-                        <p className={styles.guideBio}>{guide.bio}</p>
-                      )}
-
-                      {guide.specializations && guide.specializations.length > 0 && (
-                        <div className={styles.specializations}>
-                          {guide.specializations.map((spec, index) => (
-                            <span key={index} className={styles.specTag}>
-                              {spec}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      <div className={styles.cardActions}>
-                        <button
-                          onClick={() =>
-                            router.push(`/guides/${guide._id}`)
-                          }
-                          className={styles.viewProfileBtn}
-                        >
-                          View Profile
-                        </button>
-                        <button
-                          onClick={() => handleSelectGuide(guide._id)}
-                          disabled={selectGuideMutation.isPending}
-                          className={styles.selectBtn}
-                        >
-                          {selectGuideMutation.isPending
-                            ? 'Selecting...'
-                            : 'Select Guide'}
-                        </button>
                       </div>
                     </div>
                   );

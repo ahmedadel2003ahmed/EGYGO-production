@@ -19,6 +19,13 @@ export default function TripDetailsPage() {
   });
   const auth = useAuth();
   const [isSocketConnected, setIsSocketConnected] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
 
   // Debug logging
   useEffect(() => {
@@ -61,6 +68,7 @@ export default function TripDetailsPage() {
         ...(oldData.trip || oldData),
         status: payload.status,
         paymentStatus: payload.paymentStatus || (oldData.trip || oldData).paymentStatus,
+        negotiatedPrice: payload.negotiatedPrice || (oldData.trip || oldData).negotiatedPrice, // Capture price
         confirmedAt: payload.confirmedAt || (oldData.trip || oldData).confirmedAt,
         cancelledAt: payload.cancelledAt || (oldData.trip || oldData).cancelledAt,
         cancelledBy: payload.cancelledBy || (oldData.trip || oldData).cancelledBy,
@@ -69,6 +77,9 @@ export default function TripDetailsPage() {
       // Maintain the same structure as the original data
       return oldData.trip ? { ...oldData, trip: updatedTrip } : updatedTrip;
     });
+
+    // Immediately refetch to ensure we have the complete latest data (including any fields not in socket payload)
+    queryClient.invalidateQueries(['trip', tripId]);
 
     console.log(`✅ [TripDetails] Trip status updated to: ${payload.status}`);
   }, [tripId, queryClient]);
@@ -102,18 +113,17 @@ export default function TripDetailsPage() {
     };
   }, [tripId, isSocketConnected, handleTripStatusUpdate]);
 
-  // WORKAROUND: Poll for status changes (since CORS may block Socket.IO events)
-  // This is a temporary fix until backend adds port 3001 to CORS whitelist
+  // Fallback: Poll for status changes to ensure data consistency
+  // This ensures updates happen even if Socket.IO events are missed or blocked
   useEffect(() => {
-    if (!tripId || isSocketConnected) return;
+    if (!tripId) return;
 
     const pollInterval = setInterval(() => {
-      console.log('[TripDetails] Polling for status changes...');
       queryClient.invalidateQueries(['trip', tripId]);
-    }, 3000); // Poll every 3 seconds
+    }, 5000); // Poll every 5 seconds
 
     return () => clearInterval(pollInterval);
-  }, [tripId, queryClient, isSocketConnected]);
+  }, [tripId, queryClient]);
 
   // Fetch trip details
   const {
@@ -236,7 +246,7 @@ export default function TripDetailsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['trip', tripId]);
-      alert('Trip cancelled successfully');
+      showToast('Trip cancelled successfully');
     },
   });
 
@@ -256,7 +266,7 @@ export default function TripDetailsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['trip', tripId]);
-      alert('Review submitted successfully');
+      showToast('Review submitted successfully');
     },
   });
 
@@ -279,7 +289,7 @@ export default function TripDetailsPage() {
       queryClient.invalidateQueries(['trip', tripId]);
       queryClient.invalidateQueries(['guides-for-trip', tripId]);
       queryClient.invalidateQueries(['selected-guide']);
-      alert('Guide selected successfully!');
+      showToast('Guide selected successfully!');
     },
   });
 
@@ -313,9 +323,9 @@ export default function TripDetailsPage() {
 
       // If trip is already in_call, try to get the existing call
       if (errorMsg.includes('in_call')) {
-        alert('This trip already has an active call. Please refresh the page or check your call history.');
+        showToast('This trip already has an active call. Please refresh the page or check your call history.', 'error');
       } else {
-        alert(errorMsg);
+        showToast(errorMsg, 'error');
       }
     },
   });
@@ -339,7 +349,7 @@ export default function TripDetailsPage() {
       window.location.href = data.data.checkoutUrl;
     },
     onError: (err) => {
-      alert(err.response?.data?.message || 'Failed to create checkout session');
+      showToast(err.response?.data?.message || 'Failed to create checkout session', 'error');
     },
   });
 
@@ -364,7 +374,7 @@ export default function TripDetailsPage() {
   const handleSubmitReview = () => {
     const rating = prompt('Rate this trip (1-5 stars):');
     if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
-      alert('Please enter a valid rating between 1 and 5');
+      showToast('Please enter a valid rating between 1 and 5', 'error');
       return;
     }
 
@@ -434,6 +444,16 @@ export default function TripDetailsPage() {
 
   return (
     <div className={styles.pageWrapper}>
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`${styles.toast} ${styles[toast.type]}`}>
+          <span className={styles.toastIcon}>
+            {toast.type === 'success' ? '✓' : '✕'}
+          </span>
+          <span className={styles.toastMessage}>{toast.message}</span>
+        </div>
+      )}
+
       {/* Real-time Connection Indicator */}
       {isSocketConnected && (
         <div style={{
@@ -762,32 +782,39 @@ export default function TripDetailsPage() {
                     </button>
                   )}
 
-                  {(trip.status === 'pending_confirmation' || trip.status === 'awaiting_payment') && trip.negotiatedPrice && (
+                  {(trip.status === 'pending_confirmation' || trip.status === 'awaiting_payment') && (
                     <>
-                      <div className={styles.priceInfo}>
-                        <span className={styles.priceLabel}>Negotiated Price:</span>
-                        <span className={styles.priceValue}>$ {trip.negotiatedPrice}</span>
-                      </div>
-                      <button
-                        onClick={handlePayNow}
-                        disabled={createCheckoutMutation.isPending}
-                        className={`${styles.actionBtn} ${styles.payBtn}`}
-                      >
-                        {createCheckoutMutation.isPending ? 'Processing...' : '💳 Pay Now'}
-                      </button>
-                      {trip.status === 'pending_confirmation' && (
+                      {trip.negotiatedPrice ? (
+                        <>
+                          <div className={styles.priceInfo}>
+                            <span className={styles.priceLabel}>Negotiated Price:</span>
+                            <span className={styles.priceValue}>$ {trip.negotiatedPrice}</span>
+                          </div>
+                          <button
+                            onClick={handlePayNow}
+                            disabled={createCheckoutMutation.isPending}
+                            className={`${styles.actionBtn} ${styles.payBtn}`}
+                          >
+                            {createCheckoutMutation.isPending ? 'Processing...' : '💳 Pay Now'}
+                          </button>
+                        </>
+                      ) : (
+                        <div className={styles.waitingMessage}>
+                          <span className={styles.waitingIcon}>⏳</span>
+                          <p>
+                             {trip.status === 'awaiting_payment' 
+                               ? 'Waiting for price details...' 
+                               : 'Waiting for guide confirmation...'}
+                          </p>
+                        </div>
+                      )}
+
+                      {trip.status === 'pending_confirmation' && trip.negotiatedPrice && (
                         <p className={styles.paymentNote}>
                           💡 You can pay now or wait for guide confirmation
                         </p>
                       )}
                     </>
-                  )}
-
-                  {trip.status === 'pending_confirmation' && !trip.negotiatedPrice && (
-                    <div className={styles.waitingMessage}>
-                      <span className={styles.waitingIcon}>⏳</span>
-                      <p>Waiting for guide confirmation...</p>
-                    </div>
                   )}
 
                   {trip.status === 'confirmed' && trip.paymentStatus === 'paid' && (

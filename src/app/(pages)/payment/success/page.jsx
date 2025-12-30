@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import socketTripService from '@/services/socketTripService';
 import styles from './PaymentSuccess.module.css';
 
 export default function PaymentSuccessPage() {
@@ -11,7 +12,7 @@ export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
   const [verificationStatus, setVerificationStatus] = useState('verifying'); // 'verifying', 'success', 'failed', 'timeout'
   const [pollAttempts, setPollAttempts] = useState(0);
-  const maxPollAttempts = 30; // 30 attempts * 2 seconds = 60 seconds max
+  const maxPollAttempts = 60; // 60 attempts * 2 seconds = 120 seconds max
 
   const sessionId = searchParams.get('session_id');
   const tripId = searchParams.get('trip_id');
@@ -89,6 +90,38 @@ export default function PaymentSuccessPage() {
       // Keep verifying if still pending
     }
   }, [trip, tripId, pollAttempts, maxPollAttempts]);
+
+  // Socket.IO integration for real-time updates
+  useEffect(() => {
+    if (!tripId) return;
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
+    if (!token) return;
+
+    // Connect and join room
+    socketTripService.connect(token);
+    socketTripService.joinTripRoom(tripId);
+
+    const handleStatusUpdate = (data) => {
+      console.log('🔔 Socket update received:', data);
+      if (data.tripId === tripId) {
+        // If we get an update, force a refetch immediately
+        refetch();
+        
+        // Optimistically check if this is the payment success
+        if (data.paymentStatus === 'paid') {
+           setVerificationStatus('success');
+        }
+      }
+    };
+
+    socketTripService.onTripStatusUpdate(handleStatusUpdate);
+
+    return () => {
+      socketTripService.offTripStatusUpdate(handleStatusUpdate);
+      socketTripService.leaveTripRoom(tripId);
+    };
+  }, [tripId, refetch]);
 
   const handleViewTrip = () => {
     router.push(`/my-trips/${tripId}`);

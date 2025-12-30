@@ -44,6 +44,15 @@ export default function CallPage() {
   const statusPollingIntervalRef = useRef(null);
   const isEndingCallRef = useRef(false);
 
+  // Toast state
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+
   useEffect(() => {
     // Prevent duplicate initialization (React StrictMode, hot reload)
     if (isInitializingRef.current || hasJoinedRef.current) {
@@ -232,7 +241,9 @@ export default function CallPage() {
               clearInterval(statusPollingIntervalRef.current);
               statusPollingIntervalRef.current = null;
 
-              alert('The call has been ended by the other participant.');
+              // Use toast instead of alert
+              showToast('The call has been ended by the other participant.', 'error');
+
 
               // Cleanup and navigate
               await cleanup();
@@ -454,7 +465,7 @@ export default function CallPage() {
       }
     } catch (error) {
       console.error("Error ending call:", error);
-      alert("Failed to submit call details. Please try again.");
+      showToast("Failed to submit call details. Please try again.", "error");
       setEndingCall(false);
     }
   };
@@ -527,8 +538,8 @@ export default function CallPage() {
       }
     } catch (err) {
       console.error('Failed to end call:', err);
-      alert('Call ended locally. Please refresh to see updates.');
-      router.push('/my-trips');
+      showToast('Call ended locally. Please refresh to see updates.', 'error');
+      setTimeout(() => router.push('/my-trips'), 1000);
     }
   };
 
@@ -683,6 +694,16 @@ export default function CallPage() {
 
   return (
     <div className={styles.callContainer}>
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`${styles.toast} ${styles[toast.type]}`}>
+          <span className={styles.toastIcon}>
+            {toast.type === 'success' ? '✓' : '✕'}
+          </span>
+          <span className={styles.toastMessage}>{toast.message}</span>
+        </div>
+      )}
+
       {/* Header */}
       <div className={styles.callHeader}>
         <div className={styles.callInfo}>
@@ -721,14 +742,18 @@ export default function CallPage() {
       </div>
 
       {/* Controls */}
+      {/* Controls */}
       <div className={styles.controlsBar}>
         <button
           onClick={toggleMic}
           className={`${styles.controlButton} ${!micOn ? styles.disabled : ''}`}
           title={micOn ? 'Mute' : 'Unmute'}
         >
-          {micOn ? '🎤' : '🔇'}
-          <span>{micOn ? 'Mute' : 'Unmuted'}</span>
+          {micOn ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="2" x2="22" y1="2" y2="22"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          )}
         </button>
 
         <button
@@ -736,8 +761,11 @@ export default function CallPage() {
           className={`${styles.controlButton} ${!cameraOn ? styles.disabled : ''}`}
           title={cameraOn ? 'Turn off camera' : 'Turn on camera'}
         >
-          {cameraOn ? '📹' : '🚫'}
-          <span>{cameraOn ? 'Camera' : 'No Camera'}</span>
+          {cameraOn ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="2" x2="22" y1="2" y2="22"/><path d="M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16"/><path d="M9.5 4h5L17 7h3a2 2 0 0 1 2 2v7.5"/><path d="M14.121 15.121A3 3 0 1 1 9.88 10.88"/></svg>
+          )}
         </button>
 
         <button
@@ -745,8 +773,7 @@ export default function CallPage() {
           className={`${styles.controlButton} ${styles.hangUpButton}`}
           title="End call"
         >
-          📞
-          <span>End Call</span>
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{transform: 'rotate(135deg)'}}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         </button>
       </div>
 
