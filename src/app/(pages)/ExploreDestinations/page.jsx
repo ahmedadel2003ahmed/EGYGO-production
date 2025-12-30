@@ -54,36 +54,42 @@ const MOCK_DESTINATIONS = [
 const MOCK_GOVERNORATES = [
   {
     name: 'Giza',
+    slug: 'giza',
     shortDesc: 'Home of the Great Pyramids and Sphinx.',
     icon: '⛰️',
     colorClass: 'tileGiza',
   },
   {
     name: 'Cairo',
+    slug: 'cairo',
     shortDesc: 'Egypt\'s vibrant capital and largest city.',
     icon: '🕌',
     colorClass: 'tileCairo',
   },
   {
     name: 'Alexandria',
+    slug: 'alexandria',
     shortDesc: 'The historic Pearl of the Mediterranean.',
     icon: '⚓',
     colorClass: 'tileAlexandria',
   },
   {
     name: 'Luxor',
+    slug: 'luxor',
     shortDesc: 'Ancient city known as the "World\'s Greatest Open-Air Museum."',
     icon: '☀️',
     colorClass: 'tileLuxor',
   },
   {
     name: 'Aswan',
+    slug: 'aswan',
     shortDesc: 'Scenic southern city on the Nile River, famous for its temples.',
     icon: '📍',
     colorClass: 'tileAswan',
   },
   {
     name: 'Sharm El Sheikh',
+    slug: 'sharm-el-sheikh',
     shortDesc: 'Popular Red Sea resort city known for diving and beaches.',
     icon: '🌴',
     colorClass: 'tileSharm',
