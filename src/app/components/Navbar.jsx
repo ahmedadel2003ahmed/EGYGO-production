@@ -123,7 +123,7 @@ const Navbar = () => {
                 >
                   Get Started
                 </button>
-            
+
               </>
             ) : (
               <Link href="/profile" className={styles.profileBtn} aria-label="User profile">
@@ -134,7 +134,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className={styles.menuToggle}
+            className={`${styles.menuToggle} ${isMenuOpen ? styles.menuOpen : ''}`}
             onClick={toggleMenu}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
@@ -171,20 +171,10 @@ const Navbar = () => {
                   auth?.openLoginModal();
                   setIsMenuOpen(false);
                 }}
-                className={styles.mobileLoginBtn}
-                aria-label="Login to your account"
+                className={styles.mobileGetStartedBtn}
+                aria-label="Get Started"
               >
-                Login
-              </button>
-              <button
-                onClick={() => {
-                  auth?.openRegisterModal();
-                  setIsMenuOpen(false);
-                }}
-                className={styles.mobileRegisterBtn}
-                aria-label="Create new account"
-              >
-                Register
+                Get Started
               </button>
             </div>
           </div>

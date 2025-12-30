@@ -7,7 +7,7 @@ import styles from './TourGuides.module.css';
 const guides = [
     {
         id: 1,
-        name: 'Marwa Mosa',
+        name: 'mohamed mousa',
         role: 'Tour guide',
         description: '',
         languages: ['English', 'Arabic'],

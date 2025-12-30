@@ -21,12 +21,12 @@
 
 /* Scrolled State - Apple Glass Effect */
 .navbarScrolled {
-  /* Floating pill effect optional, but let's stick to full width glass first unless specified as pill */
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  /* Premium Glass Effect */
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
 
 /* Float visual tweak - slight padding adjustment on scroll */
@@ -258,6 +258,7 @@
   height: 2px;
   border-radius: 2px;
   transition: all 0.3s ease;
+  transform-origin: center;
 }
 
 .navbar:not(.navbarScrolled) .hamburgerLine {
@@ -268,20 +269,39 @@
   background: #1a1a1a;
 }
 
-/* Mobile Menu */
+/* Hamburger Animation */
+.menuOpen .hamburgerLine:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menuOpen .hamburgerLine:nth-child(2) {
+  opacity: 0;
+}
+
+.menuOpen .hamburgerLine:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Change color when open on mobile menu (which has white background) */
+.menuOpen .hamburgerLine {
+  background: #1a1a1a !important;
+}
+
+/* Mobile Menu Glass */
 .mobileMenu {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
   transform: translateY(-20px);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
   padding: 20px;
 }
 
@@ -306,6 +326,39 @@
 
 .mobileNavLink:hover {
   color: #F59E0B;
+  padding-left: 10px; /* subtle layout shift on hover */
+}
+
+/* Mobile Auth Buttons */
+.mobileAuthButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.mobileGetStartedBtn {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #F59E0B 0%, #d97706 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobileGetStartedBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  filter: brightness(1.1);
 }
 
 /* Responsive */
