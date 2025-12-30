@@ -16,7 +16,7 @@
     "bootstrap": "^5.3.8",
     "formik": "^2.4.6",
     "generate-react-cli": "^9.1.0",
-    "next": "15.3.0",
+    "next": "^15.5.9",
     "react": "19.1.0",
     "react-datepicker": "^8.8.0",
     "react-dom": "19.1.0",

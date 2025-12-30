@@ -331,7 +331,7 @@ export default function SelectGuidePage() {
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>🔍</div>
               <h3>No Guides Found</h3>
-              <p>We couldn't find any guides matching your criteria in this area.</p>
+              <p>We couldn&apos;t find any guides matching your criteria in this area.</p>
               <button 
                 onClick={() => setFilters({ language: '', maxDistance: '', minRating: 0, sortBy: 'distance' })}
                 className={styles.resetBtn}
