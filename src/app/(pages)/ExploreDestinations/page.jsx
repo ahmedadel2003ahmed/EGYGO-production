@@ -17,37 +17,37 @@ const MOCK_DESTINATIONS = [
     slug: 'pyramids-of-giza',
     title: 'Pyramids of Giza',
     subtitle: 'Witness the majestic ancient wonders, a testament to pharaonic engineering and history.',
-    imageUrl: '/images/destinations/pyramids-of-giza.png', // Assumed image path
+    imageUrl: '/images/destination/Giza.jpeg',
   },
   {
     slug: 'khan-el-khalili',
     title: 'Khan el-Khalili Bazaar',
     subtitle: 'Immerse yourself in the vibrant atmosphere of Cairo\'s historic marketplace, rich with crafts and spices.',
-    imageUrl: '/images/destinations/khan-el-khalili.png',
+    imageUrl: '/images/destination/KhanelKhaliliBazaar.jpeg',
   },
   {
     slug: 'aswan-nile-cruise',
     title: 'Aswan Nile Cruise',
     subtitle: 'Experience serene luxury along the Nile, passing ancient temples and picturesque landscapes.',
-    imageUrl: '/images/destinations/aswan-nile-cruise.png',
+    imageUrl: '/images/destination/aswan.jpeg',
   },
   {
     slug: 'alexandria-library',
     title: 'Alexandria Library & Citadel',
     subtitle: 'Explore the modern marvel of the Bibliotheca Alexandrina and the historic Qaitbay Citadel.',
-    imageUrl: '/images/destinations/alexandria-library.png',
+    imageUrl: '/images/destination/alex.jpeg',
   },
   {
     slug: 'luxor-temple',
     title: 'Luxor Temple Complex',
     subtitle: 'Step back in time among grand pylons, statues, and obelisks of one of Egypt\'s most significant sites.',
-    imageUrl: '/images/destinations/luxor-temple.png',
+    imageUrl: '/images/destination/luxor.jpeg',
   },
   {
     slug: 'dahab-blue-hole',
     title: 'Dahab Blue Hole',
     subtitle: 'Dive into the stunning underwater world of the Red Sea, a paradise for snorkelers and divers.',
-    imageUrl: '/images/destinations/dahab-blue-hole.png',
+    imageUrl: '/images/destination/Dahab.jpeg',
   },
 ];
 
@@ -113,6 +113,7 @@ const makeSlug = (name = "") =>
 const normalizeImagePath = (img = "") => {
   if (!img) return "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=1200&h=800&fit=crop";
   if (img.startsWith("/")) return img;
+  if (img.startsWith("http")) return img; 
   return "/" + img.replace(/^\.\.\/+/, "").replace(/^\/+/, "");
 };
 
@@ -133,7 +134,7 @@ const fetchDestinations = async () => {
         slug: place.slug,
         title: place.name,
         subtitle: place.shortDescription || "",
-        imageUrl: place.images?.[0] || getPlaceholderImage(place.name),
+        imageUrl: normalizeImagePath(place.images?.[0]),
       }));
 
       return formatted.length > 0 ? formatted : MOCK_DESTINATIONS;
