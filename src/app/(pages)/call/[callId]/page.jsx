@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import AgoraRTC from 'agora-rtc-sdk-ng';
+// AgoraRTC imported dynamically to avoid SSR window error
 import axios from 'axios';
 import styles from './CallPage.module.css';
 import socketTripService from '@/services/socketTripService';
@@ -114,6 +114,7 @@ export default function CallPage() {
 
       // Initialize Agora client
       console.log('[Agora] Creating Agora client...');
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       const client = AgoraRTC.createClient({
         mode: 'rtc',
         codec: 'vp8',

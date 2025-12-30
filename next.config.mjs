@@ -5,7 +5,7 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://egygo-backend-production.up.railway.app',
   },
   images: {
-    domains: ['localhost'],
+
     remotePatterns: [
       {
         protocol: 'https',
