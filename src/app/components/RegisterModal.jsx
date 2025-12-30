@@ -88,7 +88,8 @@ const RegisterModal = ({ isOpen, onClose }) => {
             setServerError(null);
             formik.resetForm();
         }
-    }, [isOpen, formik]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen]);
 
     // Close on Esc
     useEffect(() => {
