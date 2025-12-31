@@ -70,75 +70,112 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--color-bg);
+  background: #000;
   display: flex;
   flex-direction: column;
   z-index: var(--z-index-modal);
+  overflow: hidden;
 }
 
-/* --- Header --- */
+/* --- Header Overlay --- */
 .callHeader {
-  background: var(--color-surface);
-  padding: var(--spacing-md) var(--spacing-xl);
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+  position: absolute;
+  top: var(--spacing-lg);
+  left: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: 10;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  pointer-events: none; /* Let clicks pass through to video */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .callInfo {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 1400px;
-  margin: 0 auto;
+  gap: 16px;
+  pointer-events: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .callInfo h2 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
   margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .statusBadge {
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.statusBadge.connected {
-  background: var(--color-success-light);
-  color: var(--color-success);
+.statusBadge.connected,
+.statusBadge.CONNECTED {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .statusBadge.connecting,
 .statusBadge.CONNECTING {
-  background: var(--color-warning-light);
-  color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 /* --- Video Container --- */
 .videoContainer {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   position: relative;
-  background: #000;
+  background: #111;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 .remoteVideoSection {
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .remotePlayer {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  position: relative;
 }
+
+/* IMPORTANT: Target the Agora internal dynamic elements */
+.remotePlayer > div, 
+.remotePlayer > video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
 
 .waitingMessage {
   display: flex;
@@ -172,56 +209,65 @@
   margin: 0;
 }
 
-/* Local Video - Picture in Picture */
+/* Local Video - Floating Picture in Picture */
 .localVideoSection {
   position: absolute;
-  top: var(--spacing-lg);
-  right: var(--spacing-lg);
-  width: 280px;
-  height: 210px;
-  border-radius: var(--radius-md);
+  top: 80px; /* Below the header info */
+  right: 20px;
+  width: 240px;
+  height: 320px; /* Portrait aspect ratio looks more modern for mobile-first feel */
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-xl);
-  border: 3px solid white;
-  background: #000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #222; /* Fallback */
+  z-index: 20;
+  transition: all 0.3s ease;
 }
 
 .localPlayer {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  position: relative;
+  background: #000;
+}
+
+.localPlayer > div, 
+.localPlayer > video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transform: rotateY(180deg); /* Mirror effect for self-view */
 }
 
 .localLabel {
-  position: absolute;
-  bottom: var(--spacing-sm);
-  left: var(--spacing-sm);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  backdrop-filter: blur(4px);
+  display: none; /* Hide label for cleaner look, or style it minimally */
 }
 
 /* --- Controls Bar --- */
 .controlsBar {
   position: absolute;
-  bottom: 2rem;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  padding: 1rem 2rem;
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  border-radius: 50px;
+  gap: 24px;
+  border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.controlsBar:hover {
+  background: rgba(15, 15, 15, 0.9);
+  padding: 14px 36px; /* Subtle expansion on hover */
 }
 
 .controlButton {

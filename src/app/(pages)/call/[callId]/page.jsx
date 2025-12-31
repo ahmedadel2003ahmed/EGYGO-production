@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import styles from './CallPage.module.css';
 import socketTripService from '@/services/socketTripService';
+import LocalSelfVideo from '@/components/LocalSelfVideo';
 
 export default function CallPage() {
   const router = useRouter();
@@ -18,6 +19,24 @@ export default function CallPage() {
   const [localVideoTrack, setLocalVideoTrack] = useState(null);
   const [localAudioTrack, setLocalAudioTrack] = useState(null);
   const [remoteUsers, setRemoteUsers] = useState([]);
+
+  // Create a pure MediaStream for the local self-video component
+  const localVideoStream = React.useMemo(() => {
+    if (!localVideoTrack) return null;
+    try {
+      // Extract native MediaStreamTrack from Agora track
+      const mediaStreamTrack = localVideoTrack.getMediaStreamTrack
+        ? localVideoTrack.getMediaStreamTrack()
+        : localVideoTrack.track;
+
+      if (mediaStreamTrack) {
+        return new MediaStream([mediaStreamTrack]);
+      }
+    } catch (e) {
+      console.warn('Failed to Create MediaStream', e);
+    }
+    return null;
+  }, [localVideoTrack]);
 
   // Call state
   const [joined, setJoined] = useState(false);
@@ -67,6 +86,8 @@ export default function CallPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callId]);
+
+
 
   const initializeCall = async () => {
     // Guard: Prevent duplicate calls
@@ -177,8 +198,8 @@ export default function CallPage() {
       setLocalAudioTrack(audioTrack);
       setLocalVideoTrack(videoTrack);
 
-      // Play local video
-      videoTrack.play('local-player');
+      // Play local video - DEFERRED to useEffect
+      // videoTrack.play('local-player'); // Removed because element doesn't exist yet
 
       // Wait a moment and check connection state
       console.log('[Agora] About to publish. Connection state:', client.connectionState);
@@ -312,14 +333,8 @@ export default function CallPage() {
             return [...prev, user];
           });
 
-          // Play remote video with delay to ensure DOM is ready
-          setTimeout(() => {
-            const element = document.getElementById(`remote-player-${user.uid}`);
-            if (element && user.videoTrack) {
-              user.videoTrack.play(`remote-player-${user.uid}`);
-              console.log('[Agora] Playing remote video for:', user.uid);
-            }
-          }, 100);
+          // Remote audio is played automatically by the event listener below/above
+          // Video is handled by the component rendering
         }
 
         if (mediaType === 'audio') {
@@ -721,11 +736,11 @@ export default function CallPage() {
         <div className={styles.remoteVideoSection}>
           {remoteUsers.length > 0 ? (
             remoteUsers.map((user) => (
-              <div
+              <AgoraVideoPlayer
                 key={user.uid}
-                id={`remote-player-${user.uid}`}
+                videoTrack={user.videoTrack}
                 className={styles.remotePlayer}
-              ></div>
+              />
             ))
           ) : (
             <div className={styles.waitingMessage}>
@@ -737,7 +752,10 @@ export default function CallPage() {
 
         {/* Local Video (Small - Picture in Picture) */}
         <div className={styles.localVideoSection}>
-          <div id="local-player" className={styles.localPlayer}></div>
+          <LocalSelfVideo
+            stream={localVideoStream}
+            className={styles.localPlayer}
+          />
           <span className={styles.localLabel}>You</span>
         </div>
       </div>
@@ -751,9 +769,9 @@ export default function CallPage() {
           title={micOn ? 'Mute' : 'Unmute'}
         >
           {micOn ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" x2="12" y1="19" y2="22" /></svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="2" x2="22" y1="2" y2="22"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="2" x2="22" y1="2" y2="22" /><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2" /><path d="M5 10v2a7 7 0 0 0 12 5" /><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33" /><path d="M9 9v3a3 3 0 0 0 5.12 2.12" /><line x1="12" x2="12" y1="19" y2="22" /></svg>
           )}
         </button>
 
@@ -763,9 +781,9 @@ export default function CallPage() {
           title={cameraOn ? 'Turn off camera' : 'Turn on camera'}
         >
           {cameraOn ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="2" x2="22" y1="2" y2="22"/><path d="M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16"/><path d="M9.5 4h5L17 7h3a2 2 0 0 1 2 2v7.5"/><path d="M14.121 15.121A3 3 0 1 1 9.88 10.88"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="2" x2="22" y1="2" y2="22" /><path d="M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16" /><path d="M9.5 4h5L17 7h3a2 2 0 0 1 2 2v7.5" /><path d="M14.121 15.121A3 3 0 1 1 9.88 10.88" /></svg>
           )}
         </button>
 
@@ -774,7 +792,7 @@ export default function CallPage() {
           className={`${styles.controlButton} ${styles.hangUpButton}`}
           title="End call"
         >
-           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{transform: 'rotate(135deg)'}}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(135deg)' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
         </button>
       </div>
 
@@ -854,3 +872,59 @@ export default function CallPage() {
     </div>
   );
 }
+
+const AgoraVideoPlayer = ({ videoTrack, className }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    // Guard clauses
+    if (!containerRef.current) return;
+
+    // If no track, clear container and return
+    if (!videoTrack) {
+      containerRef.current.innerHTML = '';
+      return;
+    }
+
+    try {
+      console.log('[AgoraVideoPlayer] Mounting track:', videoTrack.getTrackId());
+
+      // CRITICAL FIX: Clear any existing video elements to prevent "black screen" from stale stopped videos
+      // Agora appends a new div/video on play(). StrictMode leads to double append without this.
+      containerRef.current.innerHTML = '';
+
+      // Play the track in the container
+      videoTrack.play(containerRef.current);
+    } catch (err) {
+      console.error('[AgoraVideoPlayer] Error playing video:', err);
+    }
+
+    return () => {
+      try {
+        console.log('[AgoraVideoPlayer] Stopping track:', videoTrack.getTrackId());
+        // Stop playback
+        videoTrack.stop();
+
+        // Optional: clear container on cleanup to be safe
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+      } catch (e) {
+        console.warn('[AgoraVideoPlayer] Cleanup warning:', e);
+      }
+    };
+  }, [videoTrack]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{
+        width: '100%',
+        height: '100%',
+        background: '#000',
+        overflow: 'hidden' // Ensure video triggers fit logic
+      }}
+    />
+  );
+};

@@ -8,6 +8,7 @@ import axios from 'axios';
 import styles from './TripDetails.module.css';
 import { useAuth } from '@/app/context/AuthContext';
 import socketTripService from '@/services/socketTripService';
+import ReviewModal from '@/components/trip/ReviewModal';
 
 export default function TripDetailsPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function TripDetailsPage() {
   const auth = useAuth();
   const [isSocketConnected, setIsSocketConnected] = useState(false);
   const [toast, setToast] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -346,10 +348,56 @@ export default function TripDetailsPage() {
     },
     onSuccess: (data) => {
       // Redirect to Stripe checkout
-      window.location.href = data.data.checkoutUrl;
+      if (data?.data?.checkoutUrl) {
+        window.location.href = data.data.checkoutUrl;
+      } else {
+        showToast('Failed to get checkout URL', 'error');
+      }
     },
     onError: (err) => {
       showToast(err.response?.data?.message || 'Failed to create checkout session', 'error');
+    },
+  });
+
+  // Start Trip Mutation (Guide Only)
+  const startTripMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post(
+        `/api/trips/${tripId}/start`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['trip', tripId]);
+      showToast('Trip started successfully! 🚀');
+    },
+    onError: (err) => {
+      showToast(err.response?.data?.message || 'Failed to start trip', 'error');
+    },
+  });
+
+  // Complete Trip Mutation (Guide Only)
+  const endTripMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post(
+        `/api/trips/${tripId}/end`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['trip', tripId]);
+      showToast('Trip completed successfully! 🎉');
+    },
+    onError: (err) => {
+      showToast(err.response?.data?.message || 'Failed to complete trip', 'error');
     },
   });
 
@@ -371,20 +419,25 @@ export default function TripDetailsPage() {
     }
   };
 
-  const handleSubmitReview = () => {
-    const rating = prompt('Rate this trip (1-5 stars):');
-    if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
-      showToast('Please enter a valid rating between 1 and 5', 'error');
-      return;
+  const handleStartTrip = () => {
+    if (window.confirm('Are you ready to start this trip?')) {
+      startTripMutation.mutate();
     }
+  };
 
-    const comment = prompt('Write your review:');
-    if (!comment) return;
+  const handleEndTrip = () => {
+    if (window.confirm('Are you sure you want to mark this trip as completed?')) {
+      endTripMutation.mutate();
+    }
+  };
 
-    submitReviewMutation.mutate({
-      rating: Number(rating),
-      comment,
-    });
+  const openReviewModal = () => {
+    setIsReviewModalOpen(true);
+  };
+
+  const handleReviewSubmit = (reviewData) => {
+    submitReviewMutation.mutate(reviewData);
+    setIsReviewModalOpen(false);
   };
 
   console.log('Trip data received:', tripData);
@@ -429,6 +482,7 @@ export default function TripDetailsPage() {
       awaiting_payment: { label: 'Payment Required', color: 'orange', icon: '💳' },
       negotiating: { label: 'Negotiating', color: 'purple', icon: '💬' },
       confirmed: { label: 'Confirmed', color: 'green', icon: '✅' },
+      upcoming: { label: 'Upcoming', color: 'indigo', icon: '🔜' },
       in_progress: { label: 'In Progress', color: 'teal', icon: '🚀' },
       completed: { label: 'Completed', color: 'gray', icon: '✔️' },
       cancelled: { label: 'Cancelled', color: 'red', icon: '❌' },
@@ -441,6 +495,12 @@ export default function TripDetailsPage() {
       </span>
     );
   };
+
+  // Check if current user is the assigned guide
+  const isGuide = auth.user?._id && (
+    auth.user._id === trip.guide?._id ||
+    auth.user._id === trip.guideId
+  );
 
   return (
     <div className={styles.pageWrapper}>
@@ -482,6 +542,14 @@ export default function TripDetailsPage() {
           Real-time updates active
         </div>
       )}
+
+
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSubmit={handleReviewSubmit}
+        isSubmitting={submitReviewMutation.isPending}
+      />
 
       {/* Header */}
       <section className={styles.headerSection}>
@@ -790,31 +858,77 @@ export default function TripDetailsPage() {
                             <span className={styles.priceLabel}>Negotiated Price:</span>
                             <span className={styles.priceValue}>$ {trip.negotiatedPrice}</span>
                           </div>
-                          <button
-                            onClick={handlePayNow}
-                            disabled={createCheckoutMutation.isPending}
-                            className={`${styles.actionBtn} ${styles.payBtn}`}
-                          >
-                            {createCheckoutMutation.isPending ? 'Processing...' : '💳 Pay Now'}
-                          </button>
+                          {!isGuide && (
+                            <button
+                              onClick={handlePayNow}
+                              disabled={createCheckoutMutation.isPending}
+                              className={`${styles.actionBtn} ${styles.payBtn}`}
+                            >
+                              {createCheckoutMutation.isPending ? 'Processing...' : '💳 Pay Now'}
+                            </button>
+                          )}
+                          {isGuide && (
+                            <div className={styles.waitingText}>
+                              ⏳ Waiting for payment...
+                            </div>
+                          )}
                         </>
                       ) : (
-                        <div className={styles.waitingMessage}>
-                          <span className={styles.waitingIcon}>⏳</span>
-                          <p>
-                             {trip.status === 'awaiting_payment' 
-                               ? 'Waiting for price details...' 
-                               : 'Waiting for guide confirmation...'}
-                          </p>
+                        <div className={styles.waitingText}>
+                          ⏳ {isGuide ? 'Please set a price via call/chat' : 'Waiting for guide to set price...'}
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Guide Actions */}
+                  {isGuide && (
+                    <>
+                      {trip.status === 'upcoming' && (
+                        <div className={styles.guideActionBox}>
+                          <p className={styles.guideActionText}>Trip is starting soon!</p>
+                          <button
+                            onClick={handleStartTrip}
+                            disabled={startTripMutation.isPending}
+                            className={`${styles.actionBtn} ${styles.startTripBtn}`}
+                            style={{ backgroundColor: '#10b981', color: 'white' }}
+                          >
+                            {startTripMutation.isPending ? 'Starting...' : '🚀 Start Trip'}
+                          </button>
                         </div>
                       )}
 
-                      {trip.status === 'pending_confirmation' && trip.negotiatedPrice && (
-                        <p className={styles.paymentNote}>
-                          💡 You can pay now or wait for guide confirmation
-                        </p>
+                      {trip.status === 'in_progress' && (
+                        <div className={styles.guideActionBox}>
+                          <p className={styles.guideActionText}>Trip is in progress</p>
+                          <button
+                            onClick={handleEndTrip}
+                            disabled={endTripMutation.isPending}
+                            className={`${styles.actionBtn} ${styles.completeTripBtn}`}
+                            style={{ backgroundColor: '#3b82f6', color: 'white' }}
+                          >
+                            {endTripMutation.isPending ? 'Completing...' : '✅ Complete Trip'}
+                          </button>
+                        </div>
                       )}
                     </>
+                  )}
+
+                  {/* Tourist Actions */}
+                  {!isGuide && trip.status === 'completed' && !trip.review && (
+                    <button
+                      onClick={openReviewModal}
+                      className={`${styles.actionBtn} ${styles.reviewBtn}`}
+                      style={{ backgroundColor: '#f59e0b', color: 'white' }}
+                    >
+                      ⭐ Leave a Review
+                    </button>
+                  )}
+
+                  {!isGuide && trip.status === 'completed' && trip.review && (
+                    <div className={styles.reviewedBadge}>
+                      ✓ You reviewed this trip
+                    </div>
                   )}
 
                   {trip.status === 'confirmed' && trip.paymentStatus === 'paid' && (
@@ -832,54 +946,40 @@ export default function TripDetailsPage() {
                           </div>
                         )}
                         <p className={styles.successNote}>
-                          Your guide will contact you before the trip. Check your email for confirmation.
+                          Your guide will contact you before the trip.
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {['pending', 'awaiting_call', 'pending_confirmation'].includes(
-                    trip.status
-                  ) && (
-                      <button
-                        onClick={handleCancelTrip}
-                        disabled={cancelTripMutation.isPending}
-                        className={styles.cancelBtn}
-                      >
-                        {cancelTripMutation.isPending ? 'Cancelling...' : 'Cancel Trip'}
-                      </button>
-                    )}
-
-                  {trip.status === 'completed' && !trip.review && (
+                  {['pending', 'guide_selected', 'negotiating', 'awaiting_call'].includes(trip.status) && (
                     <button
-                      onClick={handleSubmitReview}
-                      disabled={submitReviewMutation.isPending}
-                      className={styles.reviewBtn}
+                      onClick={handleCancelTrip}
+                      disabled={cancelTripMutation.isPending}
+                      className={styles.cancelBtn}
                     >
-                      {submitReviewMutation.isPending
-                        ? 'Submitting...'
-                        : 'Write Review'}
+                      {cancelTripMutation.isPending ? 'Cancelling...' : 'Cancel Trip'}
                     </button>
                   )}
                 </div>
               </div>
-
-              {/* Review */}
-              {trip.review && (
-                <div className={styles.sidebarCard}>
-                  <h3 className={styles.cardTitle}>Your Review</h3>
-                  <div className={styles.reviewCard}>
-                    <div className={styles.reviewRating}>
-                      {'⭐'.repeat(trip.review.rating)}
-                    </div>
-                    <p className={styles.reviewComment}>{trip.review.comment}</p>
-                  </div>
-                </div>
-              )}
             </div>
+
+            {/* Review */}
+            {trip.review && (
+              <div className={styles.sidebarCard}>
+                <h3 className={styles.cardTitle}>Your Review</h3>
+                <div className={styles.reviewCard}>
+                  <div className={styles.reviewRating}>
+                    {'⭐'.repeat(trip.review.rating)}
+                  </div>
+                  <p className={styles.reviewComment}>{trip.review.comment}</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 }

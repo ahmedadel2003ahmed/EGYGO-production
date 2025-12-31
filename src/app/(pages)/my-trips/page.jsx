@@ -69,7 +69,7 @@ export default function MyTripsPage() {
         return tripsData;
       } catch (error) {
         console.timeEnd('fetchMyTrips');
-        
+
         // Handle 401 Unauthorized gracefully
         if (error.response && error.response.status === 401) {
           console.warn('⚠️ Unauthorized access (401). Token might be expired.');
@@ -162,7 +162,7 @@ export default function MyTripsPage() {
     if (status === 'all') return trips;
     if (status === 'upcoming')
       return trips.filter((t) =>
-        ['pending', 'guide_selected', 'negotiating', 'confirmed'].includes(t.status)
+        ['pending', 'guide_selected', 'negotiating', 'confirmed', 'upcoming'].includes(t.status)
       );
     if (status === 'active')
       return trips.filter((t) => t.status === 'in_progress');
@@ -184,6 +184,7 @@ export default function MyTripsPage() {
       guide_selected: { label: 'Guide Selected', color: 'blue', icon: '👤' },
       negotiating: { label: 'Negotiating', color: 'purple', icon: '💬' },
       confirmed: { label: 'Confirmed', color: 'green', icon: '✅' },
+      upcoming: { label: 'Upcoming', color: 'indigo', icon: '🔜' },
       in_progress: { label: 'In Progress', color: 'teal', icon: '🚀' },
       completed: { label: 'Completed', color: 'gray', icon: '✔️' },
       cancelled: { label: 'Cancelled', color: 'red', icon: '❌' },
