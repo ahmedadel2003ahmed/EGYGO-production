@@ -81,7 +81,7 @@ export default function PaymentSuccessPage() {
         pollAttempts
       });
 
-      if (trip.paymentStatus === 'paid' && trip.status === 'confirmed') {
+      if (trip.paymentStatus === 'paid') {
         console.log('Payment verified successfully!');
         setVerificationStatus('success');
       } else if (trip.paymentStatus === 'failed') {
@@ -107,10 +107,10 @@ export default function PaymentSuccessPage() {
       if (data.tripId === tripId) {
         // If we get an update, force a refetch immediately
         refetch();
-        
+
         // Optimistically check if this is the payment success
         if (data.paymentStatus === 'paid') {
-           setVerificationStatus('success');
+          setVerificationStatus('success');
         }
       }
     };
