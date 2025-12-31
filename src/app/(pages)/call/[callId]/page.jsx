@@ -6,7 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import styles from './CallPage.module.css';
 import socketTripService from '@/services/socketTripService';
-import LocalSelfVideo from '@/components/LocalSelfVideo';
+
 
 export default function CallPage() {
   const router = useRouter();
@@ -20,23 +20,7 @@ export default function CallPage() {
   const [localAudioTrack, setLocalAudioTrack] = useState(null);
   const [remoteUsers, setRemoteUsers] = useState([]);
 
-  // Create a pure MediaStream for the local self-video component
-  const localVideoStream = React.useMemo(() => {
-    if (!localVideoTrack) return null;
-    try {
-      // Extract native MediaStreamTrack from Agora track
-      const mediaStreamTrack = localVideoTrack.getMediaStreamTrack
-        ? localVideoTrack.getMediaStreamTrack()
-        : localVideoTrack.track;
 
-      if (mediaStreamTrack) {
-        return new MediaStream([mediaStreamTrack]);
-      }
-    } catch (e) {
-      console.warn('Failed to Create MediaStream', e);
-    }
-    return null;
-  }, [localVideoTrack]);
 
   // Call state
   const [joined, setJoined] = useState(false);
@@ -752,8 +736,8 @@ export default function CallPage() {
 
         {/* Local Video (Small - Picture in Picture) */}
         <div className={styles.localVideoSection}>
-          <LocalSelfVideo
-            stream={localVideoStream}
+          <AgoraVideoPlayer
+            videoTrack={localVideoTrack}
             className={styles.localPlayer}
           />
           <span className={styles.localLabel}>You</span>
