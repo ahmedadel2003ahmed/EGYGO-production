@@ -93,15 +93,6 @@ const OtpModal = ({ isOpen, onClose }) => {
             // Success
             setVerified(true);
 
-            // Auto-login via Context
-            if (data.data?.accessToken && data.data?.user) {
-                auth.setAuth({
-                    token: data.data.accessToken,
-                    user: data.data.user,
-                    isRegister: true
-                });
-            }
-
             // Cleanup
             localStorage.removeItem("registerEmail");
             localStorage.removeItem("pendingUserId");
@@ -116,8 +107,7 @@ const OtpModal = ({ isOpen, onClose }) => {
 
     const handleContinue = () => {
         onClose();
-        // Check if there was a pending action in auth context?
-        // auth.setAuth handles pending actions, so we might be good.
+        auth.switchToLogin();
     };
 
     if (!isOpen) return null;
@@ -193,11 +183,11 @@ const OtpModal = ({ isOpen, onClose }) => {
                             />
                             <h2 className={styles.heading} style={{ color: '#10B981' }}>Verified Successfully!</h2>
                             <p className={styles.subHeading}>
-                                Your account is now active. You have been logged in automatically.
+                                Your account is now active. Please log in to continue.
                             </p>
 
                             <button onClick={handleContinue} className={styles.submitBtn}>
-                                Continue to App
+                                Go to Login
                             </button>
                         </div>
                     )}

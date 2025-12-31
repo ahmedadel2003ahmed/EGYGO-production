@@ -69,13 +69,6 @@ export default function Otp() {
       setVerified(true);
       setError("");
 
-      // Auto-login logic
-      if (data.data?.accessToken && data.data?.user) {
-        localStorage.setItem("access_token", data.data.accessToken);
-        localStorage.setItem("laqtaha_user", JSON.stringify(data.data.user)); // Keeping legacy key just in case
-        console.log("✅ Auto-logged in after OTP verification");
-      }
-
       localStorage.removeItem("registerEmail");
       localStorage.removeItem("pendingUserId");
 
@@ -92,12 +85,8 @@ export default function Otp() {
     localStorage.removeItem("pendingUserId");
     localStorage.removeItem("registerEmail");
 
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      router.replace("/home"); // Or dashboard
-    } else {
-      router.replace("/login"); // Should ideally not happen if auto-login worked
-    }
+    // Redirect to login page
+    router.replace("/login");
   };
 
   return (
@@ -165,10 +154,10 @@ export default function Otp() {
                 height={150}
                 className={styles.successIcon}
               />
-              <p className={styles.subHeading}>Your account has been verified. You can now access all features.</p>
+              <p className={styles.subHeading}>Your account has been verified. Please log in to continue.</p>
 
               <button onClick={handleNext} className={styles.submitBtn}>
-                Continue to Dashboard
+                Go to Login
               </button>
             </div>
           )}
