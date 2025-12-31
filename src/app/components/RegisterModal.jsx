@@ -66,7 +66,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
                         localStorage.setItem("registerEmail", values.email);
 
                         onClose(); // Close modal
-                        router.push("/otp"); // Redirect to OTP page
+                        auth.switchToOtp(); // Open OTP Modal
                     }
                 } else {
                     throw new Error(registerRes.data?.message || "Failed to create account");

@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
   // Modal states
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
 
   useEffect(() => {
@@ -108,6 +109,21 @@ export function AuthProvider({ children }) {
     setTimeout(() => setShowLoginModal(true), 200);
   }
 
+  function openOtpModal() {
+    setShowOtpModal(true);
+    setShowRegisterModal(false);
+    setShowLoginModal(false);
+  }
+
+  function closeOtpModal() {
+    setShowOtpModal(false);
+  }
+
+  function switchToOtp() {
+    setShowRegisterModal(false);
+    setTimeout(() => setShowOtpModal(true), 200);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -124,8 +140,12 @@ export function AuthProvider({ children }) {
         showRegisterModal,
         openRegisterModal,
         closeRegisterModal,
+        showOtpModal,
+        openOtpModal,
+        closeOtpModal,
         switchToRegister,
-        switchToLogin
+        switchToLogin,
+        switchToOtp
       }}
     >
       {children}

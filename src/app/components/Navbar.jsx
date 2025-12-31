@@ -9,6 +9,7 @@ import { useAuth } from '@/app/context/AuthContext';
 
 const LoginModal = lazy(() => import('./LoginModal'));
 const RegisterModal = lazy(() => import('./RegisterModal'));
+const OtpModal = lazy(() => import('./OtpModal'));
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ const Navbar = () => {
   const isAuthenticated = !!auth?.token;
   const isLoginModalOpen = auth?.showLoginModal || false;
   const isRegisterModalOpen = auth?.showRegisterModal || false;
+  const isOtpModalOpen = auth?.showOtpModal || false;
 
   useEffect(() => {
     // Delay mounting modals to prioritize LCP
@@ -182,7 +184,8 @@ const Navbar = () => {
       </nav>
 
       {/* Modals - Lazy Loaded & Suspended */}
-      {(modalsMounted || isLoginModalOpen || isRegisterModalOpen) && (
+      {/* Modals - Lazy Loaded & Suspended */}
+      {(modalsMounted || isLoginModalOpen || isRegisterModalOpen || isOtpModalOpen) && (
         <Suspense fallback={null}>
           <LoginModal
             isOpen={isLoginModalOpen}
@@ -191,6 +194,10 @@ const Navbar = () => {
           <RegisterModal
             isOpen={isRegisterModalOpen}
             onClose={() => auth?.closeRegisterModal?.()}
+          />
+          <OtpModal
+            isOpen={isOtpModalOpen}
+            onClose={() => auth?.closeOtpModal?.()}
           />
         </Suspense>
       )}

@@ -1,0 +1,243 @@
+/* OtpModal.module.css */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContainer {
+  background: white;
+  width: 900px;
+  height: 550px;
+  border-radius: 20px;
+  display: flex;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  margin: 20px;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  color: #666;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.closeBtn:hover {
+  background: #f5f5f5;
+  color: black;
+  transform: rotate(90deg);
+}
+
+/* Left Section (Image) */
+.imageSection {
+  flex: 1;
+  background: url("/images/3.svg") center/cover no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  color: white;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+  z-index: 1;
+}
+
+.imageContent {
+  position: relative;
+  z-index: 2;
+}
+
+.imageContent p {
+    font-size: 16px;
+    line-height: 1.5;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
+/* Right Section (Form) */
+.formSection {
+  flex: 1; /* Split 50/50 */
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+}
+
+.heading {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.subHeading {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+.otpInputs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.otpBox {
+  width: 50px;
+  height: 60px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background: #fdfdfd;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  color: #1a1a1a;
+}
+
+.otpBox:focus {
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, #F59E0B 0%, #d97706 100%);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.submitBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  filter: brightness(1.1);
+}
+
+.submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.resendLink {
+  background: none;
+  border: none;
+  color: #F59E0B;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 20px;
+  transition: all 0.2s;
+}
+
+.resendLink:hover {
+    color: #d97706;
+    text-decoration: underline;
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 10px;
+  background: #fef2f2;
+  padding: 8px 12px;
+  border-radius: 8px;
+  width: 100%;
+  border: 1px solid #fee2e2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.successWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.successIcon {
+  margin: 10px 0;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .modalContainer {
+    flex-direction: column;
+    width: 95%;
+    height: auto;
+    max-height: 90vh;
+  }
+
+  .imageSection {
+    display: none;
+  }
+
+  .formSection {
+    padding: 30px 20px;
+  }
+}
