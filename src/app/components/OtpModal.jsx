@@ -145,7 +145,7 @@ const OtpModal = ({ isOpen, onClose }) => {
                         <>
                             <h2 className={styles.heading}>Verify Your Email</h2>
                             <p className={styles.subHeading}>
-                                We've sent a 4-digit verification code to <br />
+                                We&apos;ve sent a 4-digit verification code to <br />
                                 <strong>{email}</strong>
                             </p>
 
@@ -179,7 +179,7 @@ const OtpModal = ({ isOpen, onClose }) => {
                                 className={styles.resendLink}
                                 onClick={() => alert("Resend code functionality to be implemented")}
                             >
-                                Didn't receive the code? Resend
+                                Didn&apos;t receive the code? Resend
                             </button>
                         </>
                     ) : (

@@ -12,6 +12,29 @@ import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
 import LocationPicker from '@/components/trip/LocationPicker';
 import { useAuth } from '@/app/context/AuthContext';
 
+// Fallback governorate list (with actual MongoDB IDs from API)
+const FALLBACK_GOVERNORATES = [
+  { _id: '6935efa247a0b161dbdeee4e', name: 'Alexandria', slug: 'alexandria' },
+  { _id: '6935efa347a0b161dbdeee50', name: 'Aswan', slug: 'aswan' },
+  { _id: '6935efa747a0b161dbdeee59', name: 'Beheira', slug: 'beheira' },
+  { _id: '6935efaa47a0b161dbdeee62', name: 'Beni Suef', slug: 'beni-suef' },
+  { _id: '6935efa247a0b161dbdeee4c', name: 'Cairo', slug: 'cairo' },
+  { _id: '6935efa847a0b161dbdeee5d', name: 'Damietta', slug: 'damietta' },
+  { _id: '6935efaa47a0b161dbdeee63', name: 'Fayoum', slug: 'fayoum' },
+  { _id: '6935efa847a0b161dbdeee5b', name: 'Gharbia', slug: 'gharbia' },
+  { _id: '6935efa247a0b161dbdeee4d', name: 'Giza', slug: 'giza' },
+  { _id: '6935efa747a0b161dbdeee58', name: 'Ismailia', slug: 'ismailia' },
+  { _id: '6935efa847a0b161dbdeee5a', name: 'Kafr El Sheikh', slug: 'kafr-el-sheikh' },
+  { _id: '6935efa347a0b161dbdeee4f', name: 'Luxor', slug: 'luxor' },
+  { _id: '6935efaa47a0b161dbdeee64', name: 'Matrouh', slug: 'matrouh' },
+  { _id: '6935efaa47a0b161dbdeee65', name: 'North Sinai', slug: 'north-sinai' },
+  { _id: '6935efa647a0b161dbdeee55', name: 'Qalyubia', slug: 'qalyubia' },
+  { _id: '6935efa947a0b161dbdeee61', name: 'Qena', slug: 'qena' },
+  { _id: '6935efa447a0b161dbdeee51', name: 'Red Sea', slug: 'red-sea' },
+  { _id: '6935efa547a0b161dbdeee54', name: 'Sharqia', slug: 'sharqia' },
+  { _id: '6935efa747a0b161dbdeee57', name: 'Suez', slug: 'suez' },
+];
+
 export default function CreateTripPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -22,28 +45,7 @@ export default function CreateTripPage() {
   const [loadingProvinces, setLoadingProvinces] = useState(true);
   const auth = useAuth();
 
-  // Fallback governorate list (with actual MongoDB IDs from API)
-  const FALLBACK_GOVERNORATES = [
-    { _id: '6935efa247a0b161dbdeee4e', name: 'Alexandria', slug: 'alexandria' },
-    { _id: '6935efa347a0b161dbdeee50', name: 'Aswan', slug: 'aswan' },
-    { _id: '6935efa747a0b161dbdeee59', name: 'Beheira', slug: 'beheira' },
-    { _id: '6935efaa47a0b161dbdeee62', name: 'Beni Suef', slug: 'beni-suef' },
-    { _id: '6935efa247a0b161dbdeee4c', name: 'Cairo', slug: 'cairo' },
-    { _id: '6935efa847a0b161dbdeee5d', name: 'Damietta', slug: 'damietta' },
-    { _id: '6935efaa47a0b161dbdeee63', name: 'Fayoum', slug: 'fayoum' },
-    { _id: '6935efa847a0b161dbdeee5b', name: 'Gharbia', slug: 'gharbia' },
-    { _id: '6935efa247a0b161dbdeee4d', name: 'Giza', slug: 'giza' },
-    { _id: '6935efa747a0b161dbdeee58', name: 'Ismailia', slug: 'ismailia' },
-    { _id: '6935efa847a0b161dbdeee5a', name: 'Kafr El Sheikh', slug: 'kafr-el-sheikh' },
-    { _id: '6935efa347a0b161dbdeee4f', name: 'Luxor', slug: 'luxor' },
-    { _id: '6935efaa47a0b161dbdeee64', name: 'Matrouh', slug: 'matrouh' },
-    { _id: '6935efaa47a0b161dbdeee65', name: 'North Sinai', slug: 'north-sinai' },
-    { _id: '6935efa647a0b161dbdeee55', name: 'Qalyubia', slug: 'qalyubia' },
-    { _id: '6935efa947a0b161dbdeee61', name: 'Qena', slug: 'qena' },
-    { _id: '6935efa447a0b161dbdeee51', name: 'Red Sea', slug: 'red-sea' },
-    { _id: '6935efa547a0b161dbdeee54', name: 'Sharqia', slug: 'sharqia' },
-    { _id: '6935efa747a0b161dbdeee57', name: 'Suez', slug: 'suez' },
-  ];
+
 
   // Redirect to home if not authenticated (this page requires auth)
   useEffect(() => {
@@ -253,8 +255,8 @@ export default function CreateTripPage() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className={`${styles.select} ${formik.touched.provinceId && formik.errors.provinceId
-                      ? styles.inputError
-                      : ''
+                    ? styles.inputError
+                    : ''
                     }`}
                   disabled={loadingProvinces}
                 >
@@ -284,8 +286,8 @@ export default function CreateTripPage() {
                   dateFormat="MMMM d, yyyy h:mm aa"
                   placeholderText="Select date and time"
                   className={`${styles.input} ${formik.touched.startAt && formik.errors.startAt
-                      ? styles.inputError
-                      : ''
+                    ? styles.inputError
+                    : ''
                     }`}
                 />
                 {formik.touched.startAt && formik.errors.startAt && (
@@ -305,8 +307,8 @@ export default function CreateTripPage() {
                       type="button"
                       onClick={() => handleDurationChange(hours)}
                       className={`${styles.durationBtn} ${formik.values.totalDurationMinutes === hours * 60
-                          ? styles.durationBtnActive
-                          : ''
+                        ? styles.durationBtnActive
+                        : ''
                         }`}
                     >
                       {hours} Hours
@@ -343,8 +345,8 @@ export default function CreateTripPage() {
                   placeholder="Enter detailed meeting address (e.g., Giza Pyramids Main Entrance, Cairo)"
                   rows={3}
                   className={`${styles.textarea} ${formik.touched.meetingAddress && formik.errors.meetingAddress
-                      ? styles.inputError
-                      : ''
+                    ? styles.inputError
+                    : ''
                     }`}
                 />
                 {formik.touched.meetingAddress && formik.errors.meetingAddress && (

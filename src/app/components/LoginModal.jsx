@@ -64,8 +64,8 @@ const LoginModal = ({ isOpen, onClose }) => {
         console.error("login error", err);
         setServerError(
           err.response?.data?.message ||
-            err.message ||
-            "An error occurred during login"
+          err.message ||
+          "An error occurred during login"
         );
       } finally {
         setSubmitting(false);
@@ -79,6 +79,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       setServerError(null);
       formik.resetForm();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Close on Escape key
@@ -204,14 +205,14 @@ const LoginModal = ({ isOpen, onClose }) => {
               <button
                 type="button"
                 className={styles.socialBtn}
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 <FaGoogle size={20} color="#DB4437" />
               </button>
               <button
                 type="button"
                 className={styles.socialBtn}
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 <FaXTwitter size={20} color="#000" />
               </button>

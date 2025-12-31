@@ -220,6 +220,7 @@ export default function GuideDetailsPage() {
                                     guide.documents.map((doc) => (
                                         <div key={doc._id} className={styles.documentCard}>
                                             <div className={styles.documentPreview}>
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
                                                     src={doc.url}
                                                     alt={doc.type}

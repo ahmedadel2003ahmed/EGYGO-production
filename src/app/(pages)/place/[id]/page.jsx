@@ -144,7 +144,7 @@ export default function PlaceDetailPage() {
             </SwiperSlide>
           ))}
         </Swiper>
-        
+
         {/* Hero Content - Moved Text/Overlay outside Swiper to prevent duplication and glitches */}
         <div className={styles.heroOverlayContent}>
           <div className={styles.heroText}>
@@ -327,10 +327,13 @@ export default function PlaceDetailPage() {
                       {place.reviews.map((review, idx) => (
                         <div key={idx} className={styles.reviewItem}>
                           <div className={styles.reviewHeader}>
-                            <img
+                            <Image
                               src={review.userAvatar || `https://ui-avatars.com/api/?name=${review.userName}&background=random`}
                               alt={review.userName}
                               className={styles.reviewAvatar}
+                              width={50}
+                              height={50}
+                              unoptimized
                             />
                             <div className={styles.reviewMeta}>
                               <span className={styles.reviewerName}>{review.userName}</span>
@@ -366,11 +369,14 @@ export default function PlaceDetailPage() {
                         className={styles.galleryItem}
                         onClick={() => setLightboxImage(img)}
                       >
-                        <img
+                        <Image
                           src={img}
                           alt={`${place.name} view ${idx + 1}`}
                           className={styles.galleryImage}
-                          loading="lazy"
+                          width={400}
+                          height={300}
+                          style={{ objectFit: 'cover' }}
+                          unoptimized
                         />
                         <div className={styles.galleryOverlay}>
                           <span className={styles.zoomIcon}>🔍</span>
@@ -393,6 +399,7 @@ export default function PlaceDetailPage() {
               {/* Map */}
               {place.location && place.location.coordinates && (
                 <div className={styles.mapContainer}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${place.location.coordinates[0]},${place.location.coordinates[1]},13,0/400x300?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`}
                     alt="Location Map"
@@ -443,7 +450,15 @@ export default function PlaceDetailPage() {
           <div className={styles.lightboxOverlay} onClick={() => setLightboxImage(null)}>
             <button className={styles.closeLightbox} aria-label="Close gallery">×</button>
             <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
-              <img src={lightboxImage} alt="Full screen view" className={styles.lightboxImage} />
+              <Image
+                src={lightboxImage}
+                alt="Full screen view"
+                className={styles.lightboxImage}
+                width={1200}
+                height={800}
+                style={{ objectFit: 'contain' }}
+                unoptimized
+              />
             </div>
           </div>
         )

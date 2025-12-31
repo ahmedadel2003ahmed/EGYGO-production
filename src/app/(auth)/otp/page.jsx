@@ -20,7 +20,7 @@ export default function Otp() {
     } else {
       // Keep fallback just in case, or redirect to register?
       // user might have refreshed.
-      setEmail("user@example.com"); 
+      setEmail("user@example.com");
     }
   }, []);
 
@@ -30,7 +30,7 @@ export default function Otp() {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    
+
     // Auto-focus next input
     if (value && index < 3) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
@@ -103,7 +103,7 @@ export default function Otp() {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.pageOverlay}></div>
-      
+
       <div className={styles.container}>
         {/* Left Section (Image) */}
         <div className={styles.imageSection}>
@@ -121,7 +121,7 @@ export default function Otp() {
             <>
               <h2 className={styles.heading}>Verify Your Email</h2>
               <p className={styles.subHeading}>
-                We've sent a 4-digit verification code to <br/> <strong>{email}</strong>
+                We&apos;ve sent a 4-digit verification code to <br /> <strong>{email}</strong>
               </p>
 
               <div className={styles.otpInputs}>
@@ -148,11 +148,11 @@ export default function Otp() {
                 {loading ? "Verifying..." : "Verify Code"}
               </button>
 
-              <button 
-                className={styles.resendLink} 
+              <button
+                className={styles.resendLink}
                 onClick={() => alert("Resend code functionality to be implemented")}
               >
-                Didn't receive the code? Resend
+                Didn&apos;t receive the code? Resend
               </button>
             </>
           ) : (
@@ -166,7 +166,7 @@ export default function Otp() {
                 className={styles.successIcon}
               />
               <p className={styles.subHeading}>Your account has been verified. You can now access all features.</p>
-              
+
               <button onClick={handleNext} className={styles.submitBtn}>
                 Continue to Dashboard
               </button>

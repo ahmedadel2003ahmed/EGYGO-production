@@ -167,6 +167,7 @@
   transition: all 0.2s ease;
   outline: none;
   direction: ltr;
+  color: #333;
 }
 
 .input:focus {
