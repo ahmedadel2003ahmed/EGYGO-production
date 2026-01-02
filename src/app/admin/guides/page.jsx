@@ -14,11 +14,15 @@ export default function GuidesPage() {
         currentPage: 1,
         totalPages: 1
     });
+    const [error, setError] = useState(null);
 
     const fetchGuides = async (page = 1) => {
         setLoading(true);
+        setError(null);
         try {
             const data = await adminService.getPendingGuides(page);
+            console.log('Pending guides response:', data); // Debug log
+
             // API returns array in `data.data` or `data` directly
             const results = data.data || data.results || (Array.isArray(data) ? data : []);
             setGuides(results);
@@ -28,8 +32,9 @@ export default function GuidesPage() {
                 currentPage: data.pagination?.currentPage || data.currentPage || page,
                 totalPages: data.pagination?.totalPages || data.totalPages || 1
             });
-        } catch (error) {
-            console.error('Error fetching guides:', error);
+        } catch (err) {
+            console.error('Error fetching guides:', err);
+            setError(err.message || 'Failed to fetch guide applications');
         } finally {
             setLoading(false);
         }
@@ -72,7 +77,16 @@ export default function GuidesPage() {
         <div>
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1 className="h3">Pending Guide Applications</h1>
+                <button className="btn btn-sm btn-outline-secondary" onClick={() => fetchGuides(pagination.currentPage)}>
+                    Refresh
+                </button>
             </div>
+
+            {error && (
+                <div className="alert alert-danger" role="alert">
+                    {error}
+                </div>
+            )}
 
             <AdminTable
                 columns={columns}
